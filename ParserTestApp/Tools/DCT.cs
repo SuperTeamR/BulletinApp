@@ -70,8 +70,9 @@ namespace ParserTestApp.Tools
     {
         None = 0,
         WebWorker = 1,
-        ParseContainerBase = 2,
-        ParseContainerList = 3,
+        BulletinContainerBase = 2,
+        BulletinContainerList = 3,
+        ContainerAvito = 4,
     }
 
 }

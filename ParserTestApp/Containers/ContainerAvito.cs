@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace ParserTestApp.Containers
 {
-    public class ContainerAvito : ParseContainerBase
+    public class ContainerAvito : BulletinContainerBase
     {
         public override string StartUrl => @"www.avito.ru/";
 
@@ -22,25 +22,63 @@ namespace ParserTestApp.Containers
 
         public override void Authorization()
         {
-            WebWorker.DownloadPage(LoginUrl, (doc) =>
+            _DCT.Execute(data =>
             {
-                if (WebWorker.WebDocument != null)
+                WebWorker.DownloadPage(LoginUrl, (doc) =>
                 {
-                    var e = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>();
-                    var loginForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                        .FirstOrDefault(q => q.GetAttribute("name") == "login");
-                    if (loginForm != null) loginForm.SetAttribute("value", Login);
+                    if (WebWorker.WebDocument != null)
+                    {
+                        var e = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>();
+                        var loginForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                            .FirstOrDefault(q => q.GetAttribute("name") == "login");
+                        if (loginForm != null) loginForm.SetAttribute("value", Login);
 
-                    var passwordForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                        .FirstOrDefault(q => q.GetAttribute("type") == "password");
-                    if (passwordForm != null) passwordForm.InnerText = Password;
+                        var passwordForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                            .FirstOrDefault(q => q.GetAttribute("type") == "password");
+                        if (passwordForm != null) passwordForm.InnerText = Password;
 
-                    var signIn = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
-                           .FirstOrDefault(btn => btn.GetAttribute("value") == "Войти" && btn.GetAttribute("type") == "submit");
+                        var signIn = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
+                               .FirstOrDefault(btn => btn.GetAttribute("value") == "Войти" && btn.GetAttribute("type") == "submit");
 
-                    if (signIn != null) signIn.InvokeMember("click");
-                }
-            });
+                        if (signIn != null) signIn.InvokeMember("click");
+                    }
+                });
+            }, _DCTGroup.ContainerAvito);
+        }
+
+        public override void DisableBulletin(int bulletinId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void EditBulletin(int bulletinId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void ExitProfile()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetMessages(int bulletinId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GetViewStatistics(int bulletinId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void PublishBulletin(int bulletinId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UpdateBulletin(int bulletinId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

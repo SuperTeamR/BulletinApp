@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BrowserTest.cs" />
-    <Compile Include="Containers\Base\IParseContainer.cs" />
-    <Compile Include="Containers\Base\ParseContainerBase.cs" />
-    <Compile Include="Containers\Base\ParseContainerList.cs" />
+    <Compile Include="Containers\Base\IBulletinContainer.cs" />
+    <Compile Include="Containers\Base\BulletinContainerBase.cs" />
+    <Compile Include="Containers\Base\BulletinContainerList.cs" />
     <Compile Include="Containers\ContainerAvito.cs" />
+    <Compile Include="Containers\Enums\ContainerCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\CustomDataContext.cs" />

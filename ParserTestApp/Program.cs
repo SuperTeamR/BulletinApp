@@ -7,7 +7,7 @@ namespace ParserTestApp
     {
         static void Main(string[] args)
         {
-            ParseContainerList.Execute();
+            BulletinContainerList.ExecuteAll();
 
             Console.ReadLine();
         }
