@@ -58,12 +58,17 @@ namespace ParserTestApp.Containers.Base
         /// </summary>
         public abstract void GetMessages(int bulletinId);
 
+        /// <summary>
+        /// Тестовый метод - выполняет авторизацию и публикацию
+        /// </summary>
+        /// <returns></returns>
         public bool Execute()
         {
             var result = false;
             _DCT.Execute(data =>
             {
                 Authorization();
+                PublishBulletin(0);
             }, _DCTGroup.BulletinContainerBase);
             return result;
         }

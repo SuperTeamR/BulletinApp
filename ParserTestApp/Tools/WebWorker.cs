@@ -31,6 +31,7 @@ namespace ParserTestApp.Tools
                             WebBrowser = null;
                         }
                         WebBrowser = new WebBrowser();
+                        WebBrowser.Navigating += WebBrowserOnNavigating;
                         WebBrowser.ScriptErrorsSuppressed = true;
                         while (true)
                         {
@@ -54,6 +55,11 @@ namespace ParserTestApp.Tools
                     IntializationComplite?.Invoke();
                 }
             }, _DCTGroup.WebWorker);
+        }
+
+        static void WebBrowserOnNavigating(object sender, WebBrowserNavigatingEventArgs webBrowserNavigatingEventArgs)
+        {
+          
         }
 
         public static void Execute(Action executeAction, Action completeAction = null)
@@ -93,7 +99,21 @@ namespace ParserTestApp.Tools
                 compliteAction?.Invoke(result);
             });
         }
-        private static void Wait()
+
+        public static void WaitPage( Action<string> afterCompleted)
+        {
+            Execute(() =>
+            {
+                Wait();
+                var stream = WebBrowser.DocumentStream;
+                var result = "";
+                using (var sr = new StreamReader(stream))
+                    result = sr.ReadToEnd();
+                afterCompleted?.Invoke(result);
+            });
+        }
+
+        public static void Wait()
         {
             try
             {
