@@ -100,7 +100,7 @@ namespace ParserTestApp.Tools
             });
         }
 
-        public static void WaitPage( Action<string> afterCompleted)
+        public static void WaitPage(Action<string> afterCompleted)
         {
             Execute(() =>
             {

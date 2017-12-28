@@ -110,49 +110,57 @@ namespace ParserTestApp.Containers
                         serviceTypeRadio2.InvokeMember("click");
 
 
-                        //Заполнение заявки
-                        var address = "ул Нижегородская, 29-33с1";
-                        var addressForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("id") == "flt_param_address");
-                        if (addressForm != null) addressForm.SetAttribute("value", address);
 
-                        var title = "Создание суперсайта";
-                        var titleForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__title");
-                        if (titleForm != null) titleForm.SetAttribute("value", title);
 
-                        var description = "Создаем сайты любой сложности быстро, качественно и дешево";
-                        var descriptionForm = WebWorker.WebDocument.GetElementsByTagName("textarea").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__description");
-                        if (descriptionForm != null) descriptionForm.SetAttribute("value", description);
-
-                        var price = "1000";
-                        var priceForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__price");
-                        if (priceForm != null) priceForm.SetAttribute("value", price);
-
-                        //Продолжить с пакетом «Обычная продажа»
-                        var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
-                        var button = buttons.FirstOrDefault(btn => btn.InnerText == @"Продолжить с пакетом «Обычная продажа»");
-                        if (button != null)
-                            button.InvokeMember("Click");
-
-                        //InvokeScript(WebWorker.WebDocument);
                     }
                 });
 
-                //WebWorker.WaitPage(doc =>
-                //{
-                    
+                WebWorker.WaitPage(doc =>
+                {
+                    //Заполнение заявки
+                    var address = "ул Нижегородская, 29-33с1";
+                    var addressForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "flt_param_address");
+                    if (addressForm != null) addressForm.SetAttribute("value", address);
 
-                //});
+                    var title = "Создание суперсайта";
+                    var titleForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__title");
+                    if (titleForm != null) titleForm.SetAttribute("value", title);
+
+                    var description = "Создаем сайты любой сложности быстро, качественно и дешево";
+                    var descriptionForm = WebWorker.WebDocument.GetElementsByTagName("textarea").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__description");
+                    if (descriptionForm != null) descriptionForm.SetAttribute("value", description);
+
+                    var price = "1000";
+                    var priceForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "item-edit__price");
+                    if (priceForm != null) priceForm.SetAttribute("value", price);
+
+                    //Продолжить с пакетом «Обычная продажа»
+                    var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "pack2");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+
+                    var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var pack = "Продолжить с пакетом «Быстрая продажа»";
+                    //var pack = "Продолжить с пакетом «Обычная продажа»";
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
+                    if (button != null)
+                        button.InvokeMember("click");
+
+                    //InvokeScript(WebWorker.WebDocument);
+
+                });
 
                 //WebWorker.DownloadPage("https://www.avito.ru/additem/confirm", (doc) =>
                 //{
 
                 //});
 
-                }, _DCTGroup.ContainerAvito);
+            }, _DCTGroup.ContainerAvito);
         }
 
         public override void UpdateBulletin(int bulletinId)
