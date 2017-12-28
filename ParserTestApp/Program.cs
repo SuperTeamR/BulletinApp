@@ -10,14 +10,13 @@ namespace ParserTestApp
     {
         static void Main(string[] args)
         {
-            //var appName = Process.GetCurrentProcess().ProcessName + ".exe";
-            //SetIE8KeyforWebBrowserControl(appName);
+            var appName = Process.GetCurrentProcess().ProcessName + ".exe";
+            SetIE8KeyforWebBrowserControl(appName);
 
             BulletinContainerList.ExecuteAll();
 
             Console.ReadLine();
         }
-
 
         //https://stackoverflow.com/questions/40922370/allow-system-windows-forms-webbrowser-to-run-javascript
         //https://stackoverflow.com/questions/17922308/use-latest-version-of-internet-explorer-in-the-webbrowser-control
@@ -36,7 +35,7 @@ namespace ParserTestApp
                 // if the user haven't priviledges to access the registry
                 if (Regkey == null)
                 {
-                    MessageBox.Show("Application Settings Failed - Address Not found");
+                    Console.WriteLine("Application Settings Failed - Address Not found");
                     return;
                 }
 
@@ -45,7 +44,7 @@ namespace ParserTestApp
                 // Check if key is already present
                 if (FindAppkey == "8000")
                 {
-                    MessageBox.Show("Required Application Settings Present");
+                    Console.WriteLine("Required Application Settings Present");
                     Regkey.Close();
                     return;
                 }
@@ -58,14 +57,14 @@ namespace ParserTestApp
                 FindAppkey = Convert.ToString(Regkey.GetValue(appName));
 
                 if (FindAppkey == "8000")
-                    MessageBox.Show("Application Settings Applied Successfully");
+                    Console.WriteLine("Application Settings Applied Successfully");
                 else
-                    MessageBox.Show("Application Settings Failed, Ref: " + FindAppkey);
+                    Console.WriteLine("Application Settings Failed, Ref: " + FindAppkey);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Application Settings Failed");
-                MessageBox.Show(ex.Message);
+                Console.WriteLine("Application Settings Failed");
+                Console.WriteLine(ex.Message);
             }
             finally
             {
