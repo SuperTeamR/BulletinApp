@@ -28,6 +28,9 @@ namespace WebBrowserHostTest
     {
         public MainWindow()
         {
+            var appName = Process.GetCurrentProcess().ProcessName + ".exe";
+            SetIE8KeyforWebBrowserControl(appName);
+
             InitializeComponent();
 
             DispatcherHelper.SetDispatherAsDefault();
@@ -40,16 +43,6 @@ namespace WebBrowserHostTest
         private void wbWinForms_DocumentTitleChanged(object sender, EventArgs e)
         {
             this.Title = (sender as System.Windows.Forms.WebBrowser).DocumentTitle;
-        }
-
-        void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            var webBrowser = (MyWebBrowser.Child as System.Windows.Forms.WebBrowser);
-            var buttons = webBrowser.Document.GetElementsByTagName("button").Cast<HtmlElement>();
-            var pack = "Продолжить с пакетом «Обычная продажа»";
-            var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
-            if (button != null)
-                button.InvokeMember("click");
         }
 
         //https://stackoverflow.com/questions/40922370/allow-system-windows-forms-webbrowser-to-run-javascript
