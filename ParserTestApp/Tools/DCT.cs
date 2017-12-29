@@ -56,6 +56,23 @@ namespace ParserTestApp.Tools
         {
             return DCT<CustomDataContext>.Execute<TResult>(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod);
         }
+
+        /// <summary>
+        /// Асинхронное выполенение метода, без заморочек просто Task
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteCurrentDispatcherAsync(Action<CustomDataContext> action, System.Enum group = null, object[] parameters = null, string comment = "", bool logInfo = true, Action<CustomDataContext, Exception> continueExceptionMethod = null, Action<CustomDataContext> continueMethod = null)
+        {
+            DCT<CustomDataContext>.ExecuteCurrentDispatcherAsync(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod);
+        }
+        /// <summary>
+        /// Асинхронное выполенение метода, без заморочек просто Task
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteCurrentDispatcher(Action<CustomDataContext> action, System.Enum group = null, object[] parameters = null, string comment = "", bool logInfo = true, Action<CustomDataContext, Exception> continueExceptionMethod = null, Action<CustomDataContext> continueMethod = null)
+        {
+            DCT<CustomDataContext>.ExecuteCurrentDispatcher(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod);
+        }
         public static void SendInfo(string v, bool isMessageBox = false)
         {
             Console.WriteLine("[" + DateTime.Now.ToString() + "] " + v);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ParserTestApp.Containers.Base
 {
-    public abstract class BulletinContainerBase : IBulletinContainer
+    public abstract class BulletinContainerBase
     {
         #region Property
 
@@ -67,6 +67,7 @@ namespace ParserTestApp.Containers.Base
             var result = false;
             _DCT.Execute(data =>
             {
+                ExitProfile();
                 Authorization();
                 PublishBulletin(0);
             }, _DCTGroup.BulletinContainerBase);

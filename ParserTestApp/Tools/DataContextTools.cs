@@ -76,7 +76,25 @@ namespace ParserTestApp.Tools
             //ThreadPoolHelper.Execute(() => execute(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod, methodName: methodName));
             //TaskPool.Execute((a) => execute(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod, methodName: methodName));
         }
+        /// <summary>
+        /// Асинхронное выполенение метода, без заморочек просто Task
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteCurrentDispatcherAsync(Action<T> action, System.Enum group, object[] parameters = null, string comment = "", bool logInfo = true, Action<T, Exception> continueExceptionMethod = null, Action<T> continueMethod = null)
+        {
+            var methodName = GetMethodName(MethodNameLevel);
+            DispatcherHelper.Execute(() => execute(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod, methodName: methodName));
+        }
 
+        /// <summary>
+        /// Асинхронное выполенение метода, без заморочек просто Task
+        /// </summary>
+        /// <param name="action"></param>
+        public static void ExecuteCurrentDispatcher(Action<T> action, System.Enum group, object[] parameters = null, string comment = "", bool logInfo = true, Action<T, Exception> continueExceptionMethod = null, Action<T> continueMethod = null)
+        {
+            var methodName = GetMethodName(MethodNameLevel);
+            DispatcherHelper.Execute(() => execute(action, group, parameters, comment, logInfo: logInfo, continueExceptionMethod: continueExceptionMethod, continueMethod: continueMethod, methodName: methodName), false);
+        }
 
         public static string GetMethodNameWrapper(int frame = 1)
         {

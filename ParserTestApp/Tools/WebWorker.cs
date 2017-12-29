@@ -12,7 +12,19 @@ namespace ParserTestApp.Tools
         private static Thread WorkThread { get; set; }
         public static WebBrowser WebBrowser { get; set; }
 
-        public static HtmlDocument WebDocument => WebBrowser.Document;
+
+
+        public static HtmlDocument WebDocument
+        {
+            get
+            {
+                HtmlDocument document = null;
+                _DCT.ExecuteCurrentDispatcher(d => document = WebBrowser.Document);
+                return document;
+            }
+
+
+        } 
 
         static ConcurrentQueue<Action> queue = new ConcurrentQueue<Action>();
         public static Action IntializationComplite { get; set; }
@@ -25,14 +37,18 @@ namespace ParserTestApp.Tools
                 {
                     WorkThread = new Thread(() =>
                     {
-                        if (WebBrowser != null)
-                        {
-                            WebBrowser.Dispose();
-                            WebBrowser = null;
-                        }
-                        WebBrowser = new WebBrowser();
-                        WebBrowser.Navigating += WebBrowserOnNavigating;
-                        WebBrowser.ScriptErrorsSuppressed = true;
+                        //_DCT.ExecuteCurrentDispatcher(d =>
+                        //{
+                            //if (WebBrowser != null)
+                            //{
+                            //    WebBrowser.Dispose();
+                            //    WebBrowser = null;
+                            //}
+                            //WebBrowser = new WebBrowser();
+                            //WebBrowser.Navigating += WebBrowserOnNavigating;
+                            //WebBrowser.ScriptErrorsSuppressed = true;
+                        //});
+                      
                         while (true)
                         {
                             Action next;
@@ -57,9 +73,9 @@ namespace ParserTestApp.Tools
             }, _DCTGroup.WebWorker);
         }
 
-        static void WebBrowserOnNavigating(object sender, WebBrowserNavigatingEventArgs webBrowserNavigatingEventArgs)
+        public static void SetBrowser(WebBrowser browser)
         {
-          
+            WebBrowser = browser;
         }
 
         public static void Execute(Action executeAction, Action completeAction = null)
@@ -90,9 +106,13 @@ namespace ParserTestApp.Tools
                 throw new NullReferenceException("DownloadPage url can't be null!");
             Execute(() =>
             {
-                WebBrowser.Navigate(url);
-                Wait();
-                var stream = WebBrowser.DocumentStream;
+                Stream stream = null;
+                _DCT.ExecuteCurrentDispatcher(d =>
+                {
+                    WebBrowser.Navigate(url);
+                    Wait();
+                    stream = WebBrowser.DocumentStream;
+                });
                 var result = "";
                 using (var sr = new StreamReader(stream))
                     result = sr.ReadToEnd();
@@ -104,8 +124,12 @@ namespace ParserTestApp.Tools
         {
             Execute(() =>
             {
-                Wait();
-                var stream = WebBrowser.DocumentStream;
+                Stream stream = null;
+                _DCT.ExecuteCurrentDispatcher(d =>
+                {
+                    Wait();
+                    stream = WebBrowser.DocumentStream;
+                });
                 var result = "";
                 using (var sr = new StreamReader(stream))
                     result = sr.ReadToEnd();
@@ -113,7 +137,32 @@ namespace ParserTestApp.Tools
             });
         }
 
-        public static void Wait()
+        public static void RefreshPage(Action<string> afterCompleted)
+        {
+            Execute(() =>
+            {
+                Stream stream = null;
+                _DCT.ExecuteCurrentDispatcher(d =>
+                {
+                    WebBrowser.Refresh();
+                    Wait();
+                    stream = WebBrowser.DocumentStream;
+                });
+                var result = "";
+                using (var sr = new StreamReader(stream))
+                    result = sr.ReadToEnd();
+                afterCompleted?.Invoke(result);
+            });
+        }
+
+        public static void JustWait(int seconds)
+        {
+            Execute(() =>
+            {
+                Thread.Sleep(seconds * 1000);
+            });
+        }
+        static void Wait()
         {
             try
             {

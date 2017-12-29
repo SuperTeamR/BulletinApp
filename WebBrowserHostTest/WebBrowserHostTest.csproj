@@ -96,5 +96,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ParserTestApp\ParserTestApp.csproj">
+      <Project>{C550BCB0-1128-453E-BEC9-690BC4E7F5AC}</Project>
+      <Name>ParserTestApp</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -11,7 +11,7 @@ namespace ParserTestApp.Containers.Base
     public static class BulletinContainerList
     {
         #region Property
-        private static List<IBulletinContainer> containerList = new List<IBulletinContainer>();
+        private static List<BulletinContainerBase> containerList = new List<BulletinContainerBase>();
         #endregion
         #region Constructor
         static BulletinContainerList()
@@ -24,7 +24,7 @@ namespace ParserTestApp.Containers.Base
         /// Добавляем новый контейнер
         /// </summary>
         /// <param name="container"></param>
-        public static void Add(IBulletinContainer container)
+        public static void Add(BulletinContainerBase container)
         {
             _DCT.Execute((data) =>
             {
@@ -37,9 +37,9 @@ namespace ParserTestApp.Containers.Base
         /// Получаем контейнер по UID
         /// </summary>
         /// <param name="container"></param>
-        public static IBulletinContainer Get(string uid)
+        public static BulletinContainerBase Get(string uid)
         {
-            IBulletinContainer result = null;
+            BulletinContainerBase result = null;
             _DCT.Execute((data) =>
             {
                 result = containerList.FirstOrDefault(q => q.UID == uid);
@@ -51,7 +51,7 @@ namespace ParserTestApp.Containers.Base
         /// <summary>
         /// Запускаем работу всех контейнеров
         /// </summary>
-        internal static void ExecuteAll()
+        public static void ExecuteAll()
         {
             _DCT.Execute((data) =>
             {
@@ -71,7 +71,7 @@ namespace ParserTestApp.Containers.Base
             }, _DCTGroup.BulletinContainerList);
         }
 
-        static void ExecuteCommand(IBulletinContainer container, ContainerCommand command, int bulletinId)
+        static void ExecuteCommand(BulletinContainerBase container, ContainerCommand command, int bulletinId)
         {
             _DCT.Execute((data) =>
             {

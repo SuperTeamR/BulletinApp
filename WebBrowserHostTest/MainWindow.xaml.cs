@@ -15,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using ParserTestApp.Containers.Base;
+using ParserTestApp.Tools;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace WebBrowserHostTest
@@ -26,11 +28,11 @@ namespace WebBrowserHostTest
     {
         public MainWindow()
         {
-            var appName = Process.GetCurrentProcess().ProcessName + ".exe";
-            SetIE8KeyforWebBrowserControl(appName);
-
             InitializeComponent();
-            (MyWebBrowser.Child as System.Windows.Forms.WebBrowser).Navigate(Constants.InitialUrl);
+
+            DispatcherHelper.SetDispatherAsDefault();
+            ParserTestApp.Tools.WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+            BulletinContainerList.ExecuteAll();
         }
 
 
