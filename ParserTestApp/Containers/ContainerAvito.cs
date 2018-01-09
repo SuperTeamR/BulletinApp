@@ -131,6 +131,8 @@ namespace ParserTestApp.Containers
                         button.InvokeMember("click");
                 });
 
+                WebWorker.JustWait(1);
+
                 var confirmPage = $"{editPage}/confirm";
                 WebWorker.DownloadPage(confirmPage, (doc) =>
                 {
