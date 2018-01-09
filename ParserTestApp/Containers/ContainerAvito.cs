@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -60,6 +61,7 @@ namespace ParserTestApp.Containers
 
                 WebWorker.DownloadPage(doPage, (doc) =>
                 {
+                    //Удалить объявление
                     var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                         .FirstOrDefault(q => q.GetAttribute("value") == "delete");
                     if (radioButton != null) radioButton.InvokeMember("click");
@@ -101,6 +103,22 @@ namespace ParserTestApp.Containers
                         descriptionForm.SetAttribute("value", description + "!");
                     }
 
+                    //Редактирование картинки
+                    var uploaderForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("name") == "image");
+                    if(uploaderForm != null)
+                    {
+                        uploaderForm.Focus();
+
+                        Task.Delay(250).ContinueWith((a) =>
+                        {
+                            SendKeys.SendWait("https://portal.1cbit.ru/images/Logo.fw.png" + "{ENTER}");
+                        });
+
+                        uploaderForm.InvokeMember("click");
+
+                        Thread.Sleep(1000);
+                    }
                     //Продолжить без пакета
                     var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                         .FirstOrDefault(q => q.GetAttribute("id") == "pack3");
@@ -112,8 +130,6 @@ namespace ParserTestApp.Containers
                     if (button != null)
                         button.InvokeMember("click");
                 });
-
-                WebWorker.JustWait(1);
 
                 var confirmPage = $"{editPage}/confirm";
                 WebWorker.DownloadPage(confirmPage, (doc) =>
@@ -256,7 +272,40 @@ namespace ParserTestApp.Containers
 
         public override void UpdateBulletin(int bulletinId)
         {
-            throw new NotImplementedException();
+            _DCT.Execute(data =>
+            {
+                var bulletinPage = "https://www.avito.ru/moskva/predlozheniya_uslug/sozdanie_supersayta_1008446335";
+                var doPage = $"{bulletinPage}/do";
+
+                WebWorker.DownloadPage(doPage, doc =>
+                {
+                    //Поднять объявление в поиске
+                    var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("value") == "3");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+                    //Далее →
+                    var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == "Далее →");
+                    if (button != null)
+                        button.InvokeMember("click");
+
+                    WebWorker.JustWait(1);
+
+                    //Выберите способ оплаты:
+                    //Кошелек Avito
+                    //Банковская карта
+                    //Сбербанк-Онлайн
+                    //Яндекс.Деньги
+                    //QIWI-кошелек
+                    //WebMoney
+                    //Оплата наличными
+                    //SMS
+
+                });
+            });
+           
+
         }
     }
 }
