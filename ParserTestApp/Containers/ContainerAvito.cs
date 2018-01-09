@@ -53,12 +53,90 @@ namespace ParserTestApp.Containers
 
         public override void DisableBulletin(int bulletinId)
         {
-            throw new NotImplementedException();
+            _DCT.Execute(data =>
+            {
+                var bulletinPage = "https://www.avito.ru/moskva/predlozheniya_uslug/sozdanie_supersayta_1008446335";
+                var doPage = $"{bulletinPage}/do";
+
+                WebWorker.DownloadPage(doPage, (doc) =>
+                {
+                    var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("value") == "delete");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+
+                    //Далее →
+                    var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == "Далее →");
+                    if (button != null)
+                        button.InvokeMember("click");
+
+                    WebWorker.JustWait(1);
+
+                    //Нашёл на Avito
+                    var deleteButtons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var count = deleteButtons.Count();
+                    var deleteButton = deleteButtons.FirstOrDefault(btn => btn.InnerText == "Нашёл на Avito");
+                    if (deleteButton != null)
+                        deleteButton.InvokeMember("click");
+
+                });
+            });
         }
 
         public override void EditBulletin(int bulletinId)
         {
-            throw new NotImplementedException();
+            _DCT.Execute(data =>
+            {
+                var bulletinPage = "https://www.avito.ru/moskva/predlozheniya_uslug/sozdanie_supersayta_1008446335";
+                var editPage = $"{bulletinPage}/edit";
+
+                WebWorker.DownloadPage(editPage, (doc) =>
+                {
+                    //Редактирование описания
+                    var descriptionForm = WebWorker.WebDocument.GetElementsByTagName("textarea").Cast<HtmlElement>().FirstOrDefault();
+                    if (descriptionForm != null)
+                    {
+                        var description = descriptionForm.GetAttribute("value");
+                        descriptionForm.SetAttribute("value", description + "!");
+                    }
+
+                    //Продолжить без пакета
+                    var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "pack3");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+                    var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var pack = "Продолжить без пакета";
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
+                    if (button != null)
+                        button.InvokeMember("click");
+                });
+
+                WebWorker.JustWait(1);
+
+                var confirmPage = $"{editPage}/confirm";
+                WebWorker.DownloadPage(confirmPage, (doc) =>
+                {
+                    //Снимаем галочки
+                    var servicePremium = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "service-premium");
+                    if (servicePremium != null)
+                        servicePremium.InvokeMember("click");
+
+                    //    //По умолчанию галочка снята
+                    //var serviceUp = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    // .FirstOrDefault(q => q.GetAttribute("id") == "service-up-x2");
+                    //  if (serviceUp != null)
+                    //    serviceUp.InvokeMember("click");
+
+                    //Подтверждаем
+                    var text = "Продолжить";
+                    var buttonContinue = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>().FirstOrDefault(btn => btn.InnerText == text);
+                    if (buttonContinue != null)
+                        buttonContinue.InvokeMember("click");
+                });
+            });
         }
 
         public override void ExitProfile()
@@ -83,9 +161,6 @@ namespace ParserTestApp.Containers
         {
             _DCT.Execute(data =>
             {
-
-                
-
                 WebWorker.DownloadPage("https://www.avito.ru/additem", (doc) =>
                 {
                     if (WebWorker.WebDocument != null)

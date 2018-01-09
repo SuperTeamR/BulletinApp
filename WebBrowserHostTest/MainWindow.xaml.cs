@@ -53,9 +53,9 @@ namespace WebBrowserHostTest
             try
             {
                 // For 64 bit machine
-                if (Environment.Is64BitOperatingSystem)
-                    Regkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Wow6432Node\\Microsoft\\Internet Explorer\\MAIN\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
-                else  //For 32 bit machine
+                //if (Environment.Is64BitOperatingSystem)
+               //     Regkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Wow6432Node\\Microsoft\\Internet Explorer\\MAIN\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
+                //else  //For 32 bit machine
                     Regkey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
 
                 // If the path is not correct or
@@ -69,7 +69,7 @@ namespace WebBrowserHostTest
                 string FindAppkey = Convert.ToString(Regkey.GetValue(appName));
 
                 // Check if key is already present
-                if (FindAppkey == "8000")
+                if (FindAppkey == "11001")
                 {
                     Console.WriteLine("Required Application Settings Present");
                     Regkey.Close();
@@ -83,7 +83,7 @@ namespace WebBrowserHostTest
                 // Check for the key after adding
                 FindAppkey = Convert.ToString(Regkey.GetValue(appName));
 
-                if (FindAppkey == "8000")
+                if (FindAppkey == "11001")
                     Console.WriteLine("Application Settings Applied Successfully");
                 else
                     Console.WriteLine("Application Settings Failed, Ref: " + FindAppkey);

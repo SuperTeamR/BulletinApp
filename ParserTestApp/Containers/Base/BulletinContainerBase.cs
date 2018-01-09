@@ -69,7 +69,9 @@ namespace ParserTestApp.Containers.Base
             {
                 ExitProfile();
                 Authorization();
-                PublishBulletin(0);
+                //PublishBulletin(0);
+                //EditBulletin(0);
+                DisableBulletin(0);
             }, _DCTGroup.BulletinContainerBase);
             return result;
         }
