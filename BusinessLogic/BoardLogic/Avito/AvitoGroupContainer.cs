@@ -55,11 +55,32 @@ namespace BusinessLogic.BoardLogic.Group
                     //}
                     //var rawGroups = tree.ToGroupCollection().ToList();
 
-                    var xml = File.ReadAllText(@"E:\_NewWorkspace\BulletinApp\BulletinApp\WebBrowserHostTest\bin\Debug\groups.xml");
+                    //var sGroups = DataSerializer.Serialize(rawGroups);
+
+                    var xml = File.ReadAllText(@"D:\Projects\Job\BulletinApp\BulletinApp\WebBrowserHostTest\bin\Debug\groups.xml");
                     var rawGroups = DataSerializer.Deserialize<IEnumerable<Data.Group>>(xml).ToList();
 
+                    //var dictionary = new Dictionary<string, int>();
+                    //foreach (var group in rawGroups)
+                    //{
+                    //    foreach (var f in group.Fields)
+                    //    {
+                    //        if (dictionary.ContainsKey(f.Key))
+                    //        {
+                    //            dictionary[f.Key]++;
+                    //        }
+                    //        else
+                    //        {
+                    //            dictionary.Add(f.Key, 1);
+                    //        }
+                    //    }
+                    //}
+                    //dictionary.OrderByDescending(q => q.Value);
+                    //rawGroups = rawGroups.Where(q => q.Category1 == "Услуги").ToList();
                     foreach (var group in rawGroups)
                     {
+                        Console.WriteLine(group);
+
                         //1
                         if (!string.IsNullOrEmpty(group.Category1))
                         {
@@ -68,15 +89,16 @@ namespace BusinessLogic.BoardLogic.Group
                             if (categoryRadio == null) return;
                             categoryRadio.InvokeMember("click");
                         }
+                        Thread.Sleep(1000);
                         //2
-                        if(!string.IsNullOrEmpty(group.Category2))
+                        if (!string.IsNullOrEmpty(group.Category2))
                         {
                             var serviceRadio = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                                 .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == group.Category2);
                             if (serviceRadio == null) return;
                             serviceRadio.InvokeMember("click");
                         }
-
+                        Thread.Sleep(1000);
                         //3
                         if (!string.IsNullOrEmpty(group.Category3))
                         {
@@ -85,16 +107,16 @@ namespace BusinessLogic.BoardLogic.Group
                             if (serviceTypeRadio == null) return;
                             serviceTypeRadio.InvokeMember("click");
                         }
-
+                        Thread.Sleep(1000);
                         //4
-                        if(!string.IsNullOrEmpty(group.Category4))
+                        if (!string.IsNullOrEmpty(group.Category4))
                         {
                             var serviceTypeRadio2 = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                             .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == group.Category4);
                             if (serviceTypeRadio2 == null) return;
                             serviceTypeRadio2.InvokeMember("click");
                         }
-
+                        Thread.Sleep(1000);
                         //5
                         if (!string.IsNullOrEmpty(group.Category5))
                         {
@@ -106,7 +128,7 @@ namespace BusinessLogic.BoardLogic.Group
 
                         Thread.Sleep(3000);
 
-                        Console.WriteLine(group);
+                        
 
                         Fields.Clear();
                         ParseMainComponent();
@@ -115,22 +137,25 @@ namespace BusinessLogic.BoardLogic.Group
                         //ParsePhotoComponent();
                         ParseVideoComponent();
                         ParseParametersComponent();
-                        group.Fields = Fields;
+                        group.Fields = new Dictionary<string, FieldPackage>(Fields);
                     }
 
                     result = rawGroups;
+
+                    var sResult = DataSerializer.Serialize(result);
                 }
             });
             return result;
         }
 
 
-
+        List<string> checkedIds = new List<string>();
         void LoadCategoryTrees(CategoryTree parentNode, string parentValue, string prevValue = null)
         {
             _DCT.Execute(data =>
             {
                 var byDataId = false;
+
                 if (string.IsNullOrEmpty(parentValue))
                 {
                     var div = WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
@@ -142,6 +167,12 @@ namespace BusinessLogic.BoardLogic.Group
                     }
                 }
                 if (string.IsNullOrEmpty(parentValue) || parentValue == prevValue) return;
+
+                if (!checkedIds.Contains(parentValue))
+                    checkedIds.Add(parentValue);
+                else
+                    return;
+
 
                 var level = byDataId
                     ? WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
