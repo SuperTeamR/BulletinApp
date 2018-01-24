@@ -59,6 +59,11 @@ namespace ParserTestApp.Containers.Base
         public abstract void GetMessages(int bulletinId);
 
         /// <summary>
+        /// Выгрузка объявлений из файла
+        /// </summary>
+        public abstract void LoadFromFile();
+
+        /// <summary>
         /// Тестовый метод - выполняет авторизацию и публикацию
         /// </summary>
         /// <returns></returns>
@@ -69,8 +74,14 @@ namespace ParserTestApp.Containers.Base
             {
                 ExitProfile();
                 Authorization();
+                PublishBulletin(0);
+                //LoadFromFile();
+
+                //ExitProfile();
+                //Authorization();
                 //PublishBulletin(0);
-                EditBulletin(0);
+
+                //EditBulletin(0);
                 //DisableBulletin(0);
                 //UpdateBulletin(0);
             }, _DCTGroup.BulletinContainerBase);

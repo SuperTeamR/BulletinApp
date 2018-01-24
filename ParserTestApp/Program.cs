@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using ParserTestApp.Data;
 
 namespace ParserTestApp
 {
@@ -72,6 +73,17 @@ namespace ParserTestApp
                 if (Regkey != null)
                     Regkey.Close();
             }
+        }
+
+
+        static void CreateCategories()
+        {
+        }
+
+        static CategoryTree CreateCategory(string name)
+        {
+            return new CategoryTree(name);
+
         }
     }
 }

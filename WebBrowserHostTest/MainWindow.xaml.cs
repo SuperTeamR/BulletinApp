@@ -14,9 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BusinessLogic.API;
+using CommonTools;
 using Microsoft.Win32;
-using ParserTestApp.Containers.Base;
-using ParserTestApp.Tools;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace WebBrowserHostTest
@@ -34,8 +34,10 @@ namespace WebBrowserHostTest
             InitializeComponent();
 
             DispatcherHelper.SetDispatherAsDefault();
-            ParserTestApp.Tools.WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
-            BulletinContainerList.ExecuteAll();
+            WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+
+            BoardAPI.CheckIntegrity(null);
+            //BulletinContainerList.ExecuteAll();
         }
 
 

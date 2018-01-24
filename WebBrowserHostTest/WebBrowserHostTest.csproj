@@ -97,9 +97,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ParserTestApp\ParserTestApp.csproj">
-      <Project>{C550BCB0-1128-453E-BEC9-690BC4E7F5AC}</Project>
-      <Name>ParserTestApp</Name>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj">
+      <Project>{797D9475-A26F-42BF-B8A6-99BA4804C562}</Project>
+      <Name>BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommonTools\CommonTools.csproj">
+      <Project>{15C3C4D1-4FB9-4DC9-AE9D-A21231C9DFB7}</Project>
+      <Name>CommonTools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

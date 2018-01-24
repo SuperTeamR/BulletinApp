@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\ParserTestApp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -35,8 +36,16 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ExcelDataReader, Version=3.3.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.3.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.3.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.3.0\lib\net45\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,10 +55,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Containers\Base\BulletinContainerBase.cs" />
-    <Compile Include="Containers\Base\BulletinContainerList.cs" />
-    <Compile Include="Containers\ContainerAvito.cs" />
+    <Compile Include="Containers\Bulletin\Base\BulletinContainerBase.cs" />
+    <Compile Include="Containers\Bulletin\Base\BulletinContainerList.cs" />
+    <Compile Include="Containers\Bulletin\ContainerAvito.cs" />
+    <Compile Include="Containers\Category\AvitoParserContainer.cs" />
+    <Compile Include="Containers\Category\Base\CategoryContainerBase.cs" />
+    <Compile Include="Containers\Category\Base\CategoryContainerList.cs" />
+    <Compile Include="Containers\Category\Base\CategoryParserContainerBase.cs" />
+    <Compile Include="Data\Group.cs" />
     <Compile Include="Containers\Enums\ContainerCommand.cs" />
+    <Compile Include="Data\Bulletin.cs" />
+    <Compile Include="Data\CategoryTree.cs" />
+    <Compile Include="Data\ExcelBulletin.cs" />
+    <Compile Include="Data\ExcelBulletinPackage.cs" />
+    <Compile Include="Data\ExcelCategory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\CustomDataContext.cs" />
@@ -61,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

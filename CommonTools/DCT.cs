@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace ParserTestApp.Tools
+namespace CommonTools
 {
     /// <summary>
     /// Основная обертка приложения, хранит в себе:
@@ -18,7 +18,7 @@ namespace ParserTestApp.Tools
     /// Обёртка для DataContextTools. С типом данных
     /// Костыль короче - не должен лежать в общем проекте - надо положить в ClientTools
     /// </summary>
-    internal static class _DCT
+    public static class _DCT
     {
         #region Property
         public static bool IsEnable
