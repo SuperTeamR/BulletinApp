@@ -52,10 +52,30 @@ namespace BulletinExample.Logic.Containers.Avito
             fieldParser = FieldParserContainerList.Get(Uid);
         }
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>  Получаем пакет группы с полям </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///
+        /// <param name="hash"> The hash. </param>
+        ///
+        /// <returns>   The group package. </returns>
+        ///-------------------------------------------------------------------------------------------------
+
         public override GroupPackage GetGroupPackage(string hash)
         {
             return null;
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Получаем сигнатуру группы (просто категории) </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///
+        /// <param name="hash"> The hash. </param>
+        ///
+        /// <returns>   The group signature. </returns>
+        ///-------------------------------------------------------------------------------------------------
 
         public override GroupSignature GetGroupSignature(string hash)
         {
@@ -91,7 +111,19 @@ namespace BulletinExample.Logic.Containers.Avito
             });
             return result;
         }
-
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Выгружаем дерево категорий и конвертируем в группы 1. Рекурсивное чтение дерева категорий 2.
+        /// Формирование списка группа из распарсенного дерева категорий 3. Для каждой группы рекурсивный
+        /// поиск и сохранение полей.
+        /// </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <returns>
+        /// An enumerator that allows foreach to be used to process initialize in this collection.
+        /// </returns>
+        ///-------------------------------------------------------------------------------------------------
         public override void Reinitialize()
         {
             DCT.Execute(data =>

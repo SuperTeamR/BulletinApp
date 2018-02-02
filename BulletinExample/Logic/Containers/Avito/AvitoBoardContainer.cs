@@ -35,6 +35,11 @@ namespace BulletinExample.Logic.Containers.Avito
 
         public string ProfileUrl => @"https://www.avito.ru/profile";
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Выход из профиля на борде </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         public override void Exit()
         {
@@ -43,6 +48,14 @@ namespace BulletinExample.Logic.Containers.Avito
                 WebWorker.DownloadPage("https://www.avito.ru/profile/exit", null);
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Авторизация на борде </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///
+        /// <returns>   True if it succeeds, false if it fails. </returns>
+        ///-------------------------------------------------------------------------------------------------
 
         public override bool Auth()
         {
@@ -81,6 +94,12 @@ namespace BulletinExample.Logic.Containers.Avito
             return result;
         }
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Загружает все группы и поля Board. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
         public override void ReloadGroups()
         {
             DCT.Execute(data =>
@@ -100,7 +119,7 @@ namespace BulletinExample.Logic.Containers.Avito
 
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Gets the bulletins. </summary>
+        /// <summary>   Получаем список буллетинов учетки и сохраняем новые в БД </summary>
         ///
         /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
         ///-------------------------------------------------------------------------------------------------
