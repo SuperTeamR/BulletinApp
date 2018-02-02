@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Доступ к Board. </summary>
@@ -59,8 +59,9 @@ namespace Data
     public enum AccessState
     {
         Created = 0, //Создан
-        Blocked = 1, //Заблочен администрацией
-        DemandPay = 2, //Принудительный перевод на бизнес-аккаунт
-        Closed = 3, //Закрыт
+        Activated = 1, //Активирован
+        Blocked = 2, //Заблочен администрацией
+        DemandPay = 3, //Принудительный перевод на бизнес-аккаунт
+        Closed = 4, //Закрыт
     }
 }

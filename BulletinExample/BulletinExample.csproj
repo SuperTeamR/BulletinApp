@@ -42,6 +42,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="FessooFramework, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FessooFramework.1.0.0.4\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
@@ -109,20 +112,24 @@
     <Compile Include="Logic\API\ApplicationApi.cs" />
     <Compile Include="Logic\API\BoardApi.cs" />
     <Compile Include="Logic\Containers\Avito\AvitoBoardContainer.cs" />
+    <Compile Include="Logic\Containers\Avito\AvitoFieldContainer.cs" />
     <Compile Include="Logic\Containers\Avito\AvitoFieldParserContainer.cs" />
     <Compile Include="Logic\Containers\Avito\AvitoGroupContainer.cs" />
     <Compile Include="Logic\Containers\Base\Board\BoardContainerBase.cs" />
     <Compile Include="Logic\Containers\Base\Board\BoardContainerList.cs" />
     <Compile Include="Logic\Containers\Base\FieldParser\FieldParserContainerBase.cs" />
     <Compile Include="Logic\Containers\Base\FieldParser\FieldParserContainerList.cs" />
+    <Compile Include="Logic\Containers\Base\Field\FieldContainerBase.cs" />
     <Compile Include="Logic\Containers\Base\Group\GroupContainerBase.cs" />
     <Compile Include="Logic\Containers\Base\Group\GroupContainerList.cs" />
     <Compile Include="Logic\Containers\BoardIds.cs" />
+    <Compile Include="Logic\Data\BulletinPackage.cs" />
     <Compile Include="Logic\Data\CategoryTree.cs" />
     <Compile Include="Logic\Data\FieldPackage.cs" />
     <Compile Include="Logic\Data\GroupPackage.cs" />
     <Compile Include="Logic\Data\GroupSignature.cs" />
     <Compile Include="Logic\Data\OptionTag.cs" />
+    <Compile Include="Logic\Data\TabState.cs" />
     <Compile Include="Tools\Cryptography.cs" />
     <Compile Include="Tools\DataConverter.cs" />
     <Compile Include="Tools\DataSerializer.cs" />

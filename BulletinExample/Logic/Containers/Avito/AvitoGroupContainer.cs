@@ -52,6 +52,46 @@ namespace BulletinExample.Logic.Containers.Avito
             fieldParser = FieldParserContainerList.Get(Uid);
         }
 
+        public override GroupPackage GetGroupPackage(string hash)
+        {
+            return null;
+        }
+
+        public override GroupSignature GetGroupSignature(string hash)
+        {
+            GroupSignature result = null;
+            DCT.Execute(data =>
+            {
+
+                var group = data.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+                if (group != null)
+                {
+                    var chosenCategories = new List<string>();
+                    var groupedCategories = data.Db1.GroupedCategories.Where(q => q.GroupId == group.Id).Select(q => q.CategoryId).ToArray();
+                    var categories = data.Db1.CategoryTemplates.Where(q => groupedCategories.Contains(q.Id)).ToArray();
+                    var topCategory = categories.FirstOrDefault(q => q.ParentId == Guid.Empty);
+                    var nothandledCategories = categories.Where(q => q.Id != topCategory.Id).ToList();
+                    var parentId = topCategory.Id;
+                    chosenCategories.Add(topCategory.Name);
+                    while (nothandledCategories.Count > 0)
+                    {
+                        for (var i = 0; i < nothandledCategories.Count; i++)
+                        {
+                            if (nothandledCategories[i].Id == parentId)
+                            {
+                                parentId = nothandledCategories[i].Id;
+                                chosenCategories.Add(nothandledCategories[i].Name);
+                                nothandledCategories.RemoveAt(i);
+                                break;
+                            }
+                        }
+                    }
+                    result = new GroupSignature(chosenCategories.ToArray());
+                }
+            });
+            return result;
+        }
+
         public override void Reinitialize()
         {
             DCT.Execute(data =>

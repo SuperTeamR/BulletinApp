@@ -10,5 +10,6 @@ namespace BulletinExample.Core
     public class GlobalObjects
     {
         public User CurrentUser { get; set; }
+        public Access CurrentAccess { get; set; }
     }
 }

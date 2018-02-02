@@ -36,7 +36,8 @@ namespace BulletinExample
 
             ApplicationApi.Auth("penzin", "super");
 
-            BoardApi.CheckIntegrity("Avito");
+            //BoardApi.CheckIntegrity("Avito");
+            BoardApi.GetBulletins("Avito");
             
             //BoardAPI.EditFromXls(null);
             //BoardAPI.GetBulletins(null);

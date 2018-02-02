@@ -39,10 +39,18 @@ namespace BulletinExample.Logic.Containers.Base.Board
         //public abstract string GenerateXlsFromGroup(GroupSignature signature);
         //public abstract void AddFromXls();
         //public abstract void EditFromXls();
-        //public abstract void GetBulletins();
+       
         /// <summary>
         /// Загружает все группы и поля Board
         /// </summary>
         public abstract void ReloadGroups();
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Загружает все не выгруженные буллетины </summary>
+        ///
+        /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
+        public abstract void GetBulletins();
     }
 }

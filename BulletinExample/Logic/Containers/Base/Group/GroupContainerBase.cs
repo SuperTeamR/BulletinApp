@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BulletinExample.Logic.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,7 @@ namespace BulletinExample.Logic.Containers.Base.Group
         public abstract Guid Uid { get; }
 
         public abstract void Reinitialize();
+        public abstract GroupPackage GetGroupPackage(string hash);
+        public abstract GroupSignature GetGroupSignature(string hash);
     }
 }

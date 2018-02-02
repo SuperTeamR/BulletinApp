@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Контейнер инстанций буллетинов пользователя </summary>

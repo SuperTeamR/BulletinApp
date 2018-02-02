@@ -51,10 +51,8 @@ namespace BulletinExample.Logic.API
             DCT.Execute(data =>
             {
                 var board = data.Db1.Boards.FirstOrDefault(q => q.Name == boardName);
-
-                //var boardContainer = BoardContainerList.Get(boardId);
-                //var groups = boardContainer.LoadGroups();
-                //var s = DataSerializer.Serialize(groups);
+                var boardContainer = BoardContainerList.Get(board.Id);
+                boardContainer.GetBulletins();
             });
         }
     }
