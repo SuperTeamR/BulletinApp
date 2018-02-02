@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BusinessLogic.Tools;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Data
 {
-    [KnownType(typeof(string[]))]
     [DataContract]
     internal class Group
     {
@@ -22,15 +22,6 @@ namespace BusinessLogic.Data
         public string Category4 => Categories[3];
         public string Category5 => Categories[4];
 
-
-        public Group(string category1, string category2, string category3 = null, string category4 = null, string category5 = null)
-        {
-            Categories[0] = category1;
-            Categories[1] = category2;
-            Categories[2] = category3;
-            Categories[3] = category4;
-            Categories[4] = category5;
-        }
         public Group(params string[] categories)
         {
             var length = categories.Length < 5 ? categories.Length : 5;
@@ -55,7 +46,15 @@ namespace BusinessLogic.Data
 
         public override string ToString()
         {
-            return string.Join(",", Categories);
+            return string.Join(";", Categories);
+        }
+
+        string hash;
+        public string GetHash()
+        {
+            if (hash == null)
+                hash = Сryptography.StringToSha256String(Categories);
+            return hash;
         }
     }
 }

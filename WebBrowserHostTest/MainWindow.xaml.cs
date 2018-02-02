@@ -1,23 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using BusinessLogic.API;
 using CommonTools;
 using Microsoft.Win32;
-using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace WebBrowserHostTest
 {
@@ -36,7 +22,11 @@ namespace WebBrowserHostTest
             DispatcherHelper.SetDispatherAsDefault();
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
-            BoardAPI.CheckIntegrity(null);
+            //BoardAPI.EditFromXls(null);
+            BoardAPI.GetBulletins(null);
+            //BoardAPI.CheckIntegrity(null);
+            //BoardAPI.GenerateXls(null);
+            //BoardAPI.AddFromXls(null);
             //BulletinContainerList.ExecuteAll();
         }
 

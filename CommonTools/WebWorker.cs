@@ -120,6 +120,22 @@ namespace CommonTools
             });
         }
 
+        /// <summary>
+        /// Вызывать только внутри DownloadPage
+        /// </summary>
+        /// <param name="url"></param>
+        public static void NavigatePage(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+                throw new NullReferenceException("DownloadPage url can't be null!");
+
+            _DCT.ExecuteCurrentDispatcher(d =>
+            {
+                WebBrowser.Navigate(url);
+                Wait();
+            });
+        }
+
         public static void WaitPage(Action<string> afterCompleted)
         {
             Execute(() =>

@@ -9,6 +9,8 @@ namespace BusinessLogic.BoardLogic.Base
 {
     /// <summary>
     /// Контейнер для работы с уровнем Board
+    /// - Управляет жизненным циклом буллетина
+    /// - Управляет доступом к борде
     /// </summary>
     internal abstract class BoardContainerBase : ContainerBase<Board>
     {
@@ -19,9 +21,9 @@ namespace BusinessLogic.BoardLogic.Base
         public abstract bool IsBan();
         public abstract bool FillCaptcha();
         public abstract bool IsAccountBlocked();
-        public abstract void GetBulletinState();
-        public abstract void EditBulletin();
-        public abstract void AddBulletin();
+        public abstract void GetBulletinState(string url);
+        public abstract void EditBulletin(Bulletin bulletin);
+        public abstract void AddBulletin(Data.Group group, Dictionary<string, string> dictionary);
         public abstract void UpdateBulletin();
         public abstract void CloseBulletin();
         public abstract void GetStats();
@@ -31,5 +33,10 @@ namespace BusinessLogic.BoardLogic.Base
         /// Загружает все группы и поля Board
         /// </summary>
         public abstract IEnumerable<Data.Group> LoadGroups();
+
+        public abstract string GenerateXlsFromGroup(GroupSignature signature);
+        public abstract void AddFromXls();
+        public abstract void EditFromXls();
+        public abstract void GetBulletins();
     }
 }

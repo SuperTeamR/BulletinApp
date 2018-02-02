@@ -16,6 +16,6 @@ namespace BusinessLogic.BoardLogic.Base
         public string Uid { get; set; }
         public abstract IEnumerable<T> Initialize();
         public abstract IEnumerable<T> GetAll();
-        public abstract T Get();
+        public abstract T Get(string hash);
     }
 }

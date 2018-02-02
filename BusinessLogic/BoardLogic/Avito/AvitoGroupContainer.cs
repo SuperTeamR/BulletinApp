@@ -1,4 +1,11 @@
-﻿using BusinessLogic.BoardLogic.Base;
+﻿///-------------------------------------------------------------------------------------------------
+// file:	BoardLogic\Avito\AvitoGroupContainer.cs
+//
+// summary:	Implements the avito group container class
+///-------------------------------------------------------------------------------------------------
+
+using BusinessLogic.BoardLogic.Base;
+using BusinessLogic.BoardLogic.Base.FieldParser;
 using BusinessLogic.BoardLogic.Enums;
 using BusinessLogic.Data;
 using BusinessLogic.Tools;
@@ -14,25 +21,101 @@ using System.Windows.Forms;
 
 namespace BusinessLogic.BoardLogic.Group
 {
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   An avito group container. </summary>
+    ///
+    /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+    ///-------------------------------------------------------------------------------------------------
+
     internal class AvitoGroupContainer : GroupContainerBase
     {
-        Dictionary<string, FieldPackage> Fields { get; set; } = new Dictionary<string, FieldPackage>();
-        ParsingBlockStage NextStage { get; set; }
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Gets or sets the fields. </summary>
+        ///
+        /// <value> The fields. </value>
+        ///-------------------------------------------------------------------------------------------------
 
-        public override Data.Group Get()
+        Dictionary<string, FieldPackage> fields { get; set; } = new Dictionary<string, FieldPackage>();
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Gets or sets the next stage. </summary>
+        ///
+        /// <value> The next stage. </value>
+        ///-------------------------------------------------------------------------------------------------
+
+        ParsingBlockStage nextStage { get; set; }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Gets or sets the field parser. </summary>
+        ///
+        /// <value> The field parser. </value>
+        ///-------------------------------------------------------------------------------------------------
+
+        FieldParserContainerBase fieldParser { get; set; }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Default constructor. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
+        public AvitoGroupContainer()
         {
-            return null;
+            fieldParser = FieldParserContainerList.Get(Uid);
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Получаем Group по хэшу. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <param name="hash"> Хэш на основе города и категорий. </param>
+        ///
+        /// <returns>   A Data.Group. </returns>
+        ///-------------------------------------------------------------------------------------------------
+
+        public override Data.Group Get(string hash)
+        {
+            var group = default(Data.Group);
+            _DCT.Execute(data =>
+            {
+                var xml = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "groups7.xml"));
+                var rawGroups = DataSerializer.Deserialize<IEnumerable<Data.Group>>(xml).ToList();
+                group = rawGroups.FirstOrDefault(q => q.GetHash() == hash);
+
+            });
+            return group;
+        }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Получаем все группы. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <returns>
+        /// An enumerator that allows foreach to be used to process all items in this collection.
+        /// </returns>
+        ///-------------------------------------------------------------------------------------------------
 
         public override IEnumerable<Data.Group> GetAll()
         {
             return null;
         }
 
+        ///-------------------------------------------------------------------------------------------------
         /// <summary>
-        /// Выгружаем дерево категорий и конвертируем в группы
+        /// Выгружаем дерево категорий и конвертируем в группы 1. Рекурсивное чтение дерева категорий 2.
+        /// Формирование списка группа из распарсенного дерева категорий 3. Для каждой группы рекурсивный
+        /// поиск и сохранение полей.
         /// </summary>
-        /// <returns></returns>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <returns>
+        /// An enumerator that allows foreach to be used to process initialize in this collection.
+        /// </returns>
+        ///-------------------------------------------------------------------------------------------------
+
         public override IEnumerable<Data.Group> Initialize()
         {
             List<Data.Group> result = new List<Data.Group>();
@@ -47,35 +130,42 @@ namespace BusinessLogic.BoardLogic.Group
                     //foreach (var element in root)
                     //{
                     //    var elementValue = element.GetAttribute("value");
+
                     //    var node = new CategoryTree(element.GetAttribute("title"));
                     //    tree.Add(node);
                     //    element.InvokeMember("click");
                     //    Thread.Sleep(1000);
+                    //    if(node.Name == "Хобби и отдых")
+                    //    {
+
+                    //    }
                     //    LoadCategoryTrees(node, elementValue);
                     //}
                     //var rawGroups = tree.ToGroupCollection().ToList();
 
                     //var sGroups = DataSerializer.Serialize(rawGroups);
 
-                    var xml = File.ReadAllText(@"D:\Projects\Job\BulletinApp\BulletinApp\WebBrowserHostTest\bin\Debug\groups.xml");
+                    var xml = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "groups5.xml"));
                     var rawGroups = DataSerializer.Deserialize<IEnumerable<Data.Group>>(xml).ToList();
 
-                    //var dictionary = new Dictionary<string, int>();
-                    //foreach (var group in rawGroups)
-                    //{
-                    //    foreach (var f in group.Fields)
-                    //    {
-                    //        if (dictionary.ContainsKey(f.Key))
-                    //        {
-                    //            dictionary[f.Key]++;
-                    //        }
-                    //        else
-                    //        {
-                    //            dictionary.Add(f.Key, 1);
-                    //        }
-                    //    }
-                    //}
-                    //dictionary.OrderByDescending(q => q.Value);
+                    var dictionary = new Dictionary<string, int>();
+                    foreach (var group in rawGroups)
+                    {
+                        foreach (var f in group.Fields)
+                        {
+                            if (dictionary.ContainsKey(f.Key))
+                            {
+                                dictionary[f.Key]++;
+                            }
+                            else
+                            {
+                                dictionary.Add(f.Key, 1);
+                            }
+                        }
+                    }
+                    var list = dictionary.ToList();
+                    list.Sort((pair1, pair2) => pair2.Value.CompareTo(pair1.Value));
+                    var csv = string.Join(Environment.NewLine, list.ToArray());
                     //rawGroups = rawGroups.Where(q => q.Category1 == "Услуги").ToList();
                     foreach (var group in rawGroups)
                     {
@@ -128,16 +218,14 @@ namespace BusinessLogic.BoardLogic.Group
 
                         Thread.Sleep(3000);
 
-                        
-
-                        Fields.Clear();
+                        fields.Clear();
                         ParseMainComponent();
                         ParseLocationComponent();
                         ParseComissionComponent();
-                        //ParsePhotoComponent();
+                        ParsePhotoComponent();
                         ParseVideoComponent();
                         ParseParametersComponent();
-                        group.Fields = new Dictionary<string, FieldPackage>(Fields);
+                        group.Fields = new Dictionary<string, FieldPackage>(fields);
                     }
 
                     result = rawGroups;
@@ -149,7 +237,19 @@ namespace BusinessLogic.BoardLogic.Group
         }
 
 
+        /// <summary>   List of identifiers for the checked. </summary>
         List<string> checkedIds = new List<string>();
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Loads category trees. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <param name="parentNode">   The parent node. </param>
+        /// <param name="parentValue">  The parent value. </param>
+        /// <param name="prevValue">    (Optional) The previous value. </param>
+        ///-------------------------------------------------------------------------------------------------
+
         void LoadCategoryTrees(CategoryTree parentNode, string parentValue, string prevValue = null)
         {
             _DCT.Execute(data =>
@@ -170,7 +270,7 @@ namespace BusinessLogic.BoardLogic.Group
 
                 if (!checkedIds.Contains(parentValue))
                     checkedIds.Add(parentValue);
-                else
+                else if(byDataId)
                     return;
 
 
@@ -193,22 +293,27 @@ namespace BusinessLogic.BoardLogic.Group
             });
         }
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse comission component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         void ParseComissionComponent()
         {
             _DCT.Execute(data =>
             {
-                //Title
-                var nameLabel = GetByTag("label", q => q.InnerText == "Название объявления");
-                var nameInput = GetByTag("input", q => q.GetAttribute("id") == "item-edit__title");
-                Fields.Add(nameLabel.InnerText, FieldPackage.Create("item-edit__title", "input", true));
-
-                //Description
-                var descLabel = GetByTag("label", q => q.InnerText == "Описание объявления");
-                var descInput = GetByTag("textarea", q => q.GetAttribute("id") == "item-edit__description");
-                Fields.Add(descLabel.InnerText, FieldPackage.Create("item-edit__description", "textarea", true));
+                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__commission"));
+                if (divBlock != null)
+                    HandleBlock(divBlock, "form-fieldset__label", "is-hidden");
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse location component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         void ParseLocationComponent()
         {
@@ -216,67 +321,137 @@ namespace BusinessLogic.BoardLogic.Group
             {
                 var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__location"));
                 if (divBlock != null)
-                    HandleBlock(divBlock, "form-fieldset__label");
+                    HandleBlock(divBlock, "form-fieldset__label", "is-hidden");
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse main component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         void ParseMainComponent()
         {
             _DCT.Execute(data =>
             {
-                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__commission"));
-                if (divBlock != null)
-                    HandleBlock(divBlock, "form-fieldset__label");
+                //Title
+                var nameLabel = GetByTag("label", q => q.InnerText == "Название объявления");
+                var nameInput = GetByTag("input", q => q.GetAttribute("id") == "item-edit__title");
+                fields.Add(nameLabel.InnerText, FieldPackage.Create("item-edit__title", "input", true));
+
+                //Description
+                var descLabel = GetByTag("label", q => q.InnerText == "Описание объявления");
+                var descInput = GetByTag("textarea", q => q.GetAttribute("id") == "item-edit__description");
+                fields.Add(descLabel.InnerText, FieldPackage.Create("item-edit__description", "textarea", true));
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse parameters component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         void ParseParametersComponent()
         {
             _DCT.Execute(data =>
             {
-                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__photos"));
+                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__parameters"));
                 if (divBlock != null)
-                    HandleBlock(divBlock, "form-fieldset__label");
+                    HandleBlock(divBlock, "form-fieldset__label", "is-hidden");
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse photo component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
         void ParsePhotoComponent()
         {
             _DCT.Execute(data =>
             {
-                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__video"));
+                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__photos")
+                 && !q.GetAttribute("className").Contains("is-hidden"));
                 if (divBlock != null)
-                    HandleBlock(divBlock, "form-fieldset__label");
+                    HandleBlock(divBlock, "form-fieldset__label", "is-hidden");
             });
         }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Parse video component. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
 
         void ParseVideoComponent()
         {
             _DCT.Execute(data =>
             {
-                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__parameters"));
+                var divBlock = GetByTag("div", q => q.GetAttribute("className").Contains("js-component__video"));
                 if (divBlock != null)
-                    HandleBlock(divBlock, "form-fieldset__label");
+                    HandleBlock(divBlock, "form-fieldset__label", "is-hidden");
             });
         }
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Gets by tag. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <param name="tag">      The tag. </param>
+        /// <param name="query">    The query. </param>
+        ///
+        /// <returns>   Html element. </returns>
+        ///-------------------------------------------------------------------------------------------------
 
         HtmlElement GetByTag(string tag, Func<HtmlElement, bool> query)
         {
-            return WebWorker.WebDocument.GetElementsByTagName(tag).Cast<HtmlElement>().FirstOrDefault(query);
+            var result = default(HtmlElement);
+            _DCT.Execute(data =>
+            {
+                result = WebWorker.WebDocument.GetElementsByTagName(tag).Cast<HtmlElement>().FirstOrDefault(query);
+            });
+            return result;
         }
-        void HandleBlock(HtmlElement element, string labelClass)
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Handles the block. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <param name="element">      The element. </param>
+        /// <param name="labelClass">   The label class. </param>
+        /// <param name="hiddenClass">  The hidden class. </param>
+        ///-------------------------------------------------------------------------------------------------
+
+        void HandleBlock(HtmlElement element, string labelClass, string hiddenClass)
         {
             _DCT.Execute(data =>
             {
-                NextStage = ParsingBlockStage.None;
+                nextStage = ParsingBlockStage.None;
 
                 var dictionary = new Dictionary<string, FieldPackage>();
                 var currentLabel = string.Empty;
 
-                HandleElement(element, currentLabel, labelClass);
+                HandleElement(element, currentLabel, labelClass, hiddenClass);
             });
         }
-        void HandleElement(HtmlElement element, string currentLabel, string labelClass)
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Handles the element. </summary>
+        ///
+        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
+        ///
+        /// <param name="element">      The element. </param>
+        /// <param name="currentLabel"> The current label. </param>
+        /// <param name="labelClass">   The label class. </param>
+        /// <param name="hiddenClass">  The hidden class. </param>
+        ///-------------------------------------------------------------------------------------------------
+
+        void HandleElement(HtmlElement element, string currentLabel, string labelClass, string hiddenClass)
         {
             if (!element.CanHaveChildren) return;
 
@@ -284,40 +459,35 @@ namespace BusinessLogic.BoardLogic.Group
             {
                 foreach (HtmlElement ch in element.Children)
                 {
-                    if (NextStage == ParsingBlockStage.None || NextStage == ParsingBlockStage.Label)
+                    if (ch.GetAttribute("className").Contains(hiddenClass)) continue;
+                    if (nextStage == ParsingBlockStage.None || nextStage == ParsingBlockStage.Label)
                     {
                         if (ch.GetAttribute("className").Contains(labelClass))
                         {
-                            currentLabel = ch.InnerText;
-                            NextStage = ParsingBlockStage.Input;
-                            var tagName = ch.TagName;
+                            if (ch.CanHaveChildren && ch.Children.Count > 0 && string.IsNullOrEmpty(ch.InnerText))
+                            {
+                                var span = ch.Children[0];
+                                currentLabel = span.InnerText;
+                            }
+                            else
+                            {
+                                currentLabel = ch.InnerText;
+                            }
+                            nextStage = ParsingBlockStage.Input;
                         }
                     }
                     else
                     {
-                        if (ch.TagName.ToLower() == "select" || ch.TagName.ToLower() == "input")
+                        var fieldPackage = fieldParser.Parse(currentLabel, ch);
+                        if(fieldPackage != null)
                         {
-                            var id = ch.GetAttribute("id");
-                            if (!string.IsNullOrEmpty(id))
-                            {
-                                Fields.Add(currentLabel, FieldPackage.Create(id, ch.TagName.ToLower(), true));
-                            }
-                            else
-                            {
-                                var name = ch.GetAttribute("name");
-                                Fields.Add(currentLabel, FieldPackage.Create(name, ch.TagName.ToLower(), false));
-                            }
-                            NextStage = ParsingBlockStage.Label;
+                            nextStage = ParsingBlockStage.Label;
+                            fields.Add(currentLabel, fieldPackage);
                         }
                     }
-                    HandleElement(ch, currentLabel, labelClass);
+                    HandleElement(ch, currentLabel, labelClass, hiddenClass);
                 }
             });
-        }
-
-        public override FieldPackage GetFieldPackage(string key)
-        {
-            throw new NotImplementedException();
         }
     }
 }

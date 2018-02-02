@@ -19,16 +19,20 @@ namespace BusinessLogic.Data
         [DataMember]
         public bool HasId { get; set; }
 
-        FieldPackage(string id, string tag, bool hasId)
+        [DataMember]
+        public OptionTag[] Options { get; set; }
+
+        FieldPackage(string id, string tag, bool hasId, OptionTag[] options)
         {
             Id = id;
             Tag = tag;
             HasId = hasId;
+            Options = options;
         }
 
-        public static FieldPackage Create(string id, string tag, bool hasId = true)
+        public static FieldPackage Create(string id, string tag, bool hasId = true, OptionTag[] options = null)
         {
-            return new FieldPackage(id, tag, hasId);
+            return new FieldPackage(id, tag, hasId, options);
         }
     }
 }

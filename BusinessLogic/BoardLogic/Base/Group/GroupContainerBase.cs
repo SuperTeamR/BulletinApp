@@ -12,7 +12,5 @@ namespace BusinessLogic.BoardLogic.Base
     /// </summary>
     internal abstract class GroupContainerBase : ContainerBase<Data.Group>
     {
-
-        public abstract FieldPackage GetFieldPackage(string key);
     }
 }

@@ -79,10 +79,10 @@ namespace BusinessLogic.BoardLogic.Base
                 switch (command)
                 {
                     case ContainerCommand.Publish:
-                        container.AddBulletin();
+                        container.AddBulletin(null, null);
                         break;
                     case ContainerCommand.Edit:
-                        container.EditBulletin();
+                        container.EditBulletin(null);
                         break;
                     case ContainerCommand.Update:
                         container.UpdateBulletin();
