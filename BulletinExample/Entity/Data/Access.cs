@@ -1,4 +1,5 @@
-﻿using FessooFramework.Objects.Data;
+﻿using Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace BulletinExample.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class Access : EntityObject
+    public class Access : EntityObjectALM<Access, AccessState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор Board. </summary>
         ///
@@ -47,21 +49,43 @@ namespace BulletinExample.Entity.Data
 
         public string Password { get; set; }
 
-        /// <summary>
-        /// Состояние доступа
-        /// </summary>
-        public int State { get; set; }
+        #endregion
 
-        
+        protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, Activated),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, Blocked),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, Banned),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
+        };
 
-    }
+        private Access DemandPay(Access arg1, Access arg2)
+        {
+            return arg1;
+        }
 
-    public enum AccessState
-    {
-        Created = 0, //Создан
-        Activated = 1, //Активирован
-        Blocked = 2, //Заблочен администрацией
-        DemandPay = 3, //Принудительный перевод на бизнес-аккаунт
-        Closed = 4, //Закрыт
+        private Access Banned(Access arg1, Access arg2)
+        {
+            return arg1;
+        }
+
+        private Access Blocked(Access arg1, Access arg2)
+        {
+            return arg1;
+        }
+
+        private Access Activated(Access arg1, Access arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error };
+
+        protected override int GetStateValue(AccessState state)
+        {
+            return (int)state;
+        }
+
     }
 }

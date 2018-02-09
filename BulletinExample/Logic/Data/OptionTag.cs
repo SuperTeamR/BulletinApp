@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BulletinExample.Entity.Data;
+using Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -26,6 +28,11 @@ namespace BulletinExample.Logic.Data
         public static OptionTag Create(string value, string text)
         {
             return new OptionTag(value, text);
+        }
+
+        public static OptionTag Create(SelectOption entity)
+        {
+            return new OptionTag(entity.Code, entity.Name);
         }
     }
 }

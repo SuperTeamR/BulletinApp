@@ -12,10 +12,16 @@ using System.Windows.Forms;
 
 namespace BusinessLogic.BoardLogic.Fields
 {
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   Контейнер, управляющий получение и заданием значением поля </summary>
+    ///
+    /// <remarks>   SV Milovanov, 05.02.2018. </remarks>
+    ///-------------------------------------------------------------------------------------------------
+
     internal class AvitoFieldSetterContainer : FieldSetterContainerBase
     {
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Loads fields from group. </summary>
+        /// <summary>   Получить для контейнера поля группы </summary>
         ///
         /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
         ///

@@ -38,5 +38,10 @@ namespace BulletinExample.Logic.Data
                 hash = Сryptography.StringToSha256String(categories);
             return hash;
         }
+
+        public string[] GetCategories()
+        {
+            return categories;
+        }
     }
 }

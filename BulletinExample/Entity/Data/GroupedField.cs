@@ -1,11 +1,12 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Поле, используемое группой </summary>
@@ -13,8 +14,9 @@ namespace Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class GroupedField : EntityObject
+    public class GroupedField : EntityObjectALM<GroupedField, GroupedFieldState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>  Идентификатор шаблона поля  </summary>
         ///
@@ -30,5 +32,37 @@ namespace Data
         ///-------------------------------------------------------------------------------------------------
 
         public Guid GroupId { get; set; }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Идентификатор поля в DOM </summary>
+        ///
+        /// <value> The identifier of the HTML. </value>
+        ///-------------------------------------------------------------------------------------------------
+        public string HtmlId { get; set; }
+        #endregion
+
+
+        protected override IEnumerable<EntityObjectALMConfiguration<GroupedField, GroupedFieldState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<GroupedField, GroupedFieldState>(GroupedFieldState.Created, GroupedFieldState.Handled, Handled),
+        };
+
+        private GroupedField Handled(GroupedField arg1, GroupedField arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<GroupedFieldState> DefaultState => new []
+        {
+            GroupedFieldState.Error
+        };
+
+        protected override int GetStateValue(GroupedFieldState state)
+        {
+            return (int)state;
+        }
+      
+
+
     }
 }

@@ -1,11 +1,12 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Шаблон категории буллетина </summary>
@@ -13,8 +14,9 @@ namespace Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class CategoryTemplate : EntityObject
+    public class CategoryTemplate : EntityObjectALM<CategoryTemplate, CategoryTemplateState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор борды </summary>
         ///
@@ -36,5 +38,26 @@ namespace Data
         ///-------------------------------------------------------------------------------------------------
 
         public string Name { get; set; }
+        #endregion
+
+        protected override IEnumerable<EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>(CategoryTemplateState.Created, CategoryTemplateState.Handled, Handled)
+        };
+
+        private CategoryTemplate Handled(CategoryTemplate arg1, CategoryTemplate arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<CategoryTemplateState> DefaultState => new[]
+        {
+            CategoryTemplateState.Error
+        };
+
+        protected override int GetStateValue(CategoryTemplateState state)
+        {
+            return (int)state;
+        }
     }
 }

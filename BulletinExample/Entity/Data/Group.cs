@@ -1,11 +1,12 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Группа по категориям. Уникальна по содержанию в пределах одной борды </summary>
@@ -13,8 +14,9 @@ namespace Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class Group : EntityObject
+    public class Group : EntityObjectALM<Group, GroupState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор борды </summary>
         ///
@@ -30,5 +32,33 @@ namespace Data
         ///-------------------------------------------------------------------------------------------------
 
         public string Hash { get; set; }
+        #endregion
+
+        protected override IEnumerable<EntityObjectALMConfiguration<Group, GroupState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Created, GroupState.Loaded, Loaded),
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Loaded, GroupState.Changed, Changed),
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Changed, GroupState.Loaded, Loaded),
+        };
+
+        private Group Changed(Group arg1, Group arg2)
+        {
+            return arg1;
+        }
+
+        private Group Loaded(Group arg1, Group arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<GroupState> DefaultState => new[]
+        {
+            GroupState.Error
+        };
+
+        protected override int GetStateValue(GroupState state)
+        {
+            return (int)state;
+        }
     }
 }

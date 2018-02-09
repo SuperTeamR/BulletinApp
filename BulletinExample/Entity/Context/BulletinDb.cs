@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Context
 {
+
     public class BulletinDb : DbContext
     {
         public DbSet<Application> Applications { get; set; }
@@ -25,12 +26,15 @@ namespace BulletinExample.Entity.Context
         public DbSet<SelectOption> SelectOptions { get; set; }
         public DbSet<CategoryTemplate> CategoryTemplates { get; set; }
         public DbSet<GroupedCategory> GroupedCategories { get; set; }
+        public DbSet<BulletinField> BulletinFields { get; set; }
      
         public BulletinDb()
         {
             base.Configuration.ProxyCreationEnabled = false;
             base.Configuration.LazyLoadingEnabled = true;
             base.Database.Connection.ConnectionString = EntityHelper.CreateRemoteSQL("BulletinDb", "192.168.26.116", @"ExtUser", "123QWEasd");
+            Database.SetInitializer(new CreateDatabaseIfNotExists<BulletinDb>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinExample.Entity.Context.BulletinDbConfiguration>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

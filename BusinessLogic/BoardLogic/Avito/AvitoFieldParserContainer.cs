@@ -10,6 +10,12 @@ using System.Windows.Forms;
 
 namespace BusinessLogic.BoardLogic.Avito
 {
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   Контейнер, управляющий парсингом полей </summary>
+    ///
+    /// <remarks>   SV Milovanov, 05.02.2018. </remarks>
+    ///-------------------------------------------------------------------------------------------------
+
     internal class AvitoFieldParserContainer : FieldParserContainerBase
     {
         /// <summary>   Классификаторы, исключенные из записи списка их значений </summary>

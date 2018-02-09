@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace BulletinExample.Logic.Data
 {
+
     public class BulletinPackage
     {
         public string Url { get; set; }
