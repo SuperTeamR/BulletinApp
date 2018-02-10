@@ -94,11 +94,17 @@ namespace BulletinEngine.Entity.Data
 
         private BulletinInstance OnModeration(BulletinInstance arg1, BulletinInstance arg2)
         {
+          
             return arg1;
         }
 
         private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
         {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
             return arg1;
         }
 
