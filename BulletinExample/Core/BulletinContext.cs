@@ -1,6 +1,7 @@
 ﻿using BulletinExample.Entity.Context;
 using BulletinExample.Entity.Data;
 using BulletinExample.Tools;
+using FessooFramework.Components;
 using FessooFramework.Core;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,10 @@ using System.Threading.Tasks;
 
 namespace BulletinExample.Core
 {
-    public class BulletinContext : _DCTContext
+    public class BulletinContext : DCTContext
     {
         public BulletinContext()
         {
-            _Store.Add<BulletinDb>();
         }
         public BulletinDb Db1 => _Store.Context<BulletinDb>();
         public GlobalObjects Objects => Singleton<GlobalObjects>.Instance;

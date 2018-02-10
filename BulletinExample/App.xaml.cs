@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FessooFramework.Components;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,10 @@ namespace BulletinExample
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            Bootstrapper.Current.Run();
+        }
     }
 }

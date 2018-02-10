@@ -45,8 +45,8 @@
     <Reference Include="EPPlus, Version=4.1.1.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <HintPath>..\packages\EPPlus.4.1.1\lib\net40\EPPlus.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.4\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.11, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.11\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -89,26 +89,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Core\BulletinContext.cs" />
     <Compile Include="Core\DCT.cs" />
     <Compile Include="Core\GlobalObjects.cs" />
-    <Compile Include="Entity\Context\BulletinDb.cs" />
-    <Compile Include="Entity\Data\Access.cs" />
-    <Compile Include="Entity\Data\Application.cs" />
-    <Compile Include="Entity\Data\Board.cs" />
-    <Compile Include="Entity\Data\Bulletin.cs" />
-    <Compile Include="Entity\Data\BulletinInstance.cs" />
-    <Compile Include="Entity\Data\CategoryTemplate.cs" />
-    <Compile Include="Entity\Data\Enums\AccessState.cs" />
-    <Compile Include="Entity\Data\Enums\BulletinState.cs" />
-    <Compile Include="Entity\Data\Enums\UserState.cs" />
-    <Compile Include="Entity\Data\FieldTemplae.cs" />
-    <Compile Include="Entity\Data\Group.cs" />
-    <Compile Include="Entity\Data\GroupedCategory.cs" />
-    <Compile Include="Entity\Data\GroupedField.cs" />
-    <Compile Include="Entity\Data\SelectOption.cs" />
-    <Compile Include="Entity\Data\User.cs" />
-    <Compile Include="Entity\Data\UserGroup.cs" />
+    <Compile Include="Data\Context\BulletinDb.cs" />
+    <Compile Include="Data\Data\Access.cs" />
+    <Compile Include="Data\Data\Application.cs" />
+    <Compile Include="Data\Data\Board.cs" />
+    <Compile Include="Data\Data\Bulletin.cs" />
+    <Compile Include="Data\Data\BulletinInstance.cs" />
+    <Compile Include="Data\Data\CategoryTemplate.cs" />
+    <Compile Include="Data\Data\Enums\AccessState.cs" />
+    <Compile Include="Data\Data\Enums\BulletinState.cs" />
+    <Compile Include="Data\Data\Enums\UserState.cs" />
+    <Compile Include="Data\Data\FieldTemplae.cs" />
+    <Compile Include="Data\Data\Group.cs" />
+    <Compile Include="Data\Data\GroupedCategory.cs" />
+    <Compile Include="Data\Data\GroupedField.cs" />
+    <Compile Include="Data\Data\SelectOption.cs" />
+    <Compile Include="Data\Data\User.cs" />
+    <Compile Include="Data\Data\UserGroup.cs" />
     <Compile Include="Logic\API\ApplicationApi.cs" />
     <Compile Include="Logic\API\BoardApi.cs" />
     <Compile Include="Logic\Containers\Avito\AvitoBoardContainer.cs" />
@@ -130,6 +131,10 @@
     <Compile Include="Logic\Data\GroupSignature.cs" />
     <Compile Include="Logic\Data\OptionTag.cs" />
     <Compile Include="Logic\Data\TabState.cs" />
+    <Compile Include="Migrations\201802101549420_DefaultDB_1.cs" />
+    <Compile Include="Migrations\201802101549420_DefaultDB_1.Designer.cs">
+      <DependentUpon>201802101549420_DefaultDB_1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\Cryptography.cs" />
     <Compile Include="Tools\DataConverter.cs" />
     <Compile Include="Tools\DataSerializer.cs" />
@@ -155,6 +160,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Migrations\201802101549420_DefaultDB_1.resx">
+      <DependentUpon>201802101549420_DefaultDB_1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -4,12 +4,22 @@ using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Context
 {
+    #region Configuration
+    //Add-migration DefaultDB_1 -ConfigurationTypeName BulletinExample.Entity.Context.ConfigurationBulletinDb
+    // Update-database
+    internal sealed class ConfigurationBulletinDb : DbMigrationsConfiguration<BulletinDb>
+    {
+        public ConfigurationBulletinDb() { AutomaticMigrationsEnabled = true; }
+        protected override void Seed(BulletinDb context) { }
+    }
+    #endregion
     public class BulletinDb : DbContext
     {
         public DbSet<Application> Applications { get; set; }
@@ -30,7 +40,7 @@ namespace BulletinExample.Entity.Context
         {
             base.Configuration.ProxyCreationEnabled = false;
             base.Configuration.LazyLoadingEnabled = true;
-            base.Database.Connection.ConnectionString = EntityHelper.CreateRemoteSQL("BulletinDb", "192.168.26.116", @"ExtUser", "123QWEasd");
+            base.Database.Connection.ConnectionString = EntityHelper.CreateLocalSQL("BulletinDb_2");
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
