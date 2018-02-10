@@ -22,6 +22,9 @@ namespace BulletinExample.Logic.Data
         [DataMember]
         public OptionTag[] Options { get; set; }
 
+        [DataMember]
+        public bool IsDynamic { get; set; }
+
         FieldPackage(string id, string tag, bool hasId, OptionTag[] options)
         {
             Id = id;

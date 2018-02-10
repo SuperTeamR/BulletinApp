@@ -22,7 +22,7 @@ using System.Windows.Forms;
 namespace BusinessLogic.BoardLogic.Group
 {
     ///-------------------------------------------------------------------------------------------------
-    /// <summary>   An avito group container. </summary>
+    /// <summary>   Контейнер, управляющий группой категорий </summary>
     ///
     /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ namespace BusinessLogic.BoardLogic.Group
     internal class AvitoGroupContainer : GroupContainerBase
     {
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Gets or sets the fields. </summary>
+        /// <summary>   Словарь полей группы </summary>
         ///
         /// <value> The fields. </value>
         ///-------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ namespace BusinessLogic.BoardLogic.Group
         Dictionary<string, FieldPackage> fields { get; set; } = new Dictionary<string, FieldPackage>();
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Gets or sets the next stage. </summary>
+        /// <summary>   Следующая стадия парсинга </summary>
         ///
         /// <value> The next stage. </value>
         ///-------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ namespace BusinessLogic.BoardLogic.Group
         ParsingBlockStage nextStage { get; set; }
 
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Gets or sets the field parser. </summary>
+        /// <summary>   Контейнер парсера полей для данной группы </summary>
         ///
         /// <value> The field parser. </value>
         ///-------------------------------------------------------------------------------------------------

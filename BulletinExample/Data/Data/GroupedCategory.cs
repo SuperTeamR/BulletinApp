@@ -1,7 +1,9 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
+using System.Collections.Generic;
 
-namespace Data
+namespace BulletinExample.Entity.Data
 {
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Категория, используемая группой </summary>
@@ -9,8 +11,9 @@ namespace Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class GroupedCategory : EntityObject
+    public class GroupedCategory : EntityObjectALM<GroupedCategory, GroupedCategoryState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор шаблона категории </summary>
         ///
@@ -26,5 +29,26 @@ namespace Data
         ///-------------------------------------------------------------------------------------------------
 
         public Guid GroupId { get; set; }
+        #endregion
+
+        protected override IEnumerable<EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>(GroupedCategoryState.Created, GroupedCategoryState.Handled, Handled)
+        };
+
+        private GroupedCategory Handled(GroupedCategory arg1, GroupedCategory arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<GroupedCategoryState> DefaultState => new[]
+        {
+            GroupedCategoryState.Error,
+        };
+        protected override int GetStateValue(GroupedCategoryState state)
+        {
+            return (int)state;
+        }
+
     }
 }

@@ -11,7 +11,9 @@ namespace Data.Enums
         Created = 0,
         Activated = 1,
         Blocked = 2,
-        DemandPay = 3,
-        Closed = 4,
+        Banned = 3,
+        DemandPay = 4,
+        Closed = 5,
+        Error = 99,
     }
 }

@@ -31,19 +31,20 @@ namespace BulletinExample
 
             InitializeComponent();
 
+            var bootstrapper = new BootstrapperExample();
+            bootstrapper.Run();
+
             DispatcherHelper.SetDispatherAsDefault();
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
             ApplicationApi.Auth("penzin", "super");
 
-            //BoardApi.CheckIntegrity("Avito");
-            BoardApi.GetBulletins("Avito");
-            
-            //BoardAPI.EditFromXls(null);
-            //BoardAPI.GetBulletins(null);
-            //BoardAPI.CheckIntegrity(null);
-            //BoardAPI.GenerateXls(null);
-            //BoardAPI.AddFromXls(null);
+            BoardApi.CheckIntegrity("Avito");
+            //BoardApi.GetBulletins("Avito");
+            //BoardApi.GetXlsBulletins("Avito");
+            //BoardApi.EditBulletinsFromXls("Avito");
+            //BoardApi.AddBulletinsFromXls("Avito");
+            //BoardApi.GetXlsGroup("Avito");
             //BulletinContainerList.ExecuteAll();
         }
 

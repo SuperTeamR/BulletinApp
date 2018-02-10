@@ -1,20 +1,22 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data
-{
+namespace BulletinExample.Entity.Data
+{ 
     ///-------------------------------------------------------------------------------------------------
     /// <summary>   Значение поля-селекта </summary>
     ///
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class SelectOption : EntityObject
+public class SelectOption : EntityObjectALM<SelectOption, SelectOptionState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Наименование значения </summary>
         ///
@@ -37,6 +39,27 @@ namespace Data
         /// <value> The identifier of the field. </value>
         ///-------------------------------------------------------------------------------------------------
 
-        public Guid FieldId { get; set; }
+        public Guid GroupedFieldId { get; set; }
+        #endregion
+
+        protected override IEnumerable<EntityObjectALMConfiguration<SelectOption, SelectOptionState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<SelectOption, SelectOptionState>(SelectOptionState.Created, SelectOptionState.Handled, Handled)
+        };
+
+        private SelectOption Handled(SelectOption arg1, SelectOption arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<SelectOptionState> DefaultState => new[]
+        {
+            SelectOptionState.Error
+        };
+
+        protected override int GetStateValue(SelectOptionState state)
+        {
+            return (int)state;
+        }
     }
 }

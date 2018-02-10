@@ -1,4 +1,5 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinExample.Entity.Data.Enums;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace BulletinExample.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class Application : EntityObject
+    public class Application : EntityObjectALM<Application, ApplicationState>
     {
+        #region Entity properties
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Токен приложения </summary>
         ///
@@ -30,5 +32,26 @@ namespace BulletinExample.Entity.Data
         ///-------------------------------------------------------------------------------------------------
 
         public Guid UserId { get; set; }
+        #endregion
+
+        protected override IEnumerable<EntityObjectALMConfiguration<Application, ApplicationState>> Configurations => new[]
+        {
+            new EntityObjectALMConfiguration<Application, ApplicationState>(ApplicationState.Created, ApplicationState.Closed, Closed)
+        };
+
+        private Application Closed(Application arg1, Application arg2)
+        {
+            return arg1;
+        }
+
+        protected override IEnumerable<ApplicationState> DefaultState => new[]
+        {
+            ApplicationState.Error
+        };
+
+        protected override int GetStateValue(ApplicationState state)
+        {
+            return (int)state;
+        }
     }
 }

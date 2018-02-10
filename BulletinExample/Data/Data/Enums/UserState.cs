@@ -11,6 +11,7 @@ namespace Data.Enums
         Created = 0,
         Activated = 1,
         Payed = 2,
-        Closed = 3
+        Closed = 3,
+        Error = 99,
     }
 }

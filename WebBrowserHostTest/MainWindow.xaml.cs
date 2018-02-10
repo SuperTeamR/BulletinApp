@@ -23,7 +23,7 @@ namespace WebBrowserHostTest
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
             //BoardAPI.EditFromXls(null);
-            BoardAPI.GetBulletins(null);
+            //BoardAPI.GetBulletins(null);
             //BoardAPI.CheckIntegrity(null);
             //BoardAPI.GenerateXls(null);
             //BoardAPI.AddFromXls(null);
