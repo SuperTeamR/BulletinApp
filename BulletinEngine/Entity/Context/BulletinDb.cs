@@ -4,7 +4,7 @@ using System.Data.Entity;
 
 namespace BulletinEngine.Entity.Context
 {
-    internal class BulletinDb : DbContext
+    class BulletinDb : DbContext
     {
         public DbSet<Application> Applications { get; set; }
         public DbSet<User> Users { get; set; }
@@ -25,8 +25,8 @@ namespace BulletinEngine.Entity.Context
         {
             base.Configuration.ProxyCreationEnabled = false;
             base.Configuration.LazyLoadingEnabled = true;
-            //base.Database.Connection.ConnectionString = EntityHelper.CreateRemoteSQL("BulletinDb", "192.168.26.116", @"ExtUser", "123QWEasd");
-            base.Database.Connection.ConnectionString = EntityHelper.CreateLocalSQL("BulletinDb");
+            base.Database.Connection.ConnectionString = EntityHelper.CreateRemoteSQL("BulletinDb", "192.168.26.116", @"ExtUser", "123QWEasd");
+            //base.Database.Connection.ConnectionString = EntityHelper.CreateLocalSQL("BulletinDb");
             Database.SetInitializer(new CreateDatabaseIfNotExists<BulletinDb>());
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinExample.Entity.Context.BulletinDbConfiguration>());
         }

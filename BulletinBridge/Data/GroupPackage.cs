@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data.Base;
 using BulletinTools;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -54,5 +55,7 @@ namespace BulletinBridge.Data
                 hash = Сryptography.StringToSha256String(Categories);
             return hash;
         }
+        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
+        public override Version SetVersion() => new Version(1, 0, 0, 0);
     }
 }

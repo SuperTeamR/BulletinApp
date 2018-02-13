@@ -1,6 +1,7 @@
 ﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 { 
@@ -10,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class SelectOption : EntityObjectALM<SelectOption, SelectOptionState>
+    class SelectOption : EntityObjectALM<SelectOption, SelectOptionState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -38,28 +39,38 @@ namespace BulletinEngine.Entity.Data
         public Guid GroupedFieldId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<SelectOption, SelectOptionState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<SelectOption, SelectOptionState>(SelectOptionState.Created, SelectOptionState.Handled, Handled)
         };
-
-        private SelectOption Handled(SelectOption arg1, SelectOption arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<SelectOptionState> DefaultState => new[]
         {
             SelectOptionState.Error
         };
-
         protected override int GetStateValue(SelectOptionState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private SelectOption Handled(SelectOption arg1, SelectOption arg2)
+        {
+            arg1.Name = arg2.Name;
+            arg1.Code = arg2.Code;
+            arg1.GroupedFieldId = arg2.GroupedFieldId;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<SelectOption>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<SelectOption>>();
+        #endregion
     }
 
-    public enum SelectOptionState
+    enum SelectOptionState
     {
         Created = 0,
         Handled = 1,

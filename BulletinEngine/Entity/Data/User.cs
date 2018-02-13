@@ -1,5 +1,6 @@
 ﻿using FessooFramework.Objects.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -9,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class User : EntityObjectALM<User, UserState>
+    class User : EntityObjectALM<User, UserState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -28,6 +29,8 @@ namespace BulletinEngine.Entity.Data
 
         public string Hash { get; set; }
         #endregion
+
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<User, UserState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<User, UserState>(UserState.Created, UserState.Activated, Activated),
@@ -36,31 +39,44 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<User, UserState>(UserState.Payed, UserState.Closed, Closed),
             new EntityObjectALMConfiguration<User, UserState>(UserState.Activated, UserState.Closed, Closed),
         };
-
-        private User Closed(User arg1, User arg2)
-        {
-            return arg1;
-        }
-
-        private User Payed(User arg1, User arg2)
-        {
-            return arg1;
-        }
-
-        private User Activated(User arg1, User arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<UserState> DefaultState => new[] { UserState.Error };
 
         protected override int GetStateValue(UserState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private User Closed(User arg1, User arg2)
+        {
+            arg1.Login = arg2.Login;
+            arg1.Hash = arg2.Hash;
+
+            return arg1;
+        }
+        private User Payed(User arg1, User arg2)
+        {
+            arg1.Login = arg2.Login;
+            arg1.Hash = arg2.Hash;
+
+            return arg1;
+        }
+        private User Activated(User arg1, User arg2)
+        {
+            arg1.Login = arg2.Login;
+            arg1.Hash = arg2.Hash;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<User>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<User>>();
+        #endregion
     }
 
-    public enum UserState
+    enum UserState
     {
         Created = 0,
         Activated = 1,

@@ -13,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 05.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class BulletinField : EntityObjectALM<BulletinField, BulletinFieldState>
+    class BulletinField : EntityObjectALM<BulletinField, BulletinFieldState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -41,28 +41,13 @@ namespace BulletinEngine.Entity.Data
         public string Value { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<BulletinField, BulletinFieldState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Created, BulletinFieldState.Filled, Filled),
             new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Error, Error),
             new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Edited, Edited),
         };
-
-        private BulletinField Edited(BulletinField arg1, BulletinField arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinField Error(BulletinField arg1, BulletinField arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinField Filled(BulletinField arg1, BulletinField arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<BulletinFieldState> DefaultState => new[]
         {
             BulletinFieldState.Error
@@ -72,9 +57,43 @@ namespace BulletinEngine.Entity.Data
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private BulletinField Edited(BulletinField arg1, BulletinField arg2)
+        {
+            arg1.BulletinInstanceId = arg2.BulletinInstanceId;
+            arg1.FieldId = arg2.FieldId;
+            arg1.Value = arg2.Value;
+
+            return arg1;
+        }
+
+        private BulletinField Error(BulletinField arg1, BulletinField arg2)
+        {
+            arg1.BulletinInstanceId = arg2.BulletinInstanceId;
+            arg1.FieldId = arg2.FieldId;
+            arg1.Value = arg2.Value;
+
+            return arg1;
+        }
+
+        private BulletinField Filled(BulletinField arg1, BulletinField arg2)
+        {
+            arg1.BulletinInstanceId = arg2.BulletinInstanceId;
+            arg1.FieldId = arg2.FieldId;
+            arg1.Value = arg2.Value;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<BulletinField>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<BulletinField>>();
+        #endregion
     }
 
-    public enum BulletinFieldState
+    enum BulletinFieldState
     {
         Created = 0,
         Filled = 1,

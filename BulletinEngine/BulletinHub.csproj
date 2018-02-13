@@ -7,8 +7,8 @@
     <ProjectGuid>{061283DB-C550-4FB7-85AF-90FA11133C95}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BulletinEngine</RootNamespace>
-    <AssemblyName>BulletinEngine</AssemblyName>
+    <RootNamespace>BulletinHub</RootNamespace>
+    <AssemblyName>BulletinHub</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -41,8 +41,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.12, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.12\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.13, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.13\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -73,6 +73,7 @@
     <Compile Include="Core\GlobalObjects.cs" />
     <Compile Include="Core\GlobalQueue.cs" />
     <Compile Include="Entity\Context\BulletinDb.cs" />
+    <Compile Include="Entity\Converters\BulletinInstanceConverter.cs" />
     <Compile Include="Entity\Data\Access.cs" />
     <Compile Include="Entity\Data\Application.cs" />
     <Compile Include="Entity\Data\Board.cs" />
@@ -87,6 +88,11 @@
     <Compile Include="Entity\Data\SelectOption.cs" />
     <Compile Include="Entity\Data\User.cs" />
     <Compile Include="Entity\Data\UserGroup.cs" />
+    <Compile Include="Helpers\AccessFieldHelper.cs" />
+    <Compile Include="Helpers\AccessHelper.cs" />
+    <Compile Include="Helpers\GroupHelper.cs" />
+    <Compile Include="Helpers\ValueFieldHelper.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\BoardApi\BoardApiHelper.cs" />
@@ -98,6 +104,10 @@
     <ProjectReference Include="..\BulletinBridge\BulletinBridge.csproj">
       <Project>{E797CA88-A5DF-4EC7-9A22-6ABE3E393F9A}</Project>
       <Name>BulletinBridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XlsIntegration\XlsIntegration.csproj">
+      <Project>{0bfad6db-04b0-4dad-80a1-895cf59480e4}</Project>
+      <Name>XlsIntegration</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

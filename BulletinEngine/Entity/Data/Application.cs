@@ -14,7 +14,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class Application : EntityObjectALM<Application, ApplicationState>
+    class Application : EntityObjectALM<Application, ApplicationState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -34,15 +34,11 @@ namespace BulletinEngine.Entity.Data
         public Guid UserId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Application, ApplicationState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<Application, ApplicationState>(ApplicationState.Created, ApplicationState.Closed, Closed)
         };
-
-        private Application Closed(Application arg1, Application arg2)
-        {
-            return arg1;
-        }
 
         protected override IEnumerable<ApplicationState> DefaultState => new[]
         {
@@ -53,8 +49,23 @@ namespace BulletinEngine.Entity.Data
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private Application Closed(Application arg1, Application arg2)
+        {
+            arg1.UserId = arg2.UserId;
+            arg1.Token = arg2.Token;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<Application>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<Application>>();
+        #endregion
     }
-    public enum ApplicationState
+    enum ApplicationState
     {
         Created = 0,
         Closed = 1,

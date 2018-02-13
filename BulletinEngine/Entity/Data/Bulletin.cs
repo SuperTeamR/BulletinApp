@@ -3,6 +3,7 @@ using BulletinEngine.Core;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -12,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    internal class Bulletin : EntityObjectALM<Bulletin, BulletinState>
+    class Bulletin : EntityObjectALM<Bulletin, BulletinState>
     {
         #region Entity proeperties
         ///-------------------------------------------------------------------------------------------------
@@ -24,29 +25,12 @@ namespace BulletinEngine.Entity.Data
         public Guid UserId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Bulletin, BulletinState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.WaitPublication, WaitPublication),
             new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Closed, Closed)
         };
-
-        private Bulletin WaitPublication(Bulletin arg1, Bulletin arg2)
-        {
-            BCT.Execute(d =>
-            {
-                d.Queue.Bulletins.Enqueue(new BulletinPackage
-                {
-                    Id = arg2.Id,
-                    State = (int)arg2.StateEnum,
-                });
-            });
-            return arg1;
-        }
-
-        private Bulletin Closed(Bulletin arg1, Bulletin arg2)
-        {
-            return arg1;
-        }
 
         protected override IEnumerable<BulletinState> DefaultState => new[]
         {
@@ -57,15 +41,36 @@ namespace BulletinEngine.Entity.Data
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private Bulletin WaitPublication(Bulletin arg1, Bulletin arg2)
+        {
+            arg1.UserId = arg2.UserId;
+
+            return arg1;
+        }
+        private Bulletin Closed(Bulletin arg1, Bulletin arg2)
+        {
+            arg1.UserId = arg2.UserId;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<Bulletin>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<Bulletin>>();
+        #endregion
     }
 
-    internal enum BulletinState
+    enum BulletinState
     {
         Created = 0,
         WaitPublication = 1,
         OnModeration = 2,
         Publication = 3,
-        Closed = 4,
+        Edited = 4,
+        Closed = 5,
         Error = 99,
     }
 }

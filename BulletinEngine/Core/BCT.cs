@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BulletinEngine.Core
 {
-    internal class BCT : _DCT<BulletinContext>
+    class BCT : _DCT<BulletinContext>
     {
         
     }

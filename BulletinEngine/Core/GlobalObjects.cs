@@ -13,7 +13,7 @@ namespace BulletinEngine.Core
     /// <remarks>   SV Milovanov, 02.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class GlobalObjects
+    class GlobalObjects
     {
         ///-------------------------------------------------------------------------------------------------
         /// <summary>  Текущий пользователь </summary>
@@ -28,7 +28,6 @@ namespace BulletinEngine.Core
         ///
         /// <value> The current access. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Access CurrentAccess { get; set; }
     }
 }

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using FessooFramework.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BulletinBridge
+namespace BulletinClient.Core
 {
-    public class Class1
+    class DCT : _DCT<ClientContext>
     {
     }
 }

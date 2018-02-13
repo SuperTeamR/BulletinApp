@@ -1,6 +1,7 @@
 ﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -10,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class CategoryTemplate : EntityObjectALM<CategoryTemplate, CategoryTemplateState>
+    class CategoryTemplate : EntityObjectALM<CategoryTemplate, CategoryTemplateState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -36,28 +37,40 @@ namespace BulletinEngine.Entity.Data
         public string Name { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>(CategoryTemplateState.Created, CategoryTemplateState.Handled, Handled)
         };
-
-        private CategoryTemplate Handled(CategoryTemplate arg1, CategoryTemplate arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<CategoryTemplateState> DefaultState => new[]
         {
             CategoryTemplateState.Error
         };
 
+
         protected override int GetStateValue(CategoryTemplateState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private CategoryTemplate Handled(CategoryTemplate arg1, CategoryTemplate arg2)
+        {
+            arg1.BoardId = arg2.BoardId;
+            arg1.ParentId = arg2.ParentId;
+            arg1.Name = arg2.Name;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<CategoryTemplate>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<CategoryTemplate>>();
+        #endregion
     }
 
-    public enum CategoryTemplateState
+    enum CategoryTemplateState
     {
         Created = 0,
         Handled = 1,

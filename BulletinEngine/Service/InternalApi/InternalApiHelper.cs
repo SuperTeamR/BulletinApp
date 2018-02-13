@@ -1,6 +1,8 @@
-﻿using BulletinBridge.Data.Base;
+﻿using BulletinBridge.Data;
+using BulletinBridge.Data.Base;
 using BulletinBridge.Messages;
 using BulletinEngine.Core;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace BulletinEngine.Service
     /// <remarks>   SV Milovanov, 09.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public static class InternalApiHelper
+    static class InternalApiHelper
     {
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получение буллетинов, ожидающих обработки </summary>
@@ -34,12 +36,15 @@ namespace BulletinEngine.Service
             {
                 var collection = new List<DataObjectBase>();
 
+                
                 while (d.Queue.Bulletins.Count > 0)
                 {
-                    DataObjectBase r = null;
-                    if (d.Queue.Bulletins.TryDequeue(out r))
+                    var guid = Guid.Empty;
+                    if (d.Queue.Bulletins.TryDequeue(out guid))
                     {
-                        collection.Add(r);
+                        var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == guid);
+                        var package = dbInstance._ConvertToServiceModel<BulletinPackage>();
+                        collection.Add(package);
                     }
                 }
                 result = new ResponseInternalApi_GetWork { Objects = collection };

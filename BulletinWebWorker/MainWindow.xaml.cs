@@ -41,7 +41,6 @@ namespace BulletinWebWorker
                 {
                     UdpManager.Receive(ResponseRouter.ExecuteRouting);
                 });
-
                 Tests.ClientCases.AddBulletins();
                 WebWorkerManager.BulletinWork.Execute();
             });

@@ -1,9 +1,9 @@
-﻿using BulletinBridge.Data.Base;
+﻿using System;
 using System.Collections.Concurrent;
 
 namespace BulletinEngine.Core
 {
-    public class GlobalQueue
+    class GlobalQueue
     {
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Очередь буллетинов, ожидающих обработку </summary>
@@ -11,6 +11,6 @@ namespace BulletinEngine.Core
         /// <value> The bulletins. </value>
         ///-------------------------------------------------------------------------------------------------
 
-        public ConcurrentQueue<DataObjectBase> Bulletins { get; set; } = new ConcurrentQueue<DataObjectBase>();
+        public ConcurrentQueue<Guid> Bulletins { get; set; } = new ConcurrentQueue<Guid>();
     }
 }

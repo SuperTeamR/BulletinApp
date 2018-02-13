@@ -22,8 +22,6 @@ namespace BulletinEngine
                 UdpManager.Receive(ServiceRouter.ExecuteRouting);
             });
            
-
-
             Console.Read();
         }
     }

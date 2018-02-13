@@ -2,6 +2,7 @@
 using BulletinBridge.Data;
 using BulletinBridge.Data.Base;
 using BulletinWebWorker.Containers.Base.BulletinPackage;
+using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,9 @@ namespace BulletinWebWorker.Containers
                 {
                     case BulletinState.WaitPublication:
                         bulletinContainer.AddBulletins(s.Collection);
+                        break;
+                    case BulletinState.Edited:
+                        bulletinContainer.EditBulletins(s.Collection);
                         break;
                 }
             }

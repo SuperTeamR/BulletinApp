@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BulletinEngine.Service
 {
-    internal static class ServiceRouter
+    static class ServiceRouter
     {
         public static MessageBase ExecuteRouting(MessageBase message)
         {
@@ -22,6 +22,9 @@ namespace BulletinEngine.Service
                     break;
                 case BulletinBridge.Commands.CommandApi.Board_AddBulletins:
                     Execute<RequestBoardApi_AddBulletins, ResponseBoardApi_AddBulletins>(message, BoardApiHelper.AddBulletins);
+                    break;
+                case BulletinBridge.Commands.CommandApi.Board_EditBulletins:
+                    Execute<RequestBoardAPI_EditBulletins, ResponseBoardApi_EditBulletins>(message, BoardApiHelper.EditBulletins);
                     break;
                 default:
                     break;

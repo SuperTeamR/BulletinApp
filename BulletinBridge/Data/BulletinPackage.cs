@@ -1,4 +1,5 @@
 ﻿using BulletinBridge.Data.Base;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ namespace BulletinBridge.Data
         public Dictionary<string, string> ValueFields { get; set; }
         [DataMember]
         public Dictionary<string, FieldPackage> AccessFields { get; set; }
+        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
+        public override Version SetVersion() => new Version(1, 0, 0, 0);
 
     }
 
@@ -35,8 +38,11 @@ namespace BulletinBridge.Data
         Created = 0,
         WaitPublication = 1,
         OnModeration = 2,
-        Publication = 3,
-        Closed = 4,
+        Rejected = 3,
+        Blocked = 4,
+        Publicated = 5,
+        Edited = 6,
+        Removed = 7,
         Error = 99,
     }
 }

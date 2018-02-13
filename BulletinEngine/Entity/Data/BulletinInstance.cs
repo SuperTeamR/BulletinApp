@@ -1,4 +1,7 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinBridge.Data;
+using BulletinEngine.Core;
+using BulletinEngine.Entity.Converters;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    internal class BulletinInstance : EntityObjectALM<BulletinInstance, BulletinInstanceState>
+    class BulletinInstance : EntityObjectALM<BulletinInstance, BulletinInstanceState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -54,10 +57,11 @@ namespace BulletinEngine.Entity.Data
         public string Url { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.PreparedPublicated, PreparePublicated),
-            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.PreparedPublicated, BulletinInstanceState.OnModeration, OnModeration),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.WaitPublication, PreparePublicated),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.WaitPublication, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Publicated, Publicated),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Rejected, Rejected),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Blocked, Blocked),
@@ -66,60 +70,120 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Blocked, BulletinInstanceState.Removed, Removed),
         };
-
-        private BulletinInstance Removed(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Blocked(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Publicated(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance OnModeration(BulletinInstance arg1, BulletinInstance arg2)
-        {
-          
-            return arg1;
-        }
-
-        private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            arg1.BulletinId = arg2.BulletinId;
-            arg1.BoardId = arg2.BoardId;
-            arg1.AccessId = arg2.AccessId;
-            arg1.Url = arg2.Url;
-            arg1.GroupId = arg2.GroupId;
-            return arg1;
-        }
-
         protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
 
         protected override int GetStateValue(BulletinInstanceState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private BulletinInstance Removed(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+        private BulletinInstance Blocked(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+
+        private BulletinInstance OnModeration(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+        private BulletinInstance Publicated(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+
+        private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
+            return arg1;
+        }
+
+        private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
+
+            return arg1;
+        }
+
+        private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
+
+            return arg1;
+        }
+
+
+
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
+{
+             EntityObjectALMCreator<BulletinInstance>.New(typeof(BulletinPackage), BulletinInstanceConverter.Convert, new Version(1,0,0,0))
+        };
+        #endregion
     }
 
-    internal enum BulletinInstanceState
+    enum BulletinInstanceState
     {
         Created = 0,
-        PreparedPublicated = 1,
+        WaitPublication = 1,
         OnModeration = 2,
         Rejected = 3,
         Blocked = 4,

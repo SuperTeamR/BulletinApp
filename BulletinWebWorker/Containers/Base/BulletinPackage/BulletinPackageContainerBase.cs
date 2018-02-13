@@ -8,5 +8,6 @@ namespace BulletinWebWorker.Containers.Base
     {
         public abstract Guid Uid { get; }
         public abstract void AddBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
+        public abstract void EditBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
     }
 }

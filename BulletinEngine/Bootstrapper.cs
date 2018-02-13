@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BulletinEngine
 {
-    public class Bootstrapper : FessooFramework.Core.Bootstrapper<Bootstrapper>
+    class Bootstrapper : FessooFramework.Core.Bootstrapper<Bootstrapper>
     {
         public override string ApplicationName => "Application Example";
 

@@ -1,0 +1,58 @@
+﻿using BulletinBridge.Data;
+using BulletinEngine.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BulletinEngine.Helpers
+{
+    static class AccessFieldHelper
+    {
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Получает словарь правил доступа к полям </summary>
+        ///
+        /// <remarks>   SV Milovanov, 13.02.2018. </remarks>
+        ///
+        /// <param name="instanceId">   Identifier for the instance. </param>
+        ///
+        /// <returns>   The access fields. </returns>
+        ///-------------------------------------------------------------------------------------------------
+
+        public static Dictionary<string, FieldPackage> GetAccessFields(Guid instanceId)
+        {
+            Dictionary<string, FieldPackage> result = new Dictionary<string, FieldPackage>();
+            BCT.Execute(d =>
+            {
+                var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
+                var groupId = dbInstance.GroupId;
+
+                var groupedFields = d.Db1.GroupedFields.Where(q => q.GroupId == groupId).ToArray();
+
+                foreach (var gf in groupedFields)
+                {
+                    var accessId = gf.HtmlId;
+
+                    var fieldId = gf.FieldId;
+                    var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Id == fieldId);
+                    var name = dbField.Name;
+                    var tag = dbField.Tag;
+                    var hasId = dbField.Attribute == "id";
+
+                    var options = d.Db1.SelectOptions.Where(q => q.GroupedFieldId == gf.Id).ToArray();
+                    var optionTags = new List<OptionTag>();
+                    foreach (var o in options)
+                    {
+                        var optionTag = OptionTag.Create(o.Name, o.Code);
+                        optionTags.Add(optionTag);
+                    }
+                    result.Add(name, FieldPackage.Create(accessId, tag, hasId, optionTags.ToArray()));
+                }
+
+            });
+            return result;
+        }
+
+    }
+}

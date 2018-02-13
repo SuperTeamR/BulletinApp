@@ -1,5 +1,6 @@
 ﻿using FessooFramework.Objects.Data;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -9,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class FieldTemplate : EntityObjectALM<FieldTemplate, FieldTemplateState>
+    class FieldTemplate : EntityObjectALM<FieldTemplate, FieldTemplateState>
     {
         #region Entity properties
 		//-------------------------------------------------------------------------------------------------
@@ -54,28 +55,40 @@ namespace BulletinEngine.Entity.Data
 
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<FieldTemplate, FieldTemplateState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<FieldTemplate, FieldTemplateState>(FieldTemplateState.Created, FieldTemplateState.Handled, Handled)
         };
-
-        private FieldTemplate Handled(FieldTemplate arg1, FieldTemplate arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<FieldTemplateState> DefaultState => new[]
         {
             FieldTemplateState.Error
         };
-
         protected override int GetStateValue(FieldTemplateState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private FieldTemplate Handled(FieldTemplate arg1, FieldTemplate arg2)
+        {
+            arg1.Name = arg2.Name;
+            arg1.Tag = arg2.Tag;
+            arg1.Attribute = arg2.Attribute;
+            arg1.IsImage = arg2.IsImage;
+            arg1.IsDynamic = arg2.IsDynamic;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<FieldTemplate>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<FieldTemplate>>();
+        #endregion
     }
 
-    public enum FieldTemplateState
+    enum FieldTemplateState
     {
         Created = 0,
         Handled = 1,

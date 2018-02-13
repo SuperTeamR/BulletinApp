@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FessooFramework.Objects.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -9,8 +10,7 @@ namespace BulletinBridge.Data.Base
 {
     [DataContract]
     [KnownType(typeof(BulletinPackage))]
-    public abstract class DataObjectBase
+    public abstract class DataObjectBase : CacheObject
     {
-        public Guid Id { get; set; }
     }
 }

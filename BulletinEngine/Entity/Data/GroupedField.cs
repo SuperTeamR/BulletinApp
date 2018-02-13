@@ -1,6 +1,7 @@
 ﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -10,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public class GroupedField : EntityObjectALM<GroupedField, GroupedFieldState>
+    class GroupedField : EntityObjectALM<GroupedField, GroupedFieldState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -37,29 +38,40 @@ namespace BulletinEngine.Entity.Data
         public string HtmlId { get; set; }
         #endregion
 
-
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<GroupedField, GroupedFieldState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<GroupedField, GroupedFieldState>(GroupedFieldState.Created, GroupedFieldState.Handled, Handled),
         };
-
-        private GroupedField Handled(GroupedField arg1, GroupedField arg2)
-        {
-            return arg1;
-        }
-
-        protected override IEnumerable<GroupedFieldState> DefaultState => new []
+        protected override IEnumerable<GroupedFieldState> DefaultState => new[]
         {
             GroupedFieldState.Error
         };
+
 
         protected override int GetStateValue(GroupedFieldState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private GroupedField Handled(GroupedField arg1, GroupedField arg2)
+        {
+            arg1.FieldId = arg2.FieldId;
+            arg1.GroupId = arg2.GroupId;
+            arg1.HtmlId = arg2.HtmlId;
+
+            return arg1;
+        }
+        #endregion
+
+        #region ALM -- Creators
+        protected override IEnumerable<EntityObjectALMCreator<GroupedField>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<GroupedField>>();
+        #endregion
     }
 
-    public enum GroupedFieldState
+    enum GroupedFieldState
     {
         Created = 0,
         Handled = 1,

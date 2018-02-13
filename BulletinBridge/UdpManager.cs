@@ -1,25 +1,21 @@
 ﻿using BulletinBridge.Messages.Base;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge
 {
     public static class UdpManager
     {
-        static IPAddress IpAdress { get; set; }
+        static IPAddress IpAddress { get; set; }
         static int RemotePort { get; set; }
         static int LocalPort { get; set; }
 
         public static void Set(string remoteIp, int remotePort, int localPort)
         {
-            IpAdress = IPAddress.Parse(remoteIp);
+            IpAddress = IPAddress.Parse(remoteIp);
             RemotePort = remotePort;
             LocalPort = localPort;
         }
@@ -30,7 +26,7 @@ namespace BulletinBridge
             try
             {
                 // Создаем endPoint по информации об удаленном хосте
-                var endPoint = new IPEndPoint(IpAdress, RemotePort);
+                var endPoint = new IPEndPoint(IpAddress, RemotePort);
                 // Преобразуем данные в массив байтов
                 var ser = new DataContractSerializer(message.GetType());
                 using (var ms = new MemoryStream())
@@ -84,7 +80,5 @@ namespace BulletinBridge
                 udp.Close();
             }
         }
-
-
     }
 }
