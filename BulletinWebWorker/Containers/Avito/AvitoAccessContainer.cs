@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace BulletinWebWorker.Containers.Avito
 {
-    internal class AvitoAccessContainer : AccessContainerBase
+    class AvitoAccessContainer : AccessContainerBase
     {
         public override Guid Uid => BoardIds.Avito;
 
@@ -32,7 +32,6 @@ namespace BulletinWebWorker.Containers.Avito
 
 
         AccessPackage currentAccess { get; set; }
-
 
 
         public override bool TryAuth(AccessPackage access)
@@ -57,8 +56,9 @@ namespace BulletinWebWorker.Containers.Avito
             var result = false;
             DCT.Execute(d =>
             {
-                WebWorker.DownloadPage(LoginUrl, (doc) =>
-                {
+            WebWorker.NavigatePage(LoginUrl);
+            //WebWorker.DownloadPage(LoginUrl, (doc) =>
+            //{
                     if (WebWorker.WebDocument != null)
                     {
                         var e = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>();
@@ -76,7 +76,7 @@ namespace BulletinWebWorker.Containers.Avito
                         if (signIn != null)
                             signIn.InvokeMember("click");
                     }
-                });
+               // });
                 //Без принудительного ожидания даже с Application.DoEvents авторизация не сработает, если перейти на другую страницу
                 WebWorker.JustWait(2);
                 result = true;
@@ -86,9 +86,11 @@ namespace BulletinWebWorker.Containers.Avito
 
         protected override void Exit()
         {
+
             DCT.Execute(data =>
             {
-                WebWorker.DownloadPage("https://www.avito.ru/profile/exit", null);
+                WebWorker.NavigatePage("https://www.avito.ru/profile/exit");
+                //WebWorker.DownloadPage("https://www.avito.ru/profile/exit", null);
             });
         }
 

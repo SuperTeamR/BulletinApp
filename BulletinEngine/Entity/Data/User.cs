@@ -10,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class User : EntityObjectALM<User, UserState>
+    public class User : EntityObjectALM<User, UserState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum UserState
+    public enum UserState
     {
         Created = 0,
         Activated = 1,

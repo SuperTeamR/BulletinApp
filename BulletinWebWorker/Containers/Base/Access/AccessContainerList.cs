@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Containers.Base.Access
 {
-    internal static class AccessContainerList
+    static class AccessContainerList
     {
         #region Property
         private static List<AccessContainerBase> containerList = new List<AccessContainerBase>();

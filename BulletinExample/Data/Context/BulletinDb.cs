@@ -1,5 +1,4 @@
 ﻿using BulletinExample.Entity.Data;
-using Data;
 using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
@@ -40,7 +39,7 @@ namespace BulletinExample.Entity.Context
         {
             base.Configuration.ProxyCreationEnabled = false;
             base.Configuration.LazyLoadingEnabled = true;
-            base.Database.Connection.ConnectionString = EntityHelper.CreateLocalSQL("BulletinDb_2");
+            base.Database.Connection.ConnectionString = EntityHelper.CreateRemoteSQL("BulletinDb", "192.168.26.116", @"ExtUser", "123QWEasd");
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

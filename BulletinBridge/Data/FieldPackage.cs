@@ -1,19 +1,13 @@
-﻿using BulletinBridge.Data.Base;
-using FessooFramework.Objects.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FessooFramework.Objects.Data;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Data
 {
     [DataContract]
-    public class FieldPackage : DataObjectBase
+    public class FieldPackage : CacheObject
     {
         [DataMember]
-        public string Id { get; set; }
+        public string HtmlId { get; set; }
 
         [DataMember]
         public string Tag { get; set; }
@@ -27,9 +21,13 @@ namespace BulletinBridge.Data
         [DataMember]
         public bool IsDynamic { get; set; }
 
+        public FieldPackage()
+        {
+
+        }
         FieldPackage(string id, string tag, bool hasId, OptionTag[] options)
         {
-            Id = id;
+            HtmlId = id;
             Tag = tag;
             HasId = hasId;
             Options = options;
@@ -38,7 +36,5 @@ namespace BulletinBridge.Data
         {
             return new FieldPackage(id, tag, hasId, options);
         }
-        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
-        public override Version SetVersion() => new Version(1, 0, 0, 0);
     }
 }

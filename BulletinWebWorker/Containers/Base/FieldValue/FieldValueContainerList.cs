@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Containers.Base.FieldValue
 {
-    internal static class FieldValueContainerList
+
+    static class FieldValueContainerList
     {
         #region Property
         private static List<FieldValueContainerBase> containerList = new List<FieldValueContainerBase>();

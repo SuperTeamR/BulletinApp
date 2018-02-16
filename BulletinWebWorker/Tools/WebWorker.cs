@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace BulletinWebWorker.Tools
 {
-    public static class WebWorker
+    static class WebWorker
     {
         #region STA Thread tool
         private static Thread WorkThread { get; set; }
@@ -18,11 +18,12 @@ namespace BulletinWebWorker.Tools
             get
             {
                 HtmlDocument document = null;
-                DCT.ExecuteMainThread(d => document = WebBrowser.Document);
+                DCT.ExecuteMainThread(d =>
+                {
+                    document = WebBrowser.Document;
+                }, isAsync: false);
                 return document;
             }
-
-
         }
 
         static ConcurrentQueue<Action> queue = new ConcurrentQueue<Action>();
@@ -111,7 +112,7 @@ namespace BulletinWebWorker.Tools
                     WebBrowser.Navigate(url);
                     Wait();
                     stream = WebBrowser.DocumentStream;
-                });
+                }, isAsync: false);
                 var result = "";
                 using (var sr = new StreamReader(stream))
                     result = sr.ReadToEnd();
@@ -128,11 +129,11 @@ namespace BulletinWebWorker.Tools
             if (string.IsNullOrWhiteSpace(url))
                 throw new NullReferenceException("DownloadPage url can't be null!");
 
-            DCT.ExecuteMainThread(d =>
+            DCT.ExecuteMainThread((d) =>
             {
                 WebBrowser.Navigate(url);
                 Wait();
-            });
+            }, isAsync: false);
         }
 
         public static void WaitPage(Action<string> afterCompleted)
@@ -144,7 +145,7 @@ namespace BulletinWebWorker.Tools
                 {
                     Wait();
                     stream = WebBrowser.DocumentStream;
-                });
+                }, isAsync: false);
                 var result = "";
                 using (var sr = new StreamReader(stream))
                     result = sr.ReadToEnd();
@@ -162,7 +163,7 @@ namespace BulletinWebWorker.Tools
                     WebBrowser.Refresh();
                     Wait();
                     stream = WebBrowser.DocumentStream;
-                });
+                }, isAsync: false);
                 var result = "";
                 using (var sr = new StreamReader(stream))
                     result = sr.ReadToEnd();

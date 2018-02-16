@@ -14,7 +14,8 @@ namespace BulletinClient
         {
             DCT.Execute(d =>
             {
-                Bootstrapper<Bootstrapper>.Current.Run();
+                var t = d.ServiceClient.Ping();
+                t = t;
 
                 var r = WindowHelper.Window;
                 r = r;

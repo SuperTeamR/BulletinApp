@@ -1,14 +1,8 @@
-﻿using BulletinBridge.Messages;
-using BulletinWebWorker.Containers;
-using BulletinWebWorker.Task;
+﻿using BulletinBridge.Messages.InternalApi;
+using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
-using FessooFramework.Tools.Controllers;
 using FessooFramework.Tools.DCT;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Managers
 {
@@ -18,15 +12,12 @@ namespace BulletinWebWorker.Managers
     /// <remarks>   SV Milovanov, 09.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    internal static class WebWorkerManager
+    static class WebWorkerManager
     {
         internal static TaskController BulletinWork = new TaskController(
-            execute: () => AskForWork(BulletinBridge.Commands.CommandApi.Internal_GetBulletinWork),
+            execute: () => AskForWork(),
             check: () => true,
-            checkTimeout: () => 10000);
-
-        internal static WorkContainer Container = new WorkContainer();
-
+            checkTimeout: () => 60000);
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Запрашивает работу с Engine </summary>
         ///
@@ -35,12 +26,16 @@ namespace BulletinWebWorker.Managers
         /// <param name="api">  The API. </param>
         ///-------------------------------------------------------------------------------------------------
 
-        static void AskForWork(BulletinBridge.Commands.CommandApi api)
+        static void AskForWork()
         {
             DCT.ExecuteAsync(d =>
             {
-                 HubService.SendMessage<RequestInternalApi_GetWork, ResponseInternalApi_GetWork>(new RequestInternalApi_GetWork(), api);
-                //container.AssignWork(response.Objects, api);
+                using (var client = new EngineService())
+                {
+                    var result = client.Ping();
+                    Console.WriteLine($"Ping = {result}");
+                    client.Execute<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>(new RequestGetBulletinWorkModel());
+                }
             });
 
         }

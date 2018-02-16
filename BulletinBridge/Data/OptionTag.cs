@@ -1,16 +1,10 @@
-﻿using BulletinBridge.Data.Base;
-using FessooFramework.Objects.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FessooFramework.Objects.Data;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Data
 {
     [DataContract]
-    public class OptionTag : DataObjectBase
+    public class OptionTag : CacheObject
     {
         [DataMember]
         public string Value { get; set; }
@@ -19,6 +13,7 @@ namespace BulletinBridge.Data
         public string Text { get; set; }
 
 
+        public OptionTag() { }
         OptionTag(string value, string text)
         {
             Value = value;
@@ -29,7 +24,5 @@ namespace BulletinBridge.Data
         {
             return new OptionTag(value, text);
         }
-        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
-        public override Version SetVersion() => new Version(1, 0, 0, 0);
     }
 }

@@ -1,10 +1,7 @@
-﻿using Data.Enums;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Data
 {
@@ -51,6 +48,7 @@ namespace BulletinExample.Entity.Data
 
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, Activated),
@@ -59,33 +57,72 @@ namespace BulletinExample.Entity.Data
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
         };
-
-        private Access DemandPay(Access arg1, Access arg2)
-        {
-            return arg1;
-        }
-
-        private Access Banned(Access arg1, Access arg2)
-        {
-            return arg1;
-        }
-
-        private Access Blocked(Access arg1, Access arg2)
-        {
-            return arg1;
-        }
-
-        private Access Activated(Access arg1, Access arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error };
 
         protected override int GetStateValue(AccessState state)
         {
             return (int)state;
         }
+        #endregion
 
+        #region ALM -- Methods
+        private Access DemandPay(Access arg1, Access arg2)
+        {
+            arg1.Id = arg2.Id;
+            arg1.BoardId = arg2.BoardId;
+            arg1.UserId = arg2.UserId;
+            arg1.Login = arg2.Login;
+            arg1.Password = arg2.Password;
+
+            return arg1;
+        }
+
+        private Access Banned(Access arg1, Access arg2)
+        {
+            arg1.Id = arg2.Id;
+            arg1.BoardId = arg2.BoardId;
+            arg1.UserId = arg2.UserId;
+            arg1.Login = arg2.Login;
+            arg1.Password = arg2.Password;
+
+            return arg1;
+        }
+
+        private Access Blocked(Access arg1, Access arg2)
+        {
+            arg1.Id = arg2.Id;
+            arg1.BoardId = arg2.BoardId;
+            arg1.UserId = arg2.UserId;
+            arg1.Login = arg2.Login;
+            arg1.Password = arg2.Password;
+
+            return arg1;
+        }
+
+        private Access Activated(Access arg1, Access arg2)
+        {
+            arg1.Id = arg2.Id;
+            arg1.BoardId = arg2.BoardId;
+            arg1.UserId = arg2.UserId;
+            arg1.Login = arg2.Login;
+            arg1.Password = arg2.Password;
+
+            return arg1;
+        }
+
+        #endregion
+
+
+    }
+
+    public enum AccessState
+    {
+        Created = 0,
+        Activated = 1,
+        Blocked = 2,
+        Banned = 3,
+        DemandPay = 4,
+        Closed = 5,
+        Error = 99,
     }
 }

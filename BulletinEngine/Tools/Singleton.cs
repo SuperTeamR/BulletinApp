@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BulletinEngine.Tools
 {
-    class Singleton<T>
+    public class Singleton<T>
         where T : class, new()
     {
         public static T Instance => instance = instance ?? new T();

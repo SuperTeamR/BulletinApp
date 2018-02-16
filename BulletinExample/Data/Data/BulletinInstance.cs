@@ -1,10 +1,6 @@
-﻿using Data.Enums;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Data
 {
@@ -58,10 +54,11 @@ namespace BulletinExample.Entity.Data
         public string Url { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.PreparedPublicated, PreparePublicated),
-            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.PreparedPublicated, BulletinInstanceState.OnModeration, OnModeration),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.WaitPublication, PreparePublicated),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.WaitPublication, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Publicated, Publicated),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Rejected, Rejected),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Blocked, Blocked),
@@ -70,47 +67,106 @@ namespace BulletinExample.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Blocked, BulletinInstanceState.Removed, Removed),
         };
-
-        private BulletinInstance Removed(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Blocked(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance Publicated(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance OnModeration(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
-        private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
 
         protected override int GetStateValue(BulletinInstanceState state)
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private BulletinInstance Removed(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+        private BulletinInstance Blocked(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+
+        private BulletinInstance OnModeration(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+        private BulletinInstance Publicated(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+
+        private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+            return arg1;
+        }
+
+        private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+            return arg1;
+        }
+
+        private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+
+
+
+        #endregion
+
+
     }
+
+    public enum BulletinInstanceState
+    {
+        Created = 0,
+        WaitPublication = 1,
+        OnModeration = 2,
+        Rejected = 3,
+        Blocked = 4,
+        Publicated = 5,
+        Edited = 6,
+        Removed = 7,
+        Error = 99,
+    }
+
 }

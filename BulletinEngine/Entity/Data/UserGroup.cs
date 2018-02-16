@@ -10,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     ///
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
-    class UserGroup : EntityObjectALM<UserGroup, UserGroupState>
+    public class UserGroup : EntityObjectALM<UserGroup, UserGroupState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ namespace BulletinEngine.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<UserGroup>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<UserGroup>>();
         #endregion
     }
-    enum UserGroupState
+    public enum UserGroupState
     {
         Created = 0,
         Active = 1,

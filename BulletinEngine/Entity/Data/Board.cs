@@ -10,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class Board : EntityObjectALM<Board, BoardState>
+    public class Board : EntityObjectALM<Board, BoardState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum BoardState
+    public enum BoardState
     {
         Active = 0,
         Checked = 1,

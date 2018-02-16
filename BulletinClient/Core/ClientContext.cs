@@ -12,5 +12,12 @@ namespace BulletinClient.Core
     {
         public IOC<object> ContainerViewModel => _ContainerViewModel;
         private static IOC<object> _ContainerViewModel = new IOC<object>();
+
+        public ServiceClient ServiceClient => _Store.ServiceContext<ServiceClient>();
+
+        public ClientContext()
+        {
+            _Store.Add<ServiceClient>();
+        }
     }
 }

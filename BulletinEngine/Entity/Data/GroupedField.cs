@@ -11,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class GroupedField : EntityObjectALM<GroupedField, GroupedFieldState>
+    public class GroupedField : EntityObjectALM<GroupedField, GroupedFieldState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum GroupedFieldState
+    public enum GroupedFieldState
     {
         Created = 0,
         Handled = 1,

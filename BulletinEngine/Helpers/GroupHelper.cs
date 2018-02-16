@@ -65,7 +65,7 @@ namespace BulletinEngine.Helpers
                     {
                         for (var i = 0; i < nothandledCategories.Count; i++)
                         {
-                            if (nothandledCategories[i].Id == parentId)
+                            if (nothandledCategories[i].ParentId == parentId)
                             {
                                 parentId = nothandledCategories[i].Id;
                                 chosenCategories.Add(nothandledCategories[i].Name);

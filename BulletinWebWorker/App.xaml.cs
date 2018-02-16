@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BulletinWebWorker.Managers;
+using FessooFramework.Tools.DCT;
 using System.Windows;
 
 namespace BulletinWebWorker
@@ -13,5 +9,17 @@ namespace BulletinWebWorker
     /// </summary>
     public partial class App : Application
     {
+        MainWindow view;
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            DCT.Execute(d =>
+            {
+                Bootstrapper.Current.Run();
+                WebWorkerManager.BulletinWork.Execute();
+
+                view = new MainWindow();
+                view.Show();
+            });
+        }
     }
 }

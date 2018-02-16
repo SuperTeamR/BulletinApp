@@ -11,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class GroupedCategory : EntityObjectALM<GroupedCategory, GroupedCategoryState>
+    public class GroupedCategory : EntityObjectALM<GroupedCategory, GroupedCategoryState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -64,7 +64,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum GroupedCategoryState
+    public enum GroupedCategoryState
     {
         Created = 0,
         Handled = 1,

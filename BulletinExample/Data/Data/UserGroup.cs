@@ -1,10 +1,7 @@
-﻿using BulletinExample.Entity.Data.Enums;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Data
 {
@@ -13,7 +10,6 @@ namespace BulletinExample.Entity.Data
     ///
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
-
     public class UserGroup : EntityObjectALM<UserGroup, UserGroupState>
     {
         #region Entity properties
@@ -34,31 +30,46 @@ namespace BulletinExample.Entity.Data
         public Guid UserId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<UserGroup, UserGroupState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Created, UserGroupState.Active, Active),
             new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Active, UserGroupState.Limited, Limited),
             new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Limited, UserGroupState.Active, Active),
         };
+        protected override IEnumerable<UserGroupState> DefaultState => new[]
+        {
+            UserGroupState.Error,
+        };
+        protected override int GetStateValue(UserGroupState state)
+        {
+            return (int)state;
+        }
+        #endregion
 
+        #region ALM -- Methods
         private UserGroup Limited(UserGroup arg1, UserGroup arg2)
         {
+            arg1.GroupId = arg2.GroupId;
+            arg1.UserId = arg2.UserId;
+
             return arg1;
         }
 
         private UserGroup Active(UserGroup arg1, UserGroup arg2)
         {
+            arg1.GroupId = arg2.GroupId;
+            arg1.UserId = arg2.UserId;
+
             return arg1;
         }
-
-        protected override IEnumerable<UserGroupState> DefaultState => new[]
-        {
-            UserGroupState.Error,
-        };
-
-        protected override int GetStateValue(UserGroupState state)
-        {
-            return (int)state;
-        }
+        #endregion
+    }
+    public enum UserGroupState
+    {
+        Created = 0,
+        Active = 1,
+        Limited = 2,
+        Error = 3,
     }
 }

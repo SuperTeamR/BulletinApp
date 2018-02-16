@@ -1,10 +1,7 @@
-﻿using BulletinExample.Entity.Data.Enums;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinExample.Entity.Data
 {
@@ -26,15 +23,12 @@ namespace BulletinExample.Entity.Data
         public Guid UserId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Bulletin, BulletinState>> Configurations => new[]
         {
+            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.WaitPublication, WaitPublication),
             new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Closed, Closed)
         };
-
-        private Bulletin Closed(Bulletin arg1, Bulletin arg2)
-        {
-            return arg1;
-        }
 
         protected override IEnumerable<BulletinState> DefaultState => new[]
         {
@@ -45,5 +39,33 @@ namespace BulletinExample.Entity.Data
         {
             return (int)state;
         }
+        #endregion
+
+        #region ALM -- Methods
+        private Bulletin WaitPublication(Bulletin arg1, Bulletin arg2)
+        {
+            arg1.UserId = arg2.UserId;
+
+            return arg1;
+        }
+        private Bulletin Closed(Bulletin arg1, Bulletin arg2)
+        {
+            arg1.UserId = arg2.UserId;
+
+            return arg1;
+        }
+        #endregion
+
+    }
+
+    public enum BulletinState
+    {
+        Created = 0,
+        WaitPublication = 1,
+        OnModeration = 2,
+        Publication = 3,
+        Edited = 4,
+        Closed = 5,
+        Error = 99,
     }
 }

@@ -11,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class CategoryTemplate : EntityObjectALM<CategoryTemplate, CategoryTemplateState>
+    public class CategoryTemplate : EntityObjectALM<CategoryTemplate, CategoryTemplateState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum CategoryTemplateState
+    public enum CategoryTemplateState
     {
         Created = 0,
         Handled = 1,

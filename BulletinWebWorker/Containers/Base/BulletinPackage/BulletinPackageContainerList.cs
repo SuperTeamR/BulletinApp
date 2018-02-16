@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Containers.Base.BulletinPackage
 {
-    internal static class BulletinPackageContainerList
+    static class BulletinPackageContainerList
     {
         #region Property
         private static List<BulletinPackageContainerBase> containerList = new List<BulletinPackageContainerBase>();

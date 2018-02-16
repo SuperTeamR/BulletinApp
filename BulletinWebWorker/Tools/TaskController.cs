@@ -14,7 +14,7 @@ namespace BulletinWebWorker.Tools
     /// Блокирует попытку повторного запуска и завершает попытку без запуска потока 
     /// Позволяет подписаться на ряд событий - заверешние, запуск и тд
     /// </summary>
-    public class TaskController
+    class TaskController
     {
         #region Property
         ObjectController<System.Threading.Tasks.Task> task = new ObjectController<System.Threading.Tasks.Task>(null, isAsync: false);

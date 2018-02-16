@@ -1,4 +1,6 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinBridge.Data;
+using BulletinHub.Entity.Converters;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class Access : EntityObjectALM<Access, AccessState>
+    public class Access : EntityObjectALM<Access, AccessState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -113,12 +115,15 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Creators
-        protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<Access>>();
+        protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => new[]
+        {
+            EntityObjectALMCreator<Access>.New(AccessConverter.Convert, new Version(1,0,0,0))
+        };
         #endregion
 
     }
 
-    enum AccessState
+    public enum AccessState
     {
         Created = 0,
         Activated = 1,

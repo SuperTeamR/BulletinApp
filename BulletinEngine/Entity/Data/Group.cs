@@ -11,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class Group : EntityObjectALM<Group, GroupState>
+    public class Group : EntityObjectALM<Group, GroupState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum GroupState
+    public enum GroupState
     {
         Created = 0,
         Changed = 1,

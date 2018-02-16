@@ -1,17 +1,11 @@
-﻿using BulletinBridge.Data.Base;
-using BulletinTools;
+﻿using BulletinTools;
 using FessooFramework.Objects.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Data
 {
     [DataContract]
-    public class GroupSignature : DataObjectBase
+    public class GroupSignature : CacheObject
     {
         public string Category1 => categories[0];
         public string Category2 => categories[1];
@@ -46,7 +40,5 @@ namespace BulletinBridge.Data
         {
             return categories;
         }
-        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
-        public override Version SetVersion() => new Version(1, 0, 0, 0);
     }
 }

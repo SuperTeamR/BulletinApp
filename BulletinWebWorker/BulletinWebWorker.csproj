@@ -42,8 +42,11 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.13\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.19\lib\net461\FessooFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -81,19 +84,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BoardIds.cs" />
+    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Containers\Avito\AvitoAccessContainer.cs" />
     <Compile Include="Containers\Avito\AvitoFieldValueContainer.cs" />
     <Compile Include="Containers\Base\Access\AccessContainerBase.cs" />
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
-    <Compile Include="Containers\WorkContainer.cs" />
-    <Compile Include="Service\HubService.cs" />
+    <Compile Include="Service\WorkRouter.cs" />
+    <Compile Include="Data\TabState.cs" />
+    <Compile Include="Service\EngineService.cs" />
     <Compile Include="Managers\WebWorkerManager.cs" />
-    <Compile Include="Service\ResponseRouter.cs" />
-    <Compile Include="Service\SelfHost.cs" />
-    <Compile Include="Tests\ClientCases.cs" />
-    <Compile Include="Tests\ClientService.cs" />
     <Compile Include="Tools\TaskController.cs" />
     <Compile Include="Tools\WebWorker.cs" />
     <Page Include="MainWindow.xaml">
@@ -107,7 +108,6 @@
     <Compile Include="Containers\Avito\AvitoBulletinPackageContainer.cs" />
     <Compile Include="Containers\Base\BulletinPackage\BulletinPackageContainerBase.cs" />
     <Compile Include="Containers\Base\BulletinPackage\BulletinPackageContainerList.cs" />
-    <Compile Include="Logic\LogicRouter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -140,10 +140,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logic\Containers\Avito\" />
-    <Folder Include="Logic\Containers\Base\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\BulletinBridge\BulletinBridge.csproj">
       <Project>{e797ca88-a5df-4ec7-9a22-6abe3e393f9a}</Project>

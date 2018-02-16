@@ -31,13 +31,13 @@ namespace BulletinExample
 
             InitializeComponent();
 
-            var bootstrapper = new BootstrapperExample();
-            bootstrapper.Run();
+            //var bootstrapper = Bootstrapper.Current;
+            //bootstrapper.Run();
 
             DispatcherHelper.SetDispatherAsDefault();
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
-            ApplicationApi.Auth("penzin", "super");
+            //ApplicationApi.Auth("penzin", "super");
 
             BoardApi.CheckIntegrity("Avito");
             //BoardApi.GetBulletins("Avito");

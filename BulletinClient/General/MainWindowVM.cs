@@ -1,14 +1,9 @@
 ﻿using BulletinClient.Core;
-using BulletinClient.MVVM;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FessooFramework.Objects.ViewModel;
 
 namespace BulletinClient.General
 {
-    class MainWindowVM : ViewModelBase
+    class MainWindowVM : VM
     {
         public Forms.MainView.ViewModel CurrentView => DCT.Execute(d => d.ContainerViewModel.GetInstance<Forms.MainView.ViewModel>());
     }

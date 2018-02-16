@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BulletinWebWorker.Containers.Avito
 {
-    internal class AvitoFieldValueContainer : FieldValueContainerBase
+    class AvitoFieldValueContainer : FieldValueContainerBase
     {
         public override Guid Uid => BoardIds.Avito;
 
@@ -19,13 +20,13 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(d =>
             {
-                var fieldPackage = fields.FirstOrDefault(q => q.Value.Id == name).Value;
+                var fieldPackage = fields.FirstOrDefault(q => q.Key == name).Value;
 
                 if (fieldPackage == null) return;
 
                 var attribute = fieldPackage.HasId ? "id" : "name";
                 var form = WebWorker.WebDocument.GetElementsByTagName(fieldPackage.Tag).Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.Id);
+                                .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
                 if (form == null) return;
 
                 switch (fieldPackage.Tag)
@@ -38,6 +39,8 @@ namespace BulletinWebWorker.Containers.Avito
                         SetSelect(form, value, fieldPackage);
                         break;
                 }
+
+                Thread.Sleep(500);
             });
         }
 
@@ -59,7 +62,6 @@ namespace BulletinWebWorker.Containers.Avito
                     var code = option.Value;
                     form.SetAttribute("value", code);
                 }
-
             });
         }
     }

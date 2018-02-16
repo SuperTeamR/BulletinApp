@@ -11,7 +11,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class SelectOption : EntityObjectALM<SelectOption, SelectOptionState>
+    public class SelectOption : EntityObjectALM<SelectOption, SelectOptionState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -70,7 +70,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum SelectOptionState
+    public enum SelectOptionState
     {
         Created = 0,
         Handled = 1,

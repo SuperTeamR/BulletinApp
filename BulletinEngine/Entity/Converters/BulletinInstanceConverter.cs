@@ -28,13 +28,16 @@ namespace BulletinEngine.Entity.Converters
                 var valueFields = ValueFieldHelper.GetValueFields(obj.Id);
                 var accessFields = AccessFieldHelper.GetAccessFields(obj.Id);
 
+                var state = obj.State;
+
                 result = new BulletinPackage
                 {
                     Url = obj.Url,
                     Signature = groupSignature,
                     Access = access,
                     ValueFields = valueFields,
-                    AccessFields = accessFields
+                    AccessFields = accessFields,
+                    State = state,
                 };
             });
             return result;

@@ -71,7 +71,7 @@ namespace BulletinExample.Logic.API
             {
                 var board = data.Db1.Boards.FirstOrDefault(q => q.Name == boardName);
                 var boardContainer = BoardContainerList.Get(board.Id);
-                boardContainer.GetXlsBulletins();
+                //boardContainer.GetXlsBulletins();
             });
         }
 
@@ -90,7 +90,7 @@ namespace BulletinExample.Logic.API
                 var board = data.Db1.Boards.FirstOrDefault(q => q.Name == boardName);
                 var boardContainer = BoardContainerList.Get(board.Id);
                 var signature = new GroupSignature("Хобби и отдых", "Спорт и отдых", "Другое");
-                boardContainer.GetXlsGroup(signature);
+               // boardContainer.GetXlsGroup(signature);
             });
         }
 
@@ -108,7 +108,7 @@ namespace BulletinExample.Logic.API
             {
                 var board = data.Db1.Boards.FirstOrDefault(q => q.Name == boardName);
                 var boardContainer = BoardContainerList.Get(board.Id);
-                boardContainer.EditBulletinsFromXls();
+                //boardContainer.EditBulletinsFromXls();
             });
         }
         ///-------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ namespace BulletinExample.Logic.API
             {
                 var board = data.Db1.Boards.FirstOrDefault(q => q.Name == boardName);
                 var boardContainer = BoardContainerList.Get(board.Id);
-                boardContainer.AddBulletinsFromXls();
+                //boardContainer.AddBulletinsFromXls();
             });
         }
     }

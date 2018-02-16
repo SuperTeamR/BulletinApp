@@ -1,25 +1,9 @@
-﻿using BulletinBridge;
-using BulletinBridge.Messages.Base;
-using BulletinWebWorker.Managers;
-using BulletinWebWorker.Service;
+﻿using BulletinWebWorker.Managers;
 using BulletinWebWorker.Tools;
-using FessooFramework.Core;
 using FessooFramework.Tools.DCT;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace BulletinWebWorker
 {
@@ -32,19 +16,7 @@ namespace BulletinWebWorker
         {
             InitializeComponent();
 
-            DCT.Execute(d =>
-            {
-                WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
-
-                UdpManager.Set("127.0.0.1", 5051, 5052);
-                DCT.ExecuteAsync(d2 =>
-                {
-                    UdpManager.Receive(ResponseRouter.ExecuteRouting);
-                });
-                Tests.ClientCases.AddBulletins();
-                WebWorkerManager.BulletinWork.Execute();
-            });
-           
+            WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
         }
 
         //https://stackoverflow.com/questions/40922370/allow-system-windows-forms-webbrowser-to-run-javascript

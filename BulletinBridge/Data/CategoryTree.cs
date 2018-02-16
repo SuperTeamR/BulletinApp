@@ -1,16 +1,11 @@
-﻿using BulletinBridge.Data.Base;
-using FessooFramework.Objects.Data;
-using System;
+﻿using FessooFramework.Objects.Data;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Data
 {
     [DataContract]
-    public class CategoryTree : DataObjectBase
+    public class CategoryTree : CacheObject
     {
         [DataMember]
         public string Name { get; set; }
@@ -27,7 +22,5 @@ namespace BulletinBridge.Data
             Children.Add(category);
             return this;
         }
-        public override TimeSpan SetTTL() => TimeSpan.MaxValue;
-        public override Version SetVersion() => new Version(1, 0, 0, 0);
     }
 }

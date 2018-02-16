@@ -38,8 +38,11 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.13\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.19\lib\net461\FessooFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -64,7 +67,6 @@
   <ItemGroup>
     <Compile Include="Commands\CommandApi.cs" />
     <Compile Include="Data\AccessPackage.cs" />
-    <Compile Include="Data\Base\DataObjectBase.cs" />
     <Compile Include="Data\BulletinPackage.cs" />
     <Compile Include="Data\CategoryTree.cs" />
     <Compile Include="Data\FieldPackage.cs" />
@@ -73,14 +75,13 @@
     <Compile Include="Data\OptionTag.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Data\XlsPackage.cs" />
-    <Compile Include="Messages\Base\MessageBase.cs" />
-    <Compile Include="Messages\Base\SerializationData.cs" />
-    <Compile Include="Messages\BoardApi\BoardApi_AddBulletins.cs" />
-    <Compile Include="Messages\BoardApi\BoardAPI_EditBulletins.cs" />
-    <Compile Include="Messages\BoardApi\BoardAPI_GetXlsForGroup.cs" />
-    <Compile Include="Messages\InternalApi\InternalApi_GetWork.cs" />
+    <Compile Include="Messages\BoardApi\AddAccessModel.cs" />
+    <Compile Include="Messages\BoardApi\Obsolete\BoardApi_AddBulletins.cs" />
+    <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_EditBulletins.cs" />
+    <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_GetXlsForGroup.cs" />
+    <Compile Include="Messages\BoardApi\AddBulletinsModel.cs" />
+    <Compile Include="Messages\InternalApi\GetBulletinWorkModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UdpManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BulletinTools\BulletinTools.csproj">

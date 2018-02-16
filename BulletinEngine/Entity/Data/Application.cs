@@ -14,7 +14,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class Application : EntityObjectALM<Application, ApplicationState>
+    public class Application : EntityObjectALM<Application, ApplicationState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ namespace BulletinEngine.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<Application>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<Application>>();
         #endregion
     }
-    enum ApplicationState
+    public enum ApplicationState
     {
         Created = 0,
         Closed = 1,

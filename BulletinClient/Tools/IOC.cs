@@ -1,4 +1,4 @@
-﻿using BulletinClient.MVVM;
+﻿using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.DCT;
 using FessooFramework.Tools.Helpers;
 using System;
@@ -21,7 +21,7 @@ namespace BulletinClient.Tools
     /// Сделать базовый контейнер
     /// Сделать базовый объект или интерфейс
     /// </summary>
-    public class IOC<TBase>
+    class IOC<TBase>
     {
         #region Property
         public IEnumerable<TBase> Value { get { return instances.ToArray(); } }

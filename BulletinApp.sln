@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{6F1D88
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinClient", "BulletinClient\BulletinClient.csproj", "{375F6916-0078-461D-831C-CE8DC7197A28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HubService", "HubService\HubService.csproj", "{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{375F6916-0078-461D-831C-CE8DC7197A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{375F6916-0078-461D-831C-CE8DC7197A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{375F6916-0078-461D-831C-CE8DC7197A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -99,6 +105,7 @@ Global
 		{1961A9FF-CB4F-4F27-A285-FD5181B5A8F4} = {93946D77-BFCE-4375-B543-D5320ED986BA}
 		{6F1D883A-3814-4561-A1DA-4A0127891CD9} = {93946D77-BFCE-4375-B543-D5320ED986BA}
 		{375F6916-0078-461D-831C-CE8DC7197A28} = {6F1D883A-3814-4561-A1DA-4A0127891CD9}
+		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1} = {E7EB5EC2-8C9F-4C53-82BE-455EB9AB355E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A69438C-04C5-46BA-AD05-8B572AA8DF24}

@@ -1,7 +1,7 @@
-﻿using BulletinExample.Entity.Data.Enums;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinExample.Entity.Data
 {
@@ -31,24 +31,39 @@ namespace BulletinExample.Entity.Data
         public Guid GroupId { get; set; }
         #endregion
 
+        #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>(GroupedCategoryState.Created, GroupedCategoryState.Handled, Handled)
         };
-
-        private GroupedCategory Handled(GroupedCategory arg1, GroupedCategory arg2)
-        {
-            return arg1;
-        }
-
         protected override IEnumerable<GroupedCategoryState> DefaultState => new[]
         {
             GroupedCategoryState.Error,
         };
+
+
+
         protected override int GetStateValue(GroupedCategoryState state)
         {
             return (int)state;
         }
+        #endregion
 
+        #region ALM -- Methods
+        private GroupedCategory Handled(GroupedCategory arg1, GroupedCategory arg2)
+        {
+            arg1.CategoryId = arg2.CategoryId;
+            arg1.GroupId = arg2.GroupId;
+
+            return arg1;
+        }
+        #endregion
+    }
+
+    public enum GroupedCategoryState
+    {
+        Created = 0,
+        Handled = 1,
+        Error = 99
     }
 }

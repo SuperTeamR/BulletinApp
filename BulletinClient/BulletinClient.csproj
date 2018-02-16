@@ -42,8 +42,11 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.13, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.13\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.19, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.19\lib\net461\FessooFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -76,10 +79,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Bootstrapper.cs" />
     <Compile Include="Core\ClientContext.cs" />
     <Compile Include="Core\DCT.cs" />
     <Compile Include="General\MainWindowVM.cs" />
+    <Compile Include="MainService.cs" />
     <Compile Include="Tools\IOC.cs" />
     <Page Include="Forms\DataTemplate.xaml">
       <SubType>Designer</SubType>
@@ -109,9 +112,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MVVM\DelegateCommand.cs" />
-    <Compile Include="MVVM\NotifyObject.cs" />
-    <Compile Include="MVVM\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -7,12 +7,44 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Containers.Base.Access
 {
-    internal abstract class AccessContainerBase
+    ///-------------------------------------------------------------------------------------------------
+    /// <summary>   Управляет учетной записью на борде </summary>
+    ///
+    /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
+    ///-------------------------------------------------------------------------------------------------
+
+    abstract class AccessContainerBase
     {
         public abstract Guid Uid { get; }
 
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Пытается авторизоваться </summary>
+        ///
+        /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
+        ///
+        /// <param name="access">   Пакет авторизации </param>
+        ///
+        /// <returns>   True if it succeeds, false if it fails. </returns>
+        ///-------------------------------------------------------------------------------------------------
+
         public abstract bool TryAuth(AccessPackage access);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Авторизация на борде </summary>
+        ///
+        /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
+        ///
+        /// <returns>   True if it succeeds, false if it fails. </returns>
+        ///-------------------------------------------------------------------------------------------------
+
         protected abstract bool Auth();
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Выход из профиля на борде </summary>
+        ///
+        /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
         protected abstract void Exit();
     }
 }

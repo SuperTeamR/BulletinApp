@@ -13,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 05.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class BulletinField : EntityObjectALM<BulletinField, BulletinFieldState>
+    public class BulletinField : EntityObjectALM<BulletinField, BulletinFieldState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -93,7 +93,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum BulletinFieldState
+    public enum BulletinFieldState
     {
         Created = 0,
         Filled = 1,

@@ -13,7 +13,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class BulletinInstance : EntityObjectALM<BulletinInstance, BulletinInstanceState>
+    public class BulletinInstance : EntityObjectALM<BulletinInstance, BulletinInstanceState>
     {
         #region Entity properties
         ///-------------------------------------------------------------------------------------------------
@@ -175,12 +175,21 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
 {
-             EntityObjectALMCreator<BulletinInstance>.New(typeof(BulletinPackage), BulletinInstanceConverter.Convert, new Version(1,0,0,0))
+             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, new Version(1,0,0,0))
         };
         #endregion
+
+        public override IEnumerable<EntityObject> _CollectionObjectLoad()
+        {
+            return base._CollectionObjectLoad();
+        }
+        public override EntityObject _ObjectLoadById(Guid id)
+        {
+            return base._ObjectLoadById(id);
+        }
     }
 
-    enum BulletinInstanceState
+    public enum BulletinInstanceState
     {
         Created = 0,
         WaitPublication = 1,

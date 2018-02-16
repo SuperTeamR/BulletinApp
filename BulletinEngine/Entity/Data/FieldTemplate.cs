@@ -10,7 +10,7 @@ namespace BulletinEngine.Entity.Data
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    class FieldTemplate : EntityObjectALM<FieldTemplate, FieldTemplateState>
+    public class FieldTemplate : EntityObjectALM<FieldTemplate, FieldTemplateState>
     {
         #region Entity properties
 		//-------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
     }
 
-    enum FieldTemplateState
+    public enum FieldTemplateState
     {
         Created = 0,
         Handled = 1,

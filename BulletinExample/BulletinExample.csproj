@@ -99,12 +99,10 @@
     <Compile Include="Data\Data\Application.cs" />
     <Compile Include="Data\Data\Board.cs" />
     <Compile Include="Data\Data\Bulletin.cs" />
+    <Compile Include="Data\Data\BulletinField.cs" />
     <Compile Include="Data\Data\BulletinInstance.cs" />
     <Compile Include="Data\Data\CategoryTemplate.cs" />
-    <Compile Include="Data\Data\Enums\AccessState.cs" />
-    <Compile Include="Data\Data\Enums\BulletinState.cs" />
-    <Compile Include="Data\Data\Enums\UserState.cs" />
-    <Compile Include="Data\Data\FieldTemplae.cs" />
+    <Compile Include="Data\Data\FieldTemplate.cs" />
     <Compile Include="Data\Data\Group.cs" />
     <Compile Include="Data\Data\GroupedCategory.cs" />
     <Compile Include="Data\Data\GroupedField.cs" />

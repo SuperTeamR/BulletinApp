@@ -44,15 +44,14 @@ namespace BulletinEngine.Helpers
                     var optionTags = new List<OptionTag>();
                     foreach (var o in options)
                     {
-                        var optionTag = OptionTag.Create(o.Name, o.Code);
+                        var optionTag = OptionTag.Create(o.Code, o.Name);
                         optionTags.Add(optionTag);
                     }
-                    result.Add(name, FieldPackage.Create(accessId, tag, hasId, optionTags.ToArray()));
+                    if(!result.ContainsKey(name))
+                        result.Add(name, FieldPackage.Create(accessId, tag, hasId, optionTags.ToArray()));
                 }
-
             });
             return result;
         }
-
     }
 }
