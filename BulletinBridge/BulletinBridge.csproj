@@ -80,7 +80,9 @@
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_EditBulletins.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_GetXlsForGroup.cs" />
     <Compile Include="Messages\BoardApi\AddBulletinsModel.cs" />
+    <Compile Include="Messages\InternalApi\AddBulletinsWorkModel.cs" />
     <Compile Include="Messages\InternalApi\GetBulletinWorkModel.cs" />
+    <Compile Include="Messages\InternalApi\GetProfileWorkModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

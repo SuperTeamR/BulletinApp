@@ -25,5 +25,16 @@ namespace BulletinWebWorker.Containers.Base.FieldValue
         ///-------------------------------------------------------------------------------------------------
 
         public abstract void SetFieldValue(Dictionary<string, FieldPackage> fields, string name, string value);
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Получить значение для поля </summary>
+        ///
+        /// <remarks>   SV Milovanov, 19.02.2018. </remarks>
+        ///
+        /// <param name="fields">   The fields. </param>
+        /// <param name="name">     The name. </param>
+        ///-------------------------------------------------------------------------------------------------
+
+        public abstract string GetFieldValue(Dictionary<string, FieldPackage> fields, string name);
     }
 }

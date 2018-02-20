@@ -1,7 +1,9 @@
 ﻿using BulletinBridge.Data;
+using BulletinBridge.Messages.InternalApi;
 using BulletinWebWorker.Containers.Base;
 using BulletinWebWorker.Containers.Base.Access;
 using BulletinWebWorker.Containers.Base.FieldValue;
+using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using System;
@@ -16,11 +18,14 @@ using System.Windows.Forms;
 
 namespace BulletinWebWorker.Containers.Avito
 {
+
     class AvitoBulletinPackageContainer : BulletinPackageContainerBase
     {
         public override Guid Uid => BoardIds.Avito;
 
         public string ProfileUrl => @"https://www.avito.ru/profile";
+
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Добавить буллетины </summary>
         ///
@@ -198,13 +203,14 @@ namespace BulletinWebWorker.Containers.Avito
         /// An enumerator that allows foreach to be used to process the bulletins in this collection.
         /// </returns>
         ///-------------------------------------------------------------------------------------------------
-        public override IEnumerable<BulletinPackage> GetBulletins(AccessPackage access)
+        public override void GetBulletinList(AccessPackage access)
         {
             var result = Enumerable.Empty<BulletinPackage>();
             DCT.Execute(d =>
             {
                 var tabStates = new List<TabState>();
                 var bulletins = new List<BulletinPackage>();
+
                 WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
@@ -212,8 +218,11 @@ namespace BulletinWebWorker.Containers.Avito
 
                     if (accessContainer.TryAuth(access))
                     {
+                        Thread.Sleep(2000);
+
                         WebWorker.NavigatePage(ProfileUrl);
 
+                        var doc = WebWorker.WebDocument.Body.InnerHtml;
                         var tabs = WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
                             .Where(q => q.GetAttribute("className").Contains("tabs-item")).ToArray();
 
@@ -233,6 +242,8 @@ namespace BulletinWebWorker.Containers.Avito
                                 {
                                     var tabUrl = ch.GetAttribute("href");
                                     var tabState = ch.InnerText;
+
+                                    if (tabState == "Удаленные") continue;
 
                                     tabStates.Add(new TabState
                                     {
@@ -283,7 +294,7 @@ namespace BulletinWebWorker.Containers.Avito
                         Thread.Sleep(1500);
 
                         var groupElement = WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("className").Contains("form-category-path"));
+                            .FirstOrDefault(q => q.GetAttribute("className") != null && q.GetAttribute("className").Contains("form-category-path"));
 
                         if (groupElement == null) continue;
 
@@ -292,10 +303,66 @@ namespace BulletinWebWorker.Containers.Avito
                     }
                     result = bulletins;
                 });
+                WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        using (var client = new EngineService())
+                        {
+                            var r = client.Ping();
+                            Console.WriteLine($"Ping = {r}");
+                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
+                            {
+                                Objects = bulletins
+                            });
+                        }
+                    });
+                });
+
             });
-            return result;
         }
 
+        public override void GetBulletinDetails(IEnumerable<BulletinPackage> packages)
+        {
+            DCT.Execute(d =>
+            {
+                WebWorker.Execute(() =>
+                {
+                    var fieldValueContainer = FieldValueContainerList.Get(Uid);
+
+                    foreach (var bulletin in packages)
+                    {
+                        var url = Path.Combine(bulletin.Url, "edit");
+                        WebWorker.NavigatePage(url);
+                        Thread.Sleep(1500);
+                        var values = new Dictionary<string, string>();
+                        foreach (var pair in bulletin.AccessFields)
+                        {
+                            var v = fieldValueContainer.GetFieldValue(bulletin.AccessFields, pair.Key);
+                            values.Add(pair.Key, v);
+                        }
+                        bulletin.ValueFields = values;
+                    }
+                });
+                WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        using (var client = new EngineService())
+                        {
+                            //var r = client.Ping();
+                            //Console.WriteLine($"Ping = {r}");
+                            //client.Execute<RequestAddBulletinDetailsWorkModel, ResponseAddBulletinDetailsWorkModel>(new RequestAddBulletinDetailsWorkModel
+                            //{
+                            //    Objects = packages
+                            //});
+                        }
+                    });
+
+                });
+
+            });
+        }
         List<BulletinPackage> GetBulletinPages(string state)
         {
             var result = new List<BulletinPackage>();
@@ -373,5 +440,7 @@ namespace BulletinWebWorker.Containers.Avito
                 }
             });
         }
+
+
     }
 }

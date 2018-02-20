@@ -54,8 +54,6 @@ namespace BusinessLogic.BoardLogic.Boards
 
         public string Password => "OnlineHelp59";
 
-
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Редактирует буллетин. </summary>
         ///

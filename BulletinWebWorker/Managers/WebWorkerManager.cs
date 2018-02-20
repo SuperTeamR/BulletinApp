@@ -15,18 +15,23 @@ namespace BulletinWebWorker.Managers
     static class WebWorkerManager
     {
         internal static TaskController BulletinWork = new TaskController(
-            execute: () => AskForWork(),
+            execute: () => AskForBulletinWork(),
             check: () => true,
             checkTimeout: () => 60000);
+
+        internal static TaskController ProfileWork = new TaskController(
+           execute: () => AskForProfileWork(),
+           check: () => true,
+           checkTimeout: () => 60000);
         ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Запрашивает работу с Engine </summary>
+        /// <summary>   Запрашивает работу с Hub по буллетинам </summary>
         ///
         /// <remarks>   SV Milovanov, 09.02.2018. </remarks>
         ///
         /// <param name="api">  The API. </param>
         ///-------------------------------------------------------------------------------------------------
 
-        static void AskForWork()
+        static void AskForBulletinWork()
         {
             DCT.ExecuteAsync(d =>
             {
@@ -38,6 +43,25 @@ namespace BulletinWebWorker.Managers
                 }
             });
 
+        }
+
+        ///-------------------------------------------------------------------------------------------------
+        /// <summary>   Запрашивает работу с Hub по профилю </summary>
+        ///
+        /// <remarks>   SV Milovanov, 19.02.2018. </remarks>
+        ///-------------------------------------------------------------------------------------------------
+
+        static void AskForProfileWork()
+        {
+            DCT.ExecuteAsync(d =>
+            {
+                using (var client = new EngineService())
+                {
+                    var result = client.Ping();
+                    Console.WriteLine($"Ping = {result}");
+                    client.Execute<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>(new RequestGetProfileWorkModel());
+                }
+            });
         }
     }
 }

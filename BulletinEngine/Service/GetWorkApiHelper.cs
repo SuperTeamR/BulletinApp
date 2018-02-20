@@ -15,7 +15,7 @@ namespace BulletinEngine.Service
     /// <remarks>   SV Milovanov, 09.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
 
-    public static class InternalApiHelper
+    public static class GetWorkApiHelper
     {
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получение буллетинов, ожидающих обработки </summary>
@@ -43,19 +43,32 @@ namespace BulletinEngine.Service
                         collection.Add(package);
                     }
                 }
-                //while(d.Queue.Profiles.Count > 0)
-                //{
-                //    var guid = Guid.Empty;
-                //    if(d.Queue.Profiles.TryDequeue(out guid))
-                //    {
-                //        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == guid);
-                //        var package = dbAccess._ConvertToServiceModel<AccessPackage>();
-                //        collection.Add(package);
-                //    }
-                //}
                 result = new ResponseGetBulletinWorkModel { Objects = collection };
             });
             return result;
         }
+
+        public static ResponseGetProfileWorkModel GetWork(RequestGetProfileWorkModel request)
+        {
+            ResponseGetProfileWorkModel result = null;
+            BCT.Execute((d) =>
+            {
+                var collection = new List<AccessPackage>();
+                while (d.Queue.Profiles.Count > 0)
+                {
+                    var guid = Guid.Empty;
+                    if (d.Queue.Profiles.TryDequeue(out guid))
+                    {
+                        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == guid);
+                        var package = dbAccess._ConvertToServiceModel<AccessPackage>();
+                        collection.Add(package);
+                    }
+                }
+                result = new ResponseGetProfileWorkModel { Objects = collection };
+            });
+            return result;
+        }
+
+
     }
 }

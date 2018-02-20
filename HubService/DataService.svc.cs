@@ -5,6 +5,7 @@ using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using BulletinEngine.Service;
 using BulletinEngine.Service.BoardApi;
+using BulletinHub.Service;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Message;
 using FessooFramework.Tools.DCT;
@@ -71,7 +72,9 @@ namespace HubService
 
         protected override IEnumerable<ServiceRequestConfigBase> Configurations => new ServiceRequestConfigBase[]
         {
-            ServiceRequestConfig<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>.New((a) => InternalApiHelper.GetWork(a)),
+            ServiceRequestConfig<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
+            ServiceRequestConfig<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
+            ServiceRequestConfig<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>.New(a => AddWorkResultApiHelper.AddWorkResult(a)),
             ServiceRequestConfig<RequestAddBulletinsModel, ResponseAddBulletinsModel>.New((a) => ClientApiHelper.AddBulletins(a)),
             ServiceRequestConfig<RequestAddAccessModel, ResponseAddAccessModel>.New((a) => ClientApiHelper.AddAccess(a)),
         };

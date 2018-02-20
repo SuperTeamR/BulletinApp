@@ -73,7 +73,7 @@ namespace BulletinClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:53681/MainService.svc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://176.111.73.51/MainService.svc")]
         public string MainServiceAddress {
             get {
                 return ((string)(this["MainServiceAddress"]));

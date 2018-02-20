@@ -20,10 +20,18 @@ namespace BulletinEngine.Core
         public BulletinContext()
         {
             var settings = ConfigurationManager.AppSettings;
-            _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"], 
-                ConfigurationManager.AppSettings["BulletinDbIp"], 
-                ConfigurationManager.AppSettings["BulletinDbLogin"], 
-                ConfigurationManager.AppSettings["BulletinDbPassword"]);
+            if(ConfigurationManager.AppSettings["IsIntegrated"] == "True")
+            {
+                _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"]);
+            }
+            else
+            {
+                _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"],
+               ConfigurationManager.AppSettings["BulletinDbIp"],
+               ConfigurationManager.AppSettings["BulletinDbLogin"],
+               ConfigurationManager.AppSettings["BulletinDbPassword"]);
+            }
+           
         }
     }
 }

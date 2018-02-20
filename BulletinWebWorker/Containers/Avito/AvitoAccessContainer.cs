@@ -86,14 +86,10 @@ namespace BulletinWebWorker.Containers.Avito
 
         protected override void Exit()
         {
-
             DCT.Execute(data =>
             {
                 WebWorker.NavigatePage("https://www.avito.ru/profile/exit");
-                //WebWorker.DownloadPage("https://www.avito.ru/profile/exit", null);
             });
         }
-
-
     }
 }

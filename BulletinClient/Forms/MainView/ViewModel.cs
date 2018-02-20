@@ -81,24 +81,27 @@ namespace BulletinClient.Forms.MainView
             {
                 using (var main = new MainService())
                 {
-                    var email = "ttt3@ttt.ru";
-                    var phone = "799988888";
-                    var password = "ttt3";
-                    var firstname = "name";
-                    var secondname = "sec";
-                    var middlename = "sec";
-                    var registration = main.Registration(email, phone, password, firstname, secondname, middlename);
-                    if (registration)
-                        Console.WriteLine($"Registration succesfull");
-                    else
-                        Console.WriteLine($"Registration not sucessfull");
+                    var ping = main.Ping();
+                    if(ping)
+                    {
+                        var email = "ttt3@ttt.ru";
+                        var phone = "799988888";
+                        var password = "ttt3";
+                        var firstname = "name";
+                        var secondname = "sec";
+                        var middlename = "sec";
+                        var registration = main.Registration(email, phone, password, firstname, secondname, middlename);
+                        if (registration)
+                            Console.WriteLine($"Registration succesfull");
+                        else
+                            Console.WriteLine($"Registration not sucessfull");
 
-                    var signin = main.SignIn(email, password);
-                    if (signin)
-                        Console.WriteLine($"Signin succesfull");
-                    else
-                        Console.WriteLine($"Signin not sucessfull");
-
+                        var signin = main.SignIn(email, password);
+                        if (signin)
+                            Console.WriteLine($"Signin succesfull");
+                        else
+                            Console.WriteLine($"Signin not sucessfull");
+                    }
                 }
             });
         }

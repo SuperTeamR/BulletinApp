@@ -16,6 +16,7 @@ namespace BulletinWebWorker
             {
                 Bootstrapper.Current.Run();
                 WebWorkerManager.BulletinWork.Execute();
+                WebWorkerManager.ProfileWork.Execute();
 
                 view = new MainWindow();
                 view.Show();

@@ -14,6 +14,13 @@ namespace BulletinWebWorker.Service
     {
         public override string Address => Settings.Default.DataServiceAddress;
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
-        protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] { ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a => { WorkRouter.AssignBulletinWork(a.Objects); }) };
+        protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
+            ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
+                {
+                    WorkRouter.AssignBulletinWork(a.Objects);
+                }
+            ),
+            ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
+        };
     }
 }
