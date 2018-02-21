@@ -14,8 +14,8 @@ namespace BulletinEngine.Core
     public class BulletinContext : DCTContext
     {
         public BulletinDb Db1 => _Store.Context<BulletinDb>();
-        public GlobalObjects Objects => Singleton<GlobalObjects>.Instance;
-        public GlobalQueue Queue => Singleton<GlobalQueue>.Instance;
+        //public GlobalObjects Objects => Singleton<GlobalObjects>.Instance;
+        //public GlobalQueue Queue => Singleton<GlobalQueue>.Instance;
 
         public BulletinContext()
         {

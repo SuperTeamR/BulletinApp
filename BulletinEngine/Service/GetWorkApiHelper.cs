@@ -33,13 +33,22 @@ namespace BulletinEngine.Service
             BCT.Execute((d) =>
             {
                 var collection = new List<BulletinPackage>();
-                while (d.Queue.Bulletins.Count > 0)
+                //while (d.Queue.Bulletins.Count > 0)
+                //{
+                //var guid = Guid.Empty;
+                //if (d.Queue.Bulletins.TryDequeue(out guid))
+                //{
+                //var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == guid);
+                //var package = dbInstance._ConvertToServiceModel<BulletinPackage>();
+                //collection.Add(package);
+                //}
+                //}
+                var instances = d.Db1.BulletinInstances.Where(q => q.State == 1).ToArray();
+                if (instances.Any())
                 {
-                    var guid = Guid.Empty;
-                    if (d.Queue.Bulletins.TryDequeue(out guid))
+                    foreach (var instance in instances)
                     {
-                        var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == guid);
-                        var package = dbInstance._ConvertToServiceModel<BulletinPackage>();
+                        var package = instance._ConvertToServiceModel<BulletinPackage>();
                         collection.Add(package);
                     }
                 }
@@ -54,16 +63,16 @@ namespace BulletinEngine.Service
             BCT.Execute((d) =>
             {
                 var collection = new List<AccessPackage>();
-                while (d.Queue.Profiles.Count > 0)
-                {
-                    var guid = Guid.Empty;
-                    if (d.Queue.Profiles.TryDequeue(out guid))
-                    {
-                        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == guid);
-                        var package = dbAccess._ConvertToServiceModel<AccessPackage>();
-                        collection.Add(package);
-                    }
-                }
+                //while (d.Queue.Profiles.Count > 0)
+                //{
+                //    var guid = Guid.Empty;
+                //    if (d.Queue.Profiles.TryDequeue(out guid))
+                //    {
+                //        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == guid);
+                //        var package = dbAccess._ConvertToServiceModel<AccessPackage>();
+                //        collection.Add(package);
+                //    }
+                //}
                 result = new ResponseGetProfileWorkModel { Objects = collection };
             });
             return result;

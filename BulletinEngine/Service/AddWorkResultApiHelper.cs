@@ -48,7 +48,7 @@ namespace BulletinHub.Service
                         d.Db1.SaveChanges();
                         if(bulletin.ValueFields == null)
                         {
-                            d.Queue.Bulletins.Enqueue(dbInstance.Id);
+                            //d.Queue.Bulletins.Enqueue(dbInstance.Id);
                         }
                         else
                         {

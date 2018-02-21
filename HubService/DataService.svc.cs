@@ -33,16 +33,6 @@ namespace HubService
         [OperationContract]
         public override bool Ping(string p)
         {
-            //DCT.Execute(c =>
-            //{
-            //    for (int i = 0; i < 10; i++)
-            //    {
-            //        var model = new ExampleDataServiceDAL.DataModels.ExampleData();
-            //        model.D = i.ToString();
-            //        model.StateEnum = ExampleDataServiceDAL.DataModels.ExampleDataState.Edit;
-            //    }
-            //    c.SaveChanges();
-            //});
             return _Ping(p);
         }
         [WebInvoke(

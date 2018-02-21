@@ -74,7 +74,8 @@ namespace BulletinClient.Forms.MainView
                 //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
             });
         }
-
+        string AuthLogin = "";
+        string AuthPassword = "";
         void ApplicationAuth()
         {
             DCT.Execute(d =>
@@ -82,27 +83,49 @@ namespace BulletinClient.Forms.MainView
                 using (var main = new MainService())
                 {
                     var ping = main.Ping();
-                    if(ping)
-                    {
-                        var email = "ttt3@ttt.ru";
-                        var phone = "799988888";
-                        var password = "ttt3";
-                        var firstname = "name";
-                        var secondname = "sec";
-                        var middlename = "sec";
-                        var registration = main.Registration(email, phone, password, firstname, secondname, middlename);
-                        if (registration)
-                            Console.WriteLine($"Registration succesfull");
-                        else
-                            Console.WriteLine($"Registration not sucessfull");
-
-                        var signin = main.SignIn(email, password);
-                        if (signin)
-                            Console.WriteLine($"Signin succesfull");
-                        else
-                            Console.WriteLine($"Signin not sucessfull");
-                    }
+                    if (ping)
+                        Registration(RegistrationCallback);
                 }
+            });
+        }
+
+        void Registration(Action<bool> callback)
+        {
+            using (var main = new MainService())
+            {
+                AuthLogin = "ttt3@ttt.ru";
+                AuthPassword = "799988888";
+                var password = "ttt3";
+                var firstname = "name";
+                var secondname = "sec";
+                var middlename = "sec";
+                main.Registration(callback, AuthLogin, AuthPassword, password, firstname, secondname, middlename);
+            }
+        }
+        void RegistrationCallback(bool result)
+        {
+            DCT.Execute(d =>
+            {
+                if (result)
+                    Console.WriteLine($"Registration succesfull");
+                else
+                    Console.WriteLine($"Registration not sucessfull");
+                SignIn(SignInCallback, AuthLogin, AuthPassword);
+            });
+        }
+        void SignIn(Action<bool> callback, string email, string password)
+        {
+            using (var main = new MainService())
+                main.SignIn(callback, email, password);
+        }
+        void SignInCallback(bool result)
+        {
+            DCT.Execute(d =>
+            {
+                if (result)
+                    Console.WriteLine($"Signin succesfull");
+                else
+                    Console.WriteLine($"Signin not sucessfull");
             });
         }
 
@@ -124,7 +147,7 @@ namespace BulletinClient.Forms.MainView
                 {
                     var response = client.Execute<RequestAddAccessModel, ResponseAddAccessModel>(request);
 
-                    if(response.State == ResponseState.Success)
+                    if (response.State == ResponseState.Success)
                     {
                         access = response.Objects.FirstOrDefault();
                         Settings.Default.BoardLogin = access.Login;

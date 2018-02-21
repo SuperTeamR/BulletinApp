@@ -33,7 +33,7 @@ namespace BulletinEngine.Service.BoardApi
                 }
                 accessPackage.Id = dbAccess.Id;
 
-                d.Queue.Profiles.Enqueue(accessPackage.Id);
+                //d.Queue.Profiles.Enqueue(accessPackage.Id);
 
                 result = new ResponseAddAccessModel
                 {
@@ -109,7 +109,7 @@ namespace BulletinEngine.Service.BoardApi
                                     Value = field.Value,
                                 };
                                 dbBulletinField.StateEnum = BulletinFieldState.Filled;
-                                d.Db1.BulletinFields.Add(dbBulletinField);
+                                //d.Db1.BulletinFields.Add(dbBulletinField);
                                 //dbBulletinField._Save();
                                 d.Db1.SaveChanges();
                             }

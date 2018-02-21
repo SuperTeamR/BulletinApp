@@ -131,7 +131,7 @@ namespace BulletinEngine.Entity.Data
                 arg1.Url = arg2.Url;
                 arg1.GroupId = arg2.GroupId;
 
-                d.Queue.Bulletins.Enqueue(arg2.Id);
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
             });
             return arg1;
         }
@@ -146,7 +146,7 @@ namespace BulletinEngine.Entity.Data
                 arg1.Url = arg2.Url;
                 arg1.GroupId = arg2.GroupId;
 
-                d.Queue.Bulletins.Enqueue(arg2.Id);
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
             });
 
             return arg1;
@@ -162,7 +162,7 @@ namespace BulletinEngine.Entity.Data
                 arg1.Url = arg2.Url;
                 arg1.GroupId = arg2.GroupId;
 
-                d.Queue.Bulletins.Enqueue(arg2.Id);
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
             });
 
             return arg1;
