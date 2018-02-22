@@ -146,7 +146,7 @@ namespace BulletinExample.Logic.Containers.Avito
 
                     //var rawGroups = tree.ToGroupCollection().ToList();
                     //var sResult2 = DataSerializer.Serialize(rawGroups);
-                    var xml = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "groups5.xml"));
+                    var xml = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "groups4.xml"));
                 var rawGroups = DataSerializer.Deserialize<IEnumerable<GroupPackage>>(xml).ToList();
 
 
@@ -215,8 +215,11 @@ namespace BulletinExample.Logic.Containers.Avito
                     //Fill groups
                 foreach (var group in rawGroups)
                 {
+                    Console.WriteLine(group);
+
                     var hash = group.GetHash();
                     var dbGroup = data.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+                    
                     if (dbGroup == null)
                     {
                         dbGroup = new Group

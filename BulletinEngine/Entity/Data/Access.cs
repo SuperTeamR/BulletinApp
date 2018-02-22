@@ -60,7 +60,7 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
         };
-        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error };
+        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error, AccessState.Unchecked, AccessState.Checking };
 
         protected override int GetStateValue(AccessState state)
         {
@@ -152,6 +152,8 @@ namespace BulletinEngine.Entity.Data
         Banned = 3,
         DemandPay = 4,
         Closed = 5,
+        Unchecked = 6,
+        Checking = 7,
         Error = 99,
     }
 }

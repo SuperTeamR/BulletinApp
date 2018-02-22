@@ -73,7 +73,6 @@
     <Compile Include="Core\BulletinContext.cs" />
     <Compile Include="Core\BCT.cs" />
     <Compile Include="Core\GlobalObjects.cs" />
-    <Compile Include="Core\GlobalQueue.cs" />
     <Compile Include="Entity\Context\BulletinDb.cs" />
     <Compile Include="Entity\Converters\AccessConverter.cs" />
     <Compile Include="Entity\Converters\BulletinInstanceConverter.cs" />

@@ -6,6 +6,7 @@ using BulletinWebWorker.Containers.Base.FieldValue;
 using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
+using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,7 +38,7 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(d =>
             {
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
                     var accessContainer = AccessContainerList.Get(Uid);
@@ -46,98 +47,41 @@ namespace BulletinWebWorker.Containers.Avito
                         if (accessContainer.TryAuth(bulletin.Access))
                         {
                             Thread.Sleep(2000);
-                            //Стадия заполнения
-                            WebWorker.NavigatePage("https://www.avito.ru/additem");
-                            //1
-                            if (!string.IsNullOrEmpty(bulletin.Signature.Category1))
-                            {
-                                var categoryRadio = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                               .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == bulletin.Signature.Category1);
-                                if (categoryRadio == null) return;
-                                categoryRadio.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
-                            //2
-                            if (!string.IsNullOrEmpty(bulletin.Signature.Category2))
-                            {
-                                var serviceRadio = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == bulletin.Signature.Category2);
-                                if (serviceRadio == null) return;
-                                serviceRadio.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
-                            //3
-                            if (!string.IsNullOrEmpty(bulletin.Signature.Category3))
-                            {
-                                var serviceTypeRadio = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == bulletin.Signature.Category3);
-                                if (serviceTypeRadio == null) return;
-                                serviceTypeRadio.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
-                            //4
-                            if (!string.IsNullOrEmpty(bulletin.Signature.Category4))
-                            {
-                                var serviceTypeRadio2 = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == bulletin.Signature.Category4);
-                                if (serviceTypeRadio2 == null) return;
-                                serviceTypeRadio2.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
-                            //5
-                            if (!string.IsNullOrEmpty(bulletin.Signature.Category5))
-                            {
-                                var serviceTypeRadio3 = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == bulletin.Signature.Category5);
-                                if (serviceTypeRadio3 == null) return;
-                                serviceTypeRadio3.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
 
-                            foreach (var pair in bulletin.ValueFields)
-                            {
-                                var template = bulletin.AccessFields.FirstOrDefault(q => q.Key == pair.Key);
-                                fieldValueContainer.SetFieldValue(bulletin.AccessFields, template.Key, pair.Value);
-                            }
+                            Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
+ 
+                            ChooseCategories(bulletin.Signature);
 
-                            //Продолжить с пакетом «Обычная продажа»
-                            var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("id") == "pack1");
-                            if (radioButton != null) radioButton.InvokeMember("click");
+                            SetValueFields(bulletin, fieldValueContainer);
 
-
-                            var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
-                            var pack = "Продолжить с пакетом «Обычная продажа»";
-                            var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
-                            if (button != null)
-                                button.InvokeMember("click");
+                            ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
 
                             Thread.Sleep(1000);
 
+                            Publicate(bulletin);
 
-                            //Стадия публикации
-                            WebWorker.NavigatePage("https://www.avito.ru/additem/confirm");
-                            //Снимаем галочки
-                            var servicePremium = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("id") == "service-premium");
-                            if (servicePremium != null)
-                                servicePremium.InvokeMember("click");
-                            var serviceVip = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("id") == "service-vip");
-                            if (serviceVip != null)
-                                serviceVip.InvokeMember("click");
-                            var serviceHighlight = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("id") == "service-highlight");
-                            if (serviceHighlight != null)
-                                serviceHighlight.InvokeMember("click");
+                            Thread.Sleep(1000);
 
-                            //Подтверждаем
-                            var text = "Продолжить";
-                            var buttonContinue = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>().FirstOrDefault(btn => btn.InnerText == text);
-                            if (buttonContinue != null)
-                                buttonContinue.InvokeMember("click");
+                            GetUrl(bulletin);
                         }
                     }
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        foreach(var b in packages)
+                        {
+                            b.State = (int)BulletinState.OnModeration;
+                        }
+
+                        using (var client = new EngineService())
+                        {
+                            var r = client.Ping();
+                            Console.WriteLine($"Ping = {r}");
+                            client.Save(null, packages);
+                        }
+                    });
                 });
             });
         }
@@ -152,43 +96,43 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(d =>
             {
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
                     var accessContainer = AccessContainerList.Get(Uid);
 
                     foreach (var bulletin in packages)
                     {
-                        WebWorker.NavigatePage(bulletin.Url);
+                        Tools.WebWorker.NavigatePage(Path.Combine(bulletin.Url, "edit"));
 
-                        foreach (var pair in bulletin.ValueFields)
-                        {
-                            var template = bulletin.AccessFields.FirstOrDefault(q => q.Key == pair.Key);
-                            fieldValueContainer.SetFieldValue(bulletin.AccessFields, template.Key, pair.Value);
-                        }
+                        SetValueFields(bulletin, fieldValueContainer);
 
-                        if (bulletin.State == (int)BulletinState.Edited)
-                        {
-                            //Продолжить с пакетом «Обычная продажа»
-                            var radioButton = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("id") == "pack1");
-                            if (radioButton != null) radioButton.InvokeMember("click");
+                        ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
 
-                            var buttons = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
-                            var pack = "Продолжить без пакета";
-                            var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
-                            if (button != null)
-                                button.InvokeMember("click");
-                        }
-                        else
-                        {
-                            var button = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("type") == "submit" && q.InnerText == "Продолжить");
+                        Thread.Sleep(1000);
 
-                            if (button != null)
-                                button.InvokeMember("click");
-                        }
+                        Publicate(bulletin);
                     }
+                });
+
+                Tools.WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        foreach (var b in packages)
+                        {
+                            b.State = (int)BulletinState.OnModeration;
+                        }
+                        using (var client = new EngineService())
+                        {
+                            var r = client.Ping();
+                            Console.WriteLine($"Ping = {r}");
+                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
+                            {
+                                Objects = packages
+                            });
+                        }
+                    });
                 });
             });
         }
@@ -211,7 +155,7 @@ namespace BulletinWebWorker.Containers.Avito
                 var tabStates = new List<TabState>();
                 var bulletins = new List<BulletinPackage>();
 
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
                     var accessContainer = AccessContainerList.Get(Uid);
@@ -220,10 +164,10 @@ namespace BulletinWebWorker.Containers.Avito
                     {
                         Thread.Sleep(2000);
 
-                        WebWorker.NavigatePage(ProfileUrl);
+                        Tools.WebWorker.NavigatePage(ProfileUrl);
 
-                        var doc = WebWorker.WebDocument.Body.InnerHtml;
-                        var tabs = WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
+                        var doc = Tools.WebWorker.WebDocument.Body.InnerHtml;
+                        var tabs = Tools.WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
                             .Where(q => q.GetAttribute("className").Contains("tabs-item")).ToArray();
 
                         tabStates.Add(new TabState
@@ -256,11 +200,15 @@ namespace BulletinWebWorker.Containers.Avito
                     }
                 });
 
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     foreach (var tabState in tabStates)
                     {
-                        WebWorker.NavigatePage(tabState.Href);
+                        var bulletinState = GetStateFromTabString(tabState.Title);
+                        if (bulletinState == BulletinState.Blocked
+                        || bulletinState == BulletinState.Removed) continue;
+
+                        Tools.WebWorker.NavigatePage(tabState.Href);
 
                         var nextPages = new List<string>();
                         nextPages.Add(tabState.Href);
@@ -271,7 +219,7 @@ namespace BulletinWebWorker.Containers.Avito
                             var bulletinsOnPage = GetBulletinPages(tabState.Title);
                             bulletins.AddRange(bulletinsOnPage);
 
-                            var nextPage = WebWorker.WebDocument.GetElementsByTagName("a").Cast<HtmlElement>()
+                            var nextPage = Tools.WebWorker.WebDocument.GetElementsByTagName("a").Cast<HtmlElement>()
                                 .FirstOrDefault(q => q.GetAttribute("className").Contains("js-pagination-next"));
                             if (nextPage == null) hasNextPage = false;
                             else
@@ -285,25 +233,26 @@ namespace BulletinWebWorker.Containers.Avito
                         } while (hasNextPage);
                     }
                 });
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     foreach (var bulletin in bulletins)
                     {
                         var url = Path.Combine(bulletin.Url, "edit");
-                        WebWorker.NavigatePage(url);
+                        Tools.WebWorker.NavigatePage(url);
                         Thread.Sleep(1500);
 
-                        var groupElement = WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
+                        var groupElement = Tools.WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
                             .FirstOrDefault(q => q.GetAttribute("className") != null && q.GetAttribute("className").Contains("form-category-path"));
 
                         if (groupElement == null) continue;
 
                         var categories = groupElement.InnerText.Split('/').Select(q => q.Trim()).ToArray();
                         bulletin.Signature = new GroupSignature(categories);
+                        bulletin.Access = access;
                     }
                     result = bulletins;
                 });
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     DCT.ExecuteAsync(d2 =>
                     {
@@ -321,19 +270,18 @@ namespace BulletinWebWorker.Containers.Avito
 
             });
         }
-
         public override void GetBulletinDetails(IEnumerable<BulletinPackage> packages)
         {
             DCT.Execute(d =>
             {
-                WebWorker.Execute(() =>
+                Tools.WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
 
                     foreach (var bulletin in packages)
                     {
                         var url = Path.Combine(bulletin.Url, "edit");
-                        WebWorker.NavigatePage(url);
+                        Tools.WebWorker.NavigatePage(url);
                         Thread.Sleep(1500);
                         var values = new Dictionary<string, string>();
                         foreach (var pair in bulletin.AccessFields)
@@ -342,20 +290,22 @@ namespace BulletinWebWorker.Containers.Avito
                             values.Add(pair.Key, v);
                         }
                         bulletin.ValueFields = values;
+                        bulletin.State = (int)CheckBulletinState(bulletin.Url);
                     }
                 });
-                WebWorker.Execute(() =>
+
+                Tools.WebWorker.Execute(() =>
                 {
                     DCT.ExecuteAsync(d2 =>
                     {
                         using (var client = new EngineService())
                         {
-                            //var r = client.Ping();
-                            //Console.WriteLine($"Ping = {r}");
-                            //client.Execute<RequestAddBulletinDetailsWorkModel, ResponseAddBulletinDetailsWorkModel>(new RequestAddBulletinDetailsWorkModel
-                            //{
-                            //    Objects = packages
-                            //});
+                            var r = client.Ping();
+                            Console.WriteLine($"Ping = {r}");
+                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
+                            {
+                                Objects = packages
+                            });
                         }
                     });
 
@@ -363,20 +313,308 @@ namespace BulletinWebWorker.Containers.Avito
 
             });
         }
+        public override void CheckModerationState(IEnumerable<BulletinPackage> packages)
+        {
+            DCT.Execute(d =>
+            {
+                Tools.WebWorker.Execute(() =>
+                {
+                    foreach(var b in packages)
+                    {
+                        var state = CheckBulletinState(b.Url);
+                        b.State = (int)state;
+                    }
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        using (var client = new EngineService())
+                        {
+                            var r = client.Ping();
+                            Console.WriteLine($"Ping = {r}");
+                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
+                            {
+                                Objects = packages
+                            });
+                        }
+                    });
+
+                });
+            });
+        }
+
+
+
+
+        void ChooseCategories(GroupSignature signature)
+        {
+            DCT.Execute(d =>
+            {
+                if (!string.IsNullOrEmpty(signature.Category1))
+                {
+                    var categoryRadio = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                   .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == signature.Category1);
+                    if (categoryRadio == null) return;
+                    categoryRadio.InvokeMember("click");
+                    Thread.Sleep(1000);
+                }
+                //2
+                if (!string.IsNullOrEmpty(signature.Category2))
+                {
+                    var serviceRadio = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == signature.Category2);
+                    if (serviceRadio == null) return;
+                    serviceRadio.InvokeMember("click");
+                    Thread.Sleep(1000);
+                }
+                //3
+                if (!string.IsNullOrEmpty(signature.Category3))
+                {
+                    var serviceTypeRadio = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == signature.Category3);
+                    if (serviceTypeRadio == null) return;
+                    serviceTypeRadio.InvokeMember("click");
+                    Thread.Sleep(1000);
+                }
+                //4
+                if (!string.IsNullOrEmpty(signature.Category4))
+                {
+                    var serviceTypeRadio2 = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == signature.Category4);
+                    if (serviceTypeRadio2 == null) return;
+                    serviceTypeRadio2.InvokeMember("click");
+                    Thread.Sleep(1000);
+                }
+                //5
+                if (!string.IsNullOrEmpty(signature.Category5))
+                {
+                    var serviceTypeRadio3 = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("type") == "radio" && q.GetAttribute("title") == signature.Category5);
+                    if (serviceTypeRadio3 == null) return;
+                    serviceTypeRadio3.InvokeMember("click");
+                    Thread.Sleep(1000);
+                }
+            });
+        }
+
+        void SetValueFields(BulletinPackage bulletin, FieldValueContainerBase fieldContainer)
+        {
+            DCT.Execute(d =>
+            {
+                foreach (var pair in bulletin.ValueFields)
+                {
+                    var template = bulletin.AccessFields.FirstOrDefault(q => q.Key == pair.Key);
+                    fieldContainer.SetFieldValue(bulletin.AccessFields, template.Key, pair.Value);
+                }
+            });
+            
+        }
+
+        void ContinueAddOrEdit(BulletinState state)
+        {
+            DCT.Execute(d =>
+            {
+                if(state == BulletinState.Edited)
+                {
+                    //Продолжить с пакетом «Обычная продажа»
+                    var radioButton = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("id") == "pack3");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+                    var buttons = Tools.WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var pack = "Продолжить без пакета";
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
+                    if (button != null)
+                        button.InvokeMember("click");
+                }
+                else if (state == BulletinState.WaitPublication)
+                {
+                    var radioButton = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                              .FirstOrDefault(q => q.GetAttribute("id") == "pack3");
+                    if (radioButton != null) radioButton.InvokeMember("click");
+
+
+                    var buttons = Tools.WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>();
+                    var pack = "Продолжить с пакетом «Обычная продажа»";
+                    var button = buttons.FirstOrDefault(btn => btn.InnerText == pack);
+                    if (button != null)
+                        button.InvokeMember("click");
+                }
+                else
+                {
+                    var button = Tools.WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
+                              .FirstOrDefault(q => q.GetAttribute("type") == "submit" && q.InnerText == "Продолжить");
+
+                    if (button != null)
+                        button.InvokeMember("click");
+                }
+               
+
+            });
+        }
+
+        void Publicate(BulletinPackage bulletin)
+        {
+            DCT.Execute(d =>
+            {
+                if(bulletin.State == (int)BulletinState.WaitPublication)
+                {
+                    //Стадия публикации
+                    Tools.WebWorker.NavigatePage("https://www.avito.ru/additem/confirm");
+                }
+                else if (bulletin.State == (int)BulletinState.Edited)
+                {
+                    Tools.WebWorker.NavigatePage(Path.Combine(bulletin.Url, "edit", "confirm"));
+                }
+                
+                //Снимаем галочки
+                var servicePremium = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("id") == "service-premium");
+                if (servicePremium != null)
+                    servicePremium.InvokeMember("click");
+                var serviceVip = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("id") == "service-vip");
+                if (serviceVip != null)
+                    serviceVip.InvokeMember("click");
+                var serviceHighlight = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                    .FirstOrDefault(q => q.GetAttribute("id") == "service-highlight");
+                if (serviceHighlight != null)
+                    serviceHighlight.InvokeMember("click");
+
+                //Подтверждаем
+                var text = "Продолжить";
+                var buttonContinue = Tools.WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>().FirstOrDefault(btn => btn.InnerText == text);
+                if (buttonContinue != null)
+                    buttonContinue.InvokeMember("click");
+
+            });
+        }
+
+        void GetUrl(BulletinPackage bulletin)
+        {
+            DCT.Execute(d =>
+            {
+                var divContent = GetByTag("div", e => e.GetAttribute("className").Contains("content-text"));
+                var a = GetChildElement(divContent, e => e.TagName == "A");
+                var href = a.GetAttribute("href");
+                bulletin.Url = href;
+            });
+        }
+
+        BulletinState CheckBulletinState(string url)
+        {
+            var result = BulletinState.Error;
+            DCT.Execute(d =>
+            {
+                var tabStates = new List<TabState>();
+                Tools.WebWorker.NavigatePage(ProfileUrl);
+
+                var doc = Tools.WebWorker.WebDocument.Body.InnerHtml;
+                var tabs = Tools.WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
+                    .Where(q => q.GetAttribute("className").Contains("tabs-item")).ToArray();
+
+                tabStates.Add(new TabState
+                {
+                    Title = "Активные",
+                    Href = ProfileUrl,
+                });
+
+                foreach (var tab in tabs)
+                {
+                    if (!tab.CanHaveChildren) continue;
+
+                    foreach (HtmlElement ch in tab.Children)
+                    {
+                        if (ch.TagName.ToLower() == "a")
+                        {
+                            var tabUrl = ch.GetAttribute("href");
+                            var tabState = ch.InnerText;
+
+                            if (tabState == "Удаленные") continue;
+
+                            tabStates.Add(new TabState
+                            {
+                                Title = tabState,
+                                Href = tabUrl,
+                            });
+                        }
+                    }
+                }
+                BulletinPackage foundedBulletin = null;
+                foreach (var tabState in tabStates)
+                {
+                    var bulletinState = GetStateFromTabString(tabState.Title);
+                    if (bulletinState == BulletinState.Blocked
+                    || bulletinState == BulletinState.Removed) continue;
+
+                    Tools.WebWorker.NavigatePage(tabState.Href);
+
+                    var nextPages = new List<string>();
+                    nextPages.Add(tabState.Href);
+
+                    var hasNextPage = true;
+                    do
+                    {
+                        var bulletinsOnPage = GetBulletinPages(tabState.Title);
+
+                        var hasBulletin = bulletinsOnPage.FirstOrDefault(q => q.Url == url);
+                        if(hasBulletin != null)
+                        {
+                            foundedBulletin = hasBulletin;
+                            break;
+                        }
+                        var nextPage = Tools.WebWorker.WebDocument.GetElementsByTagName("a").Cast<HtmlElement>()
+                            .FirstOrDefault(q => q.GetAttribute("className").Contains("js-pagination-next"));
+                        if (nextPage == null) hasNextPage = false;
+                        else
+                        {
+                            var nextPageHref = nextPage.GetAttribute("href");
+                            nextPages.Add(nextPageHref);
+                            hasNextPage = true;
+                            nextPage.InvokeMember("click");
+                            Thread.Sleep(1000);
+                        }
+                    } while (hasNextPage);
+
+                    if (foundedBulletin != null)
+                        break;
+                }
+                if(foundedBulletin != null)
+                {
+                    Tools.WebWorker.NavigatePage(foundedBulletin.Url);
+                    Thread.Sleep(1500);
+
+                    var warningElement = Tools.WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("className") != null && q.GetAttribute("className").Contains("item-view-warning"));
+                    if (warningElement != null)
+                    {
+                        if (warningElement.InnerText.Contains("Сейчас это объявление проверяется модераторами"))
+                        {
+                            foundedBulletin.State = (int)BulletinState.OnModeration;
+                        }
+                    }
+                    result = EnumHelper.GetValue<BulletinState>(foundedBulletin.State);
+                }
+            });
+
+            return result;
+        }
+
         List<BulletinPackage> GetBulletinPages(string state)
         {
             var result = new List<BulletinPackage>();
             DCT.Execute(data =>
             {
-                var s = WebWorker.WebDocument.Body.OuterHtml;
-                var titleDivs = WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
+                var s = Tools.WebWorker.WebDocument.Body.OuterHtml;
+                var titleDivs = Tools.WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
                             .Where(q => q.GetAttribute("className").Contains("profile-item-description"));
 
                 foreach (var d in titleDivs)
                 {
                     var bulletin = new BulletinPackage
                     {
-                        State = (int)GetStateFromString(state)
+                        State = (int)GetStateFromTabString(state)
                     };
                     GelChildrenRecursively(d, bulletin);
                     result.Add(bulletin);
@@ -385,8 +623,7 @@ namespace BulletinWebWorker.Containers.Avito
             return result;
         }
 
-
-        BulletinState GetStateFromString(string state)
+        BulletinState GetStateFromTabString(string state)
         {
             switch(state)
             {
@@ -394,21 +631,14 @@ namespace BulletinWebWorker.Containers.Avito
                     return BulletinState.Publicated;
                 case "Блокированные":
                     return BulletinState.Blocked;
-                case "Отклоненные":
+                case "Отклонённые":
                     return BulletinState.Rejected;
+                case "Удалённые":
+                    return BulletinState.Removed;
                 default:
                     return BulletinState.Error;
             }
         }
-
-        ///-------------------------------------------------------------------------------------------------
-        /// <summary>   Gel children recursively. </summary>
-        ///
-        /// <remarks>   SV Milovanov, 30.01.2018. </remarks>
-        ///
-        /// <param name="element">  The element. </param>
-        /// <param name="bulletin"> The bulletin. </param>
-        ///-------------------------------------------------------------------------------------------------
 
         void GelChildrenRecursively(HtmlElement element, BulletinPackage bulletin)
         {
@@ -439,6 +669,38 @@ namespace BulletinWebWorker.Containers.Avito
                     GelChildrenRecursively(ch, bulletin);
                 }
             });
+        }
+
+        HtmlElement GetByTag(string tag, Func<HtmlElement, bool> func)
+        {
+            HtmlElement result = null;
+
+            DCT.Execute(d =>
+            {
+                result = Tools.WebWorker.WebDocument.GetElementsByTagName(tag).Cast<HtmlElement>().FirstOrDefault(func);
+            });
+            return result;
+        }
+
+
+        HtmlElement GetChildElement(HtmlElement element, Func<HtmlElement, bool> func)
+        {
+            HtmlElement result = null;
+            DCT.Execute(d =>
+            {
+                if (!element.CanHaveChildren && element.Children.Count == 0) return;
+
+                foreach (HtmlElement ch in element.Children)
+                {
+                    if(func(ch))
+                    {
+                        result = ch;
+                        return;
+                    }
+                    result = GetChildElement(ch, func);
+                }
+            });
+            return result;
         }
 
 

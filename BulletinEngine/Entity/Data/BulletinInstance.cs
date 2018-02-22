@@ -183,7 +183,17 @@ namespace BulletinEngine.Entity.Data
         #region DataService -- Methods
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
-            return base._CollectionObjectLoad();
+            var result = Enumerable.Empty<EntityObject>();
+            BCT.Execute(c =>
+            {
+                var id = c._SessionInfo.HashUID;
+                var id2 = c._SessionInfo.SessionUID;
+                if (id == "Engine")
+                    result = c.Db1.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
+                else
+                    result = base._CollectionObjectLoad();
+            });
+            return result;
         }
         public override EntityObject _ObjectLoadById(Guid id)
         {
@@ -194,7 +204,25 @@ namespace BulletinEngine.Entity.Data
             var result = Enumerable.Empty<TDataModel>();
             BCT.Execute(d =>
             {
-                d.Db1.SaveChanges();
+                 foreach (var bulletin in objs.OfType<BulletinInstance>().ToArray())
+                {
+                    //Сохранение контейнера буллетинов
+                    var dbBulletin = new Bulletin
+                    {
+                        UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
+                    };
+
+                    //Сохранение инстанций буллетинов для каждой борды
+                    var dbBoards = d.Db1.Boards.ToArray();
+                    foreach (var board in dbBoards)
+                    {
+                        bulletin.BoardId = board.Id;
+                        bulletin.BulletinId = dbBulletin.Id;
+                        bulletin.StateEnum = BulletinInstanceState.WaitPublication;
+                    }
+                    dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
+                    d.Db1.SaveChanges();
+                }
                 result = objs;
             });
             return result;
@@ -214,6 +242,8 @@ namespace BulletinEngine.Entity.Data
         Edited = 6,
         Removed = 7,
         Error = 99,
+        Unchecked = 100,
+        Checking = 101,
     }
 
 }
