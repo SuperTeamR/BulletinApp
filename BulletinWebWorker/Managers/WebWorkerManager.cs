@@ -71,7 +71,7 @@ namespace BulletinWebWorker.Managers
                 {
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
-                    client.Execute<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>(new RequestGetProfileWorkModel());
+                    client.CollectionLoad<AccessPackage>(WorkRouter.AssignProfileWork);
                 }
             });
         }
