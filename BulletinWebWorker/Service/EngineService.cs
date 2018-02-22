@@ -10,20 +10,20 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Service
 {
-    class EngineService : BaseServiceClient
+    class EngineService :  DataServiceClient
     {
         public override string Address => Settings.Default.DataServiceAddress;
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
         public override string HashUID => "Engine";
         public override string SessionUID => "Engine";
 
-        protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
-            ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
-                {
-                    WorkRouter.AssignBulletinWork(a.Objects);
-                }
-            ),
-            ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
-        };
+        //protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
+        //    ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
+        //        {
+        //            WorkRouter.AssignBulletinWork(a.Objects);
+        //        }
+        //    ),
+        //    ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
+        //};
     }
 }
