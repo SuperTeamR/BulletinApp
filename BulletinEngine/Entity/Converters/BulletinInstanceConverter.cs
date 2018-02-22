@@ -38,6 +38,7 @@ namespace BulletinEngine.Entity.Converters
                     ValueFields = valueFields,
                     AccessFields = accessFields,
                     State = state,
+                    BulletinInstanceId = obj.Id,
                 };
             });
             return result;

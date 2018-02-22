@@ -48,5 +48,6 @@ namespace BulletinWebWorker.Containers.Base
 
         public abstract void GetBulletinList(AccessPackage access);
         public abstract void GetBulletinDetails(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
+        public abstract void CheckModerationState(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FessooFramework.Objects.Data;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -6,6 +7,7 @@ namespace BulletinBridge.Data
 {
     public class BulletinPackage : CacheObject
     {
+        public Guid BulletinInstanceId { get; set; }
         public string Url { get; set; }
         public string Title { get; set; }
         public int State { get; set; }
@@ -32,6 +34,8 @@ namespace BulletinBridge.Data
         Publicated = 5,
         Edited = 6,
         Removed = 7,
+        Unchecked = 8,
+        Checking = 9,
         Error = 99,
     }
 }

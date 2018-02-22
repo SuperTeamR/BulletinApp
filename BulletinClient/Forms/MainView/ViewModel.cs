@@ -60,6 +60,12 @@ namespace BulletinClient.Forms.MainView
             CommandAddBulletin = new DelegateCommand(AddBulletin);
 
             BulletinName = "Варежки";
+
+            ApplicationAuth();
+            if (!string.IsNullOrEmpty(Settings.Default.BoardLogin))
+            {
+                BoardAuth(Settings.Default.BoardLogin, Settings.Default.BoardPassword);
+            }
         }
 
         void GetXls()
@@ -84,7 +90,7 @@ namespace BulletinClient.Forms.MainView
                     var ping = main.Ping();
                     if(ping)
                     {
-                        var email = "ttt3@ttt.ru";
+                        var email = "apenzin@1cbit.ru";
                         var phone = "799988888";
                         var password = "ttt3";
                         var firstname = "name";
@@ -105,15 +111,18 @@ namespace BulletinClient.Forms.MainView
                 }
             });
         }
-
         void BoardAuth()
+        {
+            BoardAuth(Login, Password);
+        }
+        void BoardAuth(string login, string password)
         {
             DCT.Execute(d =>
             {
                 var access = new AccessPackage
                 {
-                    Login = Login,
-                    Password = Password,
+                    Login = login,
+                    Password = password,
                 };
                 var request = new RequestAddAccessModel
                 {

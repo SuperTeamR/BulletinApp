@@ -70,7 +70,7 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Blocked, BulletinInstanceState.Removed, Removed),
         };
-        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
+        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error, BulletinInstanceState.Unchecked, BulletinInstanceState.Checking };
 
         protected override int GetStateValue(BulletinInstanceState state)
         {
@@ -123,47 +123,32 @@ namespace BulletinEngine.Entity.Data
 
         private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
         {
-            BCT.Execute(d =>
-            {
-                arg1.BulletinId = arg2.BulletinId;
-                arg1.BoardId = arg2.BoardId;
-                arg1.AccessId = arg2.AccessId;
-                arg1.Url = arg2.Url;
-                arg1.GroupId = arg2.GroupId;
-
-                d.Queue.Bulletins.Enqueue(arg2.Id);
-            });
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
             return arg1;
         }
 
         private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
         {
-            BCT.Execute(d =>
-            {
-                arg1.BulletinId = arg2.BulletinId;
-                arg1.BoardId = arg2.BoardId;
-                arg1.AccessId = arg2.AccessId;
-                arg1.Url = arg2.Url;
-                arg1.GroupId = arg2.GroupId;
-
-                d.Queue.Bulletins.Enqueue(arg2.Id);
-            });
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
 
             return arg1;
         }
 
         private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
         {
-            BCT.Execute(d =>
-            {
-                arg1.BulletinId = arg2.BulletinId;
-                arg1.BoardId = arg2.BoardId;
-                arg1.AccessId = arg2.AccessId;
-                arg1.Url = arg2.Url;
-                arg1.GroupId = arg2.GroupId;
-
-                d.Queue.Bulletins.Enqueue(arg2.Id);
-            });
+            arg1.BulletinId = arg2.BulletinId;
+            arg1.BoardId = arg2.BoardId;
+            arg1.AccessId = arg2.AccessId;
+            arg1.Url = arg2.Url;
+            arg1.GroupId = arg2.GroupId;
 
             return arg1;
         }
@@ -199,6 +184,8 @@ namespace BulletinEngine.Entity.Data
         Publicated = 5,
         Edited = 6,
         Removed = 7,
+        Unchecked = 8,
+        Checking = 9,
         Error = 99,
     }
 

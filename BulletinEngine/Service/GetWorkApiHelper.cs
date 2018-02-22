@@ -2,6 +2,7 @@
 using BulletinBridge.Messages;
 using BulletinBridge.Messages.InternalApi;
 using BulletinEngine.Core;
+using BulletinEngine.Entity.Data;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
@@ -27,23 +28,32 @@ namespace BulletinEngine.Service
         /// <returns>   The work. </returns>
         ///-------------------------------------------------------------------------------------------------
 
+
+
+
         public static ResponseGetBulletinWorkModel GetWork(RequestGetBulletinWorkModel request)
         {
             ResponseGetBulletinWorkModel result = null;
             BCT.Execute((d) =>
             {
-                var collection = new List<BulletinPackage>();
-                while (d.Queue.Bulletins.Count > 0)
+                var instances = d.Db1.BulletinInstances.Where(q => 
+                    q.State == (int)BulletinInstanceState.Unchecked
+                    || q.State == (int)BulletinInstanceState.WaitPublication
+                    || q.State == (int)BulletinInstanceState.Edited
+                    || q.State == (int)BulletinInstanceState.OnModeration)
+                    .Take(50).ToArray();
+
+                result = new ResponseGetBulletinWorkModel
                 {
-                    var guid = Guid.Empty;
-                    if (d.Queue.Bulletins.TryDequeue(out guid))
-                    {
-                        var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == guid);
-                        var package = dbInstance._ConvertToServiceModel<BulletinPackage>();
-                        collection.Add(package);
-                    }
+                    Objects =
+                    instances.Select(q => q._ConvertToServiceModel<BulletinPackage>()).ToArray(),
+                };
+
+                foreach (var i in instances)
+                {
+                    i.StateEnum = BulletinInstanceState.Checking;
                 }
-                result = new ResponseGetBulletinWorkModel { Objects = collection };
+                d.Db1.SaveChanges();
             });
             return result;
         }
@@ -53,18 +63,22 @@ namespace BulletinEngine.Service
             ResponseGetProfileWorkModel result = null;
             BCT.Execute((d) =>
             {
-                var collection = new List<AccessPackage>();
-                while (d.Queue.Profiles.Count > 0)
+                var accesses = d.Db1.Accesses.Where(q => q.State == (int)AccessState.Unchecked).Take(50).ToArray();
+
+                result = new ResponseGetProfileWorkModel
                 {
-                    var guid = Guid.Empty;
-                    if (d.Queue.Profiles.TryDequeue(out guid))
-                    {
-                        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == guid);
-                        var package = dbAccess._ConvertToServiceModel<AccessPackage>();
-                        collection.Add(package);
-                    }
+                    Objects =
+                    accesses.Select(q => q._ConvertToServiceModel<AccessPackage>())
+                };
+
+
+                foreach (var i in accesses)
+                {
+                    i.StateEnum = AccessState.Checking;
                 }
-                result = new ResponseGetProfileWorkModel { Objects = collection };
+                d.Db1.SaveChanges();
+
+
             });
             return result;
         }

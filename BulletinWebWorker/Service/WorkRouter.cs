@@ -30,6 +30,9 @@ namespace BulletinWebWorker.Containers
                     case BulletinState.Edited:
                         bulletinContainer.EditBulletins(s.Collection);
                         break;
+                    case BulletinState.OnModeration:
+                        bulletinContainer.CheckModerationState(s.Collection);
+                        break;
                 }
             }
         }

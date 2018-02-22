@@ -76,7 +76,6 @@ namespace BusinessLogic.BoardLogic.Boards
                         fieldSetter.SetField(pair.Key, pair.Value);
                     }
 
-
                     if (bulletin.State == "Активные")
                     {
                         //Продолжить с пакетом «Обычная продажа»
@@ -103,8 +102,6 @@ namespace BusinessLogic.BoardLogic.Boards
 
                         Thread.Sleep(1000);
                     }
-
-
                 });
 
                 WebWorker.DownloadPage(Path.Combine(bulletin.Url, "edit", "confirm"), (doc) =>
@@ -163,9 +160,6 @@ namespace BusinessLogic.BoardLogic.Boards
 
                             Thread.Sleep(1000);
                         }
-
-
-
 
                         //2
                         //Услуги - Предложения услуг

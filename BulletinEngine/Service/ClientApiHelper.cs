@@ -33,7 +33,8 @@ namespace BulletinEngine.Service.BoardApi
                 }
                 accessPackage.Id = dbAccess.Id;
 
-                d.Queue.Profiles.Enqueue(accessPackage.Id);
+                dbAccess.State = (int)AccessState.Unchecked;
+                d.SaveChanges();
 
                 result = new ResponseAddAccessModel
                 {
@@ -78,6 +79,7 @@ namespace BulletinEngine.Service.BoardApi
                     {
                         UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
                     };
+                    d.Db1.Bulletins.Add(dbBulletin);
 
                     //dbBulletin._Save();
                     d.Db1.SaveChanges();
@@ -93,10 +95,8 @@ namespace BulletinEngine.Service.BoardApi
                             BulletinId = dbBulletin.Id,
                             GroupId = dbGroup.Id,
                         };
-                        dbInstance.StateEnum = BulletinInstanceState.WaitPublication;
-                        //dbInstance._Save();
+                        d.Db1.BulletinInstances.Add(dbInstance);
                         d.Db1.SaveChanges();
-
                         foreach (var field in bulletin.ValueFields)
                         {
                             var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
@@ -108,12 +108,18 @@ namespace BulletinEngine.Service.BoardApi
                                     FieldId = dbField.Id,
                                     Value = field.Value,
                                 };
-                                dbBulletinField.StateEnum = BulletinFieldState.Filled;
+                                
                                 d.Db1.BulletinFields.Add(dbBulletinField);
-                                //dbBulletinField._Save();
+                                d.Db1.SaveChanges();
+
+                                dbBulletinField.StateEnum = BulletinFieldState.Filled;
                                 d.Db1.SaveChanges();
                             }
                         }
+
+                        dbInstance.State = (int)BulletinInstanceState.WaitPublication;
+                        //dbInstance._Save();
+                        d.Db1.SaveChanges();
                     }
                     dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
 
