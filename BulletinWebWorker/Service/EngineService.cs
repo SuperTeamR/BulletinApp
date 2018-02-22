@@ -14,6 +14,9 @@ namespace BulletinWebWorker.Service
     {
         public override string Address => Settings.Default.DataServiceAddress;
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
+        public override string HashUID => "Engine";
+        public override string SessionUID => "Engine";
+
         protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
             ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
                 {

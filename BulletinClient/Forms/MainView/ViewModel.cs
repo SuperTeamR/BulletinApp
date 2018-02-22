@@ -168,13 +168,18 @@ namespace BulletinClient.Forms.MainView
 
         private void BoardAuthCallback(AccessPackage access)
         {
-            Settings.Default.BoardLogin = access.Login;
-            Settings.Default.BoardPassword = access.Password;
-            Settings.Default.Save();
+            DCT.Execute(c => {
+                Settings.Default.SessionUID = c._SessionInfo.SessionUID;
+                Settings.Default.HashUID = c._SessionInfo.HashUID;
 
-            RaisePropertyChanged(() => HasAccess);
-            RaisePropertyChanged(() => DontHasAccess);
-            RaisePropertyChanged(() => BoardLogin);
+                Settings.Default.BoardLogin = access.Login;
+                Settings.Default.BoardPassword = access.Password;
+                Settings.Default.Save();
+
+                RaisePropertyChanged(() => HasAccess);
+                RaisePropertyChanged(() => DontHasAccess);
+                RaisePropertyChanged(() => BoardLogin);
+            });
         }
 
         void AddBulletin()
