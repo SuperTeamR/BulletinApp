@@ -2,6 +2,7 @@
 using BulletinWebWorker.Containers;
 using BulletinWebWorker.Properties;
 using FessooFramework.Tools.Web;
+using FessooFramework.Tools.Web.DataService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
