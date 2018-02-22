@@ -2,7 +2,6 @@
 using BulletinWebWorker.Containers;
 using BulletinWebWorker.Properties;
 using FessooFramework.Tools.Web;
-using FessooFramework.Tools.Web.DataService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +10,20 @@ using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Service
 {
-    class EngineService : DataServiceClient
+    class EngineService : BaseServiceClient
     {
         public override string Address => Settings.Default.DataServiceAddress;
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
-        //protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
-        //    ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
-        //        {
-        //            WorkRouter.AssignBulletinWork(a.Objects);
-        //        }
-        //    ),
-        //    ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
-        //};
+        public override string HashUID => "Engine";
+        public override string SessionUID => "Engine";
+
+        protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
+            ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
+                {
+                    WorkRouter.AssignBulletinWork(a.Objects);
+                }
+            ),
+            ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
+        };
     }
 }

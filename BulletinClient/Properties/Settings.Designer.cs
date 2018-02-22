@@ -82,5 +82,29 @@ namespace BulletinClient.Properties {
                 this["MainServiceAddress"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string HashUID {
+            get {
+                return ((string)(this["HashUID"]));
+            }
+            set {
+                this["HashUID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SessionUID {
+            get {
+                return ((string)(this["SessionUID"]));
+            }
+            set {
+                this["SessionUID"] = value;
+            }
+        }
     }
 }
