@@ -33,16 +33,6 @@ namespace HubService
         [OperationContract]
         public override bool Ping(string p)
         {
-            //DCT.Execute(c =>
-            //{
-            //    for (int i = 0; i < 10; i++)
-            //    {
-            //        var model = new ExampleDataServiceDAL.DataModels.ExampleData();
-            //        model.D = i.ToString();
-            //        model.StateEnum = ExampleDataServiceDAL.DataModels.ExampleDataState.Edit;
-            //    }
-            //    c.SaveChanges();
-            //});
             return _Ping(p);
         }
         [WebInvoke(
@@ -70,18 +60,19 @@ namespace HubService
             return result;
         }
 
-        protected override IEnumerable<ServiceRequestConfigBase> Configurations => new ServiceRequestConfigBase[]
-        {
-            ServiceRequestConfig<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
-            ServiceRequestConfig<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
-            ServiceRequestConfig<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>.New(a => AddWorkResultApiHelper.AddWorkResult(a)),
-            ServiceRequestConfig<RequestAddBulletinsModel, ResponseAddBulletinsModel>.New((a) => ClientApiHelper.AddBulletins(a)),
-            ServiceRequestConfig<RequestAddAccessModel, ResponseAddAccessModel>.New((a) => ClientApiHelper.AddAccess(a)),
-        };
+        //protected override IEnumerable<ServiceRequestConfigBase> Configurations => new ServiceRequestConfigBase[]
+        //{
+        //    ServiceRequestConfig<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
+        //    ServiceRequestConfig<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
+        //    ServiceRequestConfig<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>.New(a => AddWorkResultApiHelper.AddWorkResult(a)),
+        //    ServiceRequestConfig<RequestAddBulletinsModel, ResponseAddBulletinsModel>.New((a) => ClientApiHelper.AddBulletins(a)),
+        //    ServiceRequestConfig<RequestAddAccessModel, ResponseAddAccessModel>.New((a) => ClientApiHelper.AddAccess(a)),
+        //};
 
-        public override IEnumerable<DataServiceConfigurationBase> Convertors => new[]
+        public override IEnumerable<DataServiceConfigurationBase> Convertors => new DataServiceConfigurationBase[]
         {
-            new DataServiceConfiguration<BulletinInstance, BulletinPackage>()
+            new DataServiceConfiguration<BulletinInstance, BulletinPackage>(),
+            new DataServiceConfiguration<Access, AccessPackage>(),
         };
     }
 }

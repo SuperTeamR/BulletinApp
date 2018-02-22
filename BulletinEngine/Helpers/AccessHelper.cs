@@ -48,7 +48,7 @@ namespace BulletinEngine.Helpers
                 }
                 result = new AccessPackage
                 {
-                    Id = access.Id,
+                    //Id = access.Id,
                     Login = access.Login,
                     Password = access.Password,
                     BoardId = boardId

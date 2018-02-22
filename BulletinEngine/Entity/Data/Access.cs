@@ -1,4 +1,5 @@
 ﻿using BulletinBridge.Data;
+using BulletinEngine.Core;
 using BulletinHub.Entity.Converters;
 using FessooFramework.Objects.Data;
 using System;
@@ -117,10 +118,30 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => new[]
         {
-            EntityObjectALMCreator<Access>.New(AccessConverter.Convert, new Version(1,0,0,0))
+            EntityObjectALMCreator<Access>.New(AccessConverter.ConvertToCache, AccessConverter.ConvertToModel, new Version(1,0,0,0))
         };
         #endregion
 
+        #region DataService -- Methods
+        public override IEnumerable<TDataModel> _CacheSave<TDataModel>(IEnumerable<TDataModel> objs)
+        {
+            var result = Enumerable.Empty<TDataModel>();
+            BCT.Execute(d =>
+            {
+                var access = objs.FirstOrDefault() as Access;
+                var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == access.Login && q.Password == access.Password);
+                if (dbAccess == null)
+                {
+                    access.StateEnum = AccessState.Activated;
+                    d.SaveChanges();
+                }
+                result = new TDataModel[] { access as TDataModel };
+            });
+              
+            return result;
+        }
+
+        #endregion
     }
 
     public enum AccessState

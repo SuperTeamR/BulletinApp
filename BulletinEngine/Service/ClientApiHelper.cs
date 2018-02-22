@@ -13,37 +13,36 @@ namespace BulletinEngine.Service.BoardApi
 {
     public static class ClientApiHelper
     {
-        public static ResponseAddAccessModel AddAccess(RequestAddAccessModel request)
-        {
-            ResponseAddAccessModel result = new ResponseAddAccessModel();
-            BCT.Execute(d =>
-            {
-                var accessPackage = request.Objects.FirstOrDefault();
-                var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == accessPackage.Login && q.Password == accessPackage.Password);
-                if(dbAccess == null)
-                {
-                    dbAccess = new Access
-                    {
-                        Login = accessPackage.Login,
-                        Password = accessPackage.Password,
-                    };
+        //public static ResponseAddAccessModel AddAccess(RequestAddAccessModel request)
+        //{
+        //    ResponseAddAccessModel result = new ResponseAddAccessModel();
+        //    BCT.Execute(d =>
+        //    {
+        //        var accessPackage = request.Objects.FirstOrDefault();
+        //        var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == accessPackage.Login && q.Password == accessPackage.Password);
+        //        if(dbAccess == null)
+        //        {
+        //            dbAccess = new Access
+        //            {
+        //                Login = accessPackage.Login,
+        //                Password = accessPackage.Password,
+        //            };
 
-                    d.Db1.Accesses.Add(dbAccess);
-                    d.SaveChanges();
-                }
-                accessPackage.Id = dbAccess.Id;
+        //            d.Db1.Accesses.Add(dbAccess);
+        //            d.SaveChanges();
+        //        }
+        //        //accessPackage.Id = dbAccess.Id;
 
-                dbAccess.State = (int)AccessState.Unchecked;
-                d.SaveChanges();
+        //        //d.Queue.Profiles.Enqueue(accessPackage.Id);
 
-                result = new ResponseAddAccessModel
-                {
-                    Objects = new[] { accessPackage },
-                    State = ResponseState.Success
-                };
-            });
-            return result;
-        }
+        //        result = new ResponseAddAccessModel
+        //        {
+        //            Objects = new[] { accessPackage },
+        //            State = ResponseState.Success
+        //        };
+        //    });
+        //    return result;
+        //}
 
 
 
@@ -56,79 +55,74 @@ namespace BulletinEngine.Service.BoardApi
         ///
         /// <returns>   The ResponseBoardApi_AddBulletins. </returns>
         ///-------------------------------------------------------------------------------------------------
-        public static ResponseAddBulletinsModel AddBulletins(RequestAddBulletinsModel request)
-        {
-            ResponseAddBulletinsModel result = new ResponseAddBulletinsModel();
-            BCT.Execute(d =>
-            {
-                var bulletinPackages = request.Objects.Cast<BulletinPackage>();
-                foreach (var bulletin in bulletinPackages)
-                {
-                    //Получение группы
-                    var hash = bulletin.Signature.GetHash();
-                    var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+        //public static ResponseAddBulletinsModel AddBulletins(RequestAddBulletinsModel request)
+        //{
+        //    ResponseAddBulletinsModel result = new ResponseAddBulletinsModel();
+        //    BCT.Execute(d =>
+        //    {
+        //        var bulletinPackages = request.Objects.Cast<BulletinPackage>();
+        //        foreach (var bulletin in bulletinPackages)
+        //        {
+        //            //Получение группы
+        //            var hash = bulletin.Signature.GetHash();
+        //            var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
 
 
-                    //Получение доступа
-                    var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == bulletin.Access.Login
-                        && q.Password == bulletin.Access.Password);
-                    if (dbAccess == null)
-                        continue;
-                    //Сохранение контейнера буллетинов
-                    var dbBulletin = new Bulletin
-                    {
-                        UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
-                    };
-                    d.Db1.Bulletins.Add(dbBulletin);
+        //            //Получение доступа
+        //            var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == bulletin.Access.Login
+        //                && q.Password == bulletin.Access.Password);
+        //            if (dbAccess == null)
+        //                continue;
+        //            //Сохранение контейнера буллетинов
+        //            var dbBulletin = new Bulletin
+        //            {
+        //                UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
+        //            };
 
-                    //dbBulletin._Save();
-                    d.Db1.SaveChanges();
+        //            //dbBulletin._Save();
+        //            d.Db1.SaveChanges();
 
-                    //Сохранение инстанций буллетинов для каждой борды
-                    var dbBoards = d.Db1.Boards.ToArray();
-                    foreach (var board in dbBoards)
-                    {
-                        var dbInstance = new BulletinInstance
-                        {
-                            BoardId = board.Id,
-                            AccessId = dbAccess.Id,
-                            BulletinId = dbBulletin.Id,
-                            GroupId = dbGroup.Id,
-                        };
-                        d.Db1.BulletinInstances.Add(dbInstance);
-                        d.Db1.SaveChanges();
-                        foreach (var field in bulletin.ValueFields)
-                        {
-                            var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
-                            if (dbField != null)
-                            {
-                                var dbBulletinField = new BulletinField
-                                {
-                                    BulletinInstanceId = dbInstance.Id,
-                                    FieldId = dbField.Id,
-                                    Value = field.Value,
-                                };
-                                
-                                d.Db1.BulletinFields.Add(dbBulletinField);
-                                d.Db1.SaveChanges();
+        //            //Сохранение инстанций буллетинов для каждой борды
+        //            var dbBoards = d.Db1.Boards.ToArray();
+        //            foreach (var board in dbBoards)
+        //            {
+        //                var dbInstance = new BulletinInstance
+        //                {
+        //                    BoardId = board.Id,
+        //                    AccessId = dbAccess.Id,
+        //                    BulletinId = dbBulletin.Id,
+        //                    GroupId = dbGroup.Id,
+        //                };
+        //                dbInstance.StateEnum = BulletinInstanceState.WaitPublication;
+        //                //dbInstance._Save();
+        //                d.Db1.SaveChanges();
 
-                                dbBulletinField.StateEnum = BulletinFieldState.Filled;
-                                d.Db1.SaveChanges();
-                            }
-                        }
+        //                foreach (var field in bulletin.ValueFields)
+        //                {
+        //                    var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
+        //                    if (dbField != null)
+        //                    {
+        //                        var dbBulletinField = new BulletinField
+        //                        {
+        //                            BulletinInstanceId = dbInstance.Id,
+        //                            FieldId = dbField.Id,
+        //                            Value = field.Value,
+        //                        };
+        //                        dbBulletinField.StateEnum = BulletinFieldState.Filled;
+        //                        //d.Db1.BulletinFields.Add(dbBulletinField);
+        //                        //dbBulletinField._Save();
+        //                        d.Db1.SaveChanges();
+        //                    }
+        //                }
+        //            }
+        //            dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
 
-                        dbInstance.State = (int)BulletinInstanceState.WaitPublication;
-                        //dbInstance._Save();
-                        d.Db1.SaveChanges();
-                    }
-                    dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
+        //            d.Db1.SaveChanges();
+        //        }
+        //    });
+        //    return result;
 
-                    d.Db1.SaveChanges();
-                }
-            });
-            return result;
-
-        }
+        //}
 
 
 

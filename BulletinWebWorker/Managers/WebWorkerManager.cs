@@ -17,12 +17,12 @@ namespace BulletinWebWorker.Managers
         internal static TaskController BulletinWork = new TaskController(
             execute: () => AskForBulletinWork(),
             check: () => true,
-            checkTimeout: () => 60000);
+            checkTimeout: () => 600000);
 
         internal static TaskController ProfileWork = new TaskController(
            execute: () => AskForProfileWork(),
            check: () => true,
-           checkTimeout: () => 60000);
+           checkTimeout: () => 600000);
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Запрашивает работу с Hub по буллетинам </summary>
         ///

@@ -65,7 +65,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandApi.cs" />
     <Compile Include="Data\AccessPackage.cs" />
     <Compile Include="Data\BulletinPackage.cs" />
     <Compile Include="Data\CategoryTree.cs" />
@@ -75,11 +74,9 @@
     <Compile Include="Data\OptionTag.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Data\XlsPackage.cs" />
-    <Compile Include="Messages\BoardApi\AddAccessModel.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardApi_AddBulletins.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_EditBulletins.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_GetXlsForGroup.cs" />
-    <Compile Include="Messages\BoardApi\AddBulletinsModel.cs" />
     <Compile Include="Messages\InternalApi\AddBulletinsWorkModel.cs" />
     <Compile Include="Messages\InternalApi\GetBulletinWorkModel.cs" />
     <Compile Include="Messages\InternalApi\GetProfileWorkModel.cs" />

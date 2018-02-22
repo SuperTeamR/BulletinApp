@@ -4,6 +4,7 @@ using BulletinEngine.Entity.Converters;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -70,7 +71,7 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Blocked, BulletinInstanceState.Removed, Removed),
         };
-        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error, BulletinInstanceState.Unchecked, BulletinInstanceState.Checking };
+        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
 
         protected override int GetStateValue(BulletinInstanceState state)
         {
@@ -123,32 +124,47 @@ namespace BulletinEngine.Entity.Data
 
         private BulletinInstance PreparePublicated(BulletinInstance arg1, BulletinInstance arg2)
         {
-            arg1.BulletinId = arg2.BulletinId;
-            arg1.BoardId = arg2.BoardId;
-            arg1.AccessId = arg2.AccessId;
-            arg1.Url = arg2.Url;
-            arg1.GroupId = arg2.GroupId;
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
             return arg1;
         }
 
         private BulletinInstance Rejected(BulletinInstance arg1, BulletinInstance arg2)
         {
-            arg1.BulletinId = arg2.BulletinId;
-            arg1.BoardId = arg2.BoardId;
-            arg1.AccessId = arg2.AccessId;
-            arg1.Url = arg2.Url;
-            arg1.GroupId = arg2.GroupId;
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
 
             return arg1;
         }
 
         private BulletinInstance Edited(BulletinInstance arg1, BulletinInstance arg2)
         {
-            arg1.BulletinId = arg2.BulletinId;
-            arg1.BoardId = arg2.BoardId;
-            arg1.AccessId = arg2.AccessId;
-            arg1.Url = arg2.Url;
-            arg1.GroupId = arg2.GroupId;
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
 
             return arg1;
         }
@@ -159,11 +175,12 @@ namespace BulletinEngine.Entity.Data
 
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
-{
-             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, new Version(1,0,0,0))
+        {
+             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, BulletinInstanceConverter.Convert, new Version(1,0,0,0))
         };
         #endregion
 
+        #region DataService -- Methods
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             return base._CollectionObjectLoad();
@@ -172,6 +189,39 @@ namespace BulletinEngine.Entity.Data
         {
             return base._ObjectLoadById(id);
         }
+        public override IEnumerable<TDataModel> _CacheSave<TDataModel>(IEnumerable<TDataModel> objs)
+        {
+            var result = Enumerable.Empty<TDataModel>();
+            BCT.Execute(d =>
+            {
+                 foreach (var bulletin in objs.OfType<BulletinInstance>().ToArray())
+                {
+                    //Сохранение контейнера буллетинов
+                    var dbBulletin = new Bulletin
+                    {
+                        UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
+                    };
+
+                    //Сохранение инстанций буллетинов для каждой борды
+                    var dbBoards = d.Db1.Boards.ToArray();
+                    foreach (var board in dbBoards)
+                    {
+                        var dbInstance = new BulletinInstance
+                        {
+                            BoardId = board.Id,
+                            BulletinId = dbBulletin.Id,
+                        };
+                        dbInstance.StateEnum = BulletinInstanceState.WaitPublication;
+                    }
+                    dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
+                    d.Db1.SaveChanges();
+                }
+                result = objs;
+            });
+            return result;
+        }
+
+        #endregion
     }
 
     public enum BulletinInstanceState
@@ -184,8 +234,6 @@ namespace BulletinEngine.Entity.Data
         Publicated = 5,
         Edited = 6,
         Removed = 7,
-        Unchecked = 8,
-        Checking = 9,
         Error = 99,
     }
 
