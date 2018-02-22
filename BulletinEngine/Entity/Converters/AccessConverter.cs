@@ -17,7 +17,7 @@ namespace BulletinHub.Entity.Converters
 
     class AccessConverter
     {
-        public static AccessPackage Convert(Access obj)
+        public static AccessPackage ConvertToCache(Access obj)
         {
             AccessPackage result = null;
             BCT.Execute(d =>
@@ -29,6 +29,16 @@ namespace BulletinHub.Entity.Converters
                     Password = obj.Password
                 };
             });
+            return result;
+        }
+        public static Access ConvertToModel(AccessPackage obj)
+        {
+            var result = new Access
+            {
+                BoardId = obj.BoardId,
+                Login = obj.Login,
+                Password = obj.Password
+            };
             return result;
         }
     }

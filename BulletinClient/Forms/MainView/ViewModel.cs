@@ -2,6 +2,7 @@
 using BulletinBridge.Messages.BoardApi;
 using BulletinClient.Core;
 using BulletinClient.Properties;
+using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using System;
@@ -60,6 +61,11 @@ namespace BulletinClient.Forms.MainView
             CommandAddBulletin = new DelegateCommand(AddBulletin);
 
             BulletinName = "Варежки";
+            GetBulletins();
+
+            Settings.Default.BoardLogin = "";
+            Settings.Default.BoardPassword = "";
+            Settings.Default.Save();
         }
 
         void GetXls()
@@ -126,7 +132,22 @@ namespace BulletinClient.Forms.MainView
                     Console.WriteLine($"Signin succesfull");
                 else
                     Console.WriteLine($"Signin not sucessfull");
+                GetBulletins();
             });
+        }
+
+        private void GetBulletins()
+        {
+            using (var client = new ServiceClient())
+            {
+                client.CollectionLoad<BulletinPackage>(GetBulletinsCallback);
+            }
+        }
+
+        private void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
+        {
+            Bulletins = objs;
+            RaisePropertyChanged(() => Bulletins);
         }
 
         void BoardAuth()
@@ -138,28 +159,22 @@ namespace BulletinClient.Forms.MainView
                     Login = Login,
                     Password = Password,
                 };
-                var request = new RequestAddAccessModel
-                {
-                    Objects = new[] { access }
-                };
-
                 using (var client = new ServiceClient())
                 {
-                    var response = client.Execute<RequestAddAccessModel, ResponseAddAccessModel>(request);
-
-                    if (response.State == ResponseState.Success)
-                    {
-                        access = response.Objects.FirstOrDefault();
-                        Settings.Default.BoardLogin = access.Login;
-                        Settings.Default.BoardPassword = access.Password;
-                        Settings.Default.Save();
-
-                        RaisePropertyChanged(() => HasAccess);
-                        RaisePropertyChanged(() => DontHasAccess);
-                        RaisePropertyChanged(() => BoardLogin);
-                    }
+                    client.Save<AccessPackage>((a)=>BoardAuthCallback(a), access);
                 }
             });
+        }
+
+        private void BoardAuthCallback(AccessPackage access)
+        {
+            Settings.Default.BoardLogin = access.Login;
+            Settings.Default.BoardPassword = access.Password;
+            Settings.Default.Save();
+
+            RaisePropertyChanged(() => HasAccess);
+            RaisePropertyChanged(() => DontHasAccess);
+            RaisePropertyChanged(() => BoardLogin);
         }
 
         void AddBulletin()
@@ -185,17 +200,19 @@ namespace BulletinClient.Forms.MainView
                     ValueFields = fields,
                     Access = access,
                 };
-                var request = new RequestAddBulletinsModel
-                {
-                    Objects = new[] { package }
-                };
                 using (var client = new ServiceClient())
                 {
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
-                    var response = client.Execute<RequestAddBulletinsModel, ResponseAddBulletinsModel>(request);
+                    client.Save<BulletinPackage>(AddBulletinCallback, package);
                 }
             });
+            GetBulletins();
+        }
+
+        private void AddBulletinCallback(BulletinPackage obj)
+        {
+            MessageBox.Show("Объявление было добавлено");
         }
     }
 }

@@ -4,6 +4,7 @@ using BulletinEngine.Entity.Converters;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -174,11 +175,12 @@ namespace BulletinEngine.Entity.Data
 
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
-{
-             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, new Version(1,0,0,0))
+        {
+             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, BulletinInstanceConverter.Convert, new Version(1,0,0,0))
         };
         #endregion
 
+        #region DataService -- Methods
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             return base._CollectionObjectLoad();
@@ -187,6 +189,39 @@ namespace BulletinEngine.Entity.Data
         {
             return base._ObjectLoadById(id);
         }
+        public override IEnumerable<TDataModel> _CacheSave<TDataModel>(IEnumerable<TDataModel> objs)
+        {
+            var result = Enumerable.Empty<TDataModel>();
+            BCT.Execute(d =>
+            {
+                 foreach (var bulletin in objs.OfType<BulletinInstance>().ToArray())
+                {
+                    //Сохранение контейнера буллетинов
+                    var dbBulletin = new Bulletin
+                    {
+                        UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
+                    };
+
+                    //Сохранение инстанций буллетинов для каждой борды
+                    var dbBoards = d.Db1.Boards.ToArray();
+                    foreach (var board in dbBoards)
+                    {
+                        var dbInstance = new BulletinInstance
+                        {
+                            BoardId = board.Id,
+                            BulletinId = dbBulletin.Id,
+                        };
+                        dbInstance.StateEnum = BulletinInstanceState.WaitPublication;
+                    }
+                    dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
+                    d.Db1.SaveChanges();
+                }
+                result = objs;
+            });
+            return result;
+        }
+
+        #endregion
     }
 
     public enum BulletinInstanceState
