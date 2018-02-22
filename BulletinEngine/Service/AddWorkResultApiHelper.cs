@@ -20,7 +20,7 @@ namespace BulletinHub.Service
                 foreach (var bulletin in bulletins)
                 {
                     //Еще не создано или не добавлено в БД
-                    if (bulletin.BulletinInstanceId == Guid.Empty
+                    if (bulletin.Id == Guid.Empty
                     && d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url) == null)
                     {
                         //Получение группы
@@ -86,7 +86,7 @@ namespace BulletinHub.Service
                     }
                     else
                     {
-                        var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == bulletin.BulletinInstanceId);
+                        var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == bulletin.Id);
                         if(dbInstance == null)
                         {
                             dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url);

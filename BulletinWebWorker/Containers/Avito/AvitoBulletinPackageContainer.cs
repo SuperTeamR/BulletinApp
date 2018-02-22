@@ -79,10 +79,7 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             var r = client.Ping();
                             Console.WriteLine($"Ping = {r}");
-                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
-                            {
-                                Objects = packages
-                            });
+                            client.Save(null, packages);
                         }
                     });
                 });

@@ -1,8 +1,12 @@
-﻿using BulletinBridge.Messages.InternalApi;
+﻿using BulletinBridge.Data;
+using BulletinBridge.Messages.InternalApi;
+using BulletinWebWorker.Containers;
 using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace BulletinWebWorker.Managers
 {
@@ -35,14 +39,22 @@ namespace BulletinWebWorker.Managers
         {
             DCT.ExecuteAsync(d =>
             {
+                d._SessionInfo.HashUID = "Engine";
+                d._SessionInfo.SessionUID = "Engine";
+
                 using (var client = new EngineService())
                 {
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
-                    client.Execute<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>(new RequestGetBulletinWorkModel());
+                    client.CollectionLoad<BulletinPackage>(AskForBulletinWork);
                 }
             });
 
+        }
+
+        private static void AskForBulletinWork(IEnumerable<BulletinPackage> objs)
+        {
+            WorkRouter.AssignBulletinWork(objs.Where(q=> q.State == 1 ));
         }
 
         ///-------------------------------------------------------------------------------------------------
