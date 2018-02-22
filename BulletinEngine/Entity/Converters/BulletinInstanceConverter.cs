@@ -53,13 +53,22 @@ namespace BulletinEngine.Entity.Converters
                 var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
                 var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == obj.Access.Login
                       && q.Password == obj.Access.Password);
+                var dbBulletin = new Bulletin
+                {
+                    UserId = Guid.Empty,
+                };
+                dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
+                var board = d.Db1.Boards.FirstOrDefault(q => q.Name == "Avito");
                 result = new BulletinInstance
                 {
                     Url = obj.Url,
                     State = state,
                     GroupId = dbGroup.Id,
                     AccessId = dbAccess == null ? Guid.Empty : dbAccess.Id,
+                    BulletinId = dbBulletin.Id,
+                    BoardId = board.Id
                 };
+                result.StateEnum = Entity.Data.BulletinInstanceState.WaitPublication;
                 foreach (var field in obj.ValueFields)
                 {
                     var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
@@ -74,7 +83,7 @@ namespace BulletinEngine.Entity.Converters
                         dbBulletinField.StateEnum = BulletinFieldState.Filled;
                     }
                 }
-
+                d.SaveChanges();
             });
             return result;
         }
