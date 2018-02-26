@@ -11,6 +11,7 @@ using FessooFramework.Objects.Message;
 using FessooFramework.Tools.DCT;
 using FessooFramework.Tools.Web;
 using FessooFramework.Tools.Web.DataService.Configuration;
+using HubService.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,8 +72,10 @@ namespace HubService
 
         public override IEnumerable<DataServiceConfigurationBase> Convertors => new DataServiceConfigurationBase[]
         {
-            new DataServiceConfiguration<BulletinInstance, BulletinPackage>(),
+            new BulletinConfiguration(),
             new DataServiceConfiguration<Access, AccessPackage>(),
         };
+
+        
     }
 }
