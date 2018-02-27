@@ -1,7 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinBridge.Messages.BoardApi;
 using BulletinClient.Core;
-using BulletinClient.Data;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
@@ -16,58 +15,53 @@ namespace BulletinClient.Forms.MainView
 {
     class ViewModel : VM
     {
-        public Visibility HasAccess
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Settings.Default.BoardLogin))
-                {
-                    return Visibility.Visible;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
-            }
-        }
+        #region Proiperty
+        public bool Auth => !string.IsNullOrEmpty(Settings.Default.BoardLogin);
+        public bool NotAuth => !Auth;
 
-        public Visibility DontHasAccess
-        {
-            get
-            {
-                if (HasAccess == Visibility.Visible) return Visibility.Collapsed;
-                else return Visibility.Visible;
-            }
-        }
+        public bool Bulletin => Bulletins != null && Bulletins.Any();
+        public bool NotBulletin => Bulletins == null || !Bulletins.Any();
+
         public string Login { get; set; }
         public string Password { get; set; }
-        public string BulletinName { get; set; }
-
         public string BoardLogin
         {
             get { return Settings.Default.BoardLogin; }
         }
-
-        public IEnumerable<BulletinPackage> Bulletins { get; set; }
+        #endregion
+        #region Commands
         public ICommand CommandGetXls { get; set; }
         public ICommand CommandBoardAuth { get; set; }
         public ICommand CommandAppAuth { get; set; }
         public ICommand CommandAddBulletin { get; set; }
-
+        public ICommand CommandLogout { get; set; }
+        #endregion
+        #region Constructor
         public ViewModel()
         {
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
             CommandAppAuth = new DelegateCommand(ApplicationAuth);
             CommandAddBulletin = new DelegateCommand(AddBulletin);
-
+            CommandLogout = new DelegateCommand(Logout);
             BulletinName = "Варежки";
             GetBulletins();
-
+        }
+        #endregion
+        #region Methods
+        private void Logout()
+        {
             Settings.Default.BoardLogin = "";
             Settings.Default.BoardPassword = "";
             Settings.Default.Save();
+            Bulletins = Enumerable.Empty<BulletinPackage>();
+            RaiseDone();
         }
+        #endregion
+        public string BulletinName { get; set; }
+        public IEnumerable<BulletinPackage> Bulletins { get; set; }
+
+     
 
         void GetXls()
         {
@@ -95,7 +89,6 @@ namespace BulletinClient.Forms.MainView
                 }
             });
         }
-
         void Registration(Action<bool> callback)
         {
             using (var main = new MainService())
@@ -136,7 +129,6 @@ namespace BulletinClient.Forms.MainView
                 GetBulletins();
             });
         }
-
         private void GetBulletins()
         {
             using (var client = new ServiceClient())
@@ -144,13 +136,13 @@ namespace BulletinClient.Forms.MainView
                 client.CollectionLoad<BulletinPackage>(GetBulletinsCallback);
             }
         }
-
         private void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
         {
             Bulletins = objs;
             RaisePropertyChanged(() => Bulletins);
+            RaisePropertyChanged(() => Bulletin);
+            RaisePropertyChanged(() => NotBulletin);
 
-            var b = Bulletins.Select(q => new BulletinView(q)).ToArray();
         }
 
         void BoardAuth()
@@ -179,8 +171,8 @@ namespace BulletinClient.Forms.MainView
                 Settings.Default.BoardPassword = access.Password;
                 Settings.Default.Save();
 
-                RaisePropertyChanged(() => HasAccess);
-                RaisePropertyChanged(() => DontHasAccess);
+                RaisePropertyChanged(() => Auth);
+                RaisePropertyChanged(() => NotAuth);
                 RaisePropertyChanged(() => BoardLogin);
             });
         }

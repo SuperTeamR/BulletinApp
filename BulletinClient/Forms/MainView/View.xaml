@@ -7,45 +7,71 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
     <Grid >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="20" />
-            <RowDefinition Height="40" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.Row="0" HorizontalAlignment="Right" Visibility="{Binding DontHasAccess}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Логин: "/>
-                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding Login}"/>
-                <TextBlock Margin="10,0,0,0" Text="Пароль: "/>
-                <TextBox Margin="5,0,0,0" Width="100" Text="{Binding Password}"/>
-                <Button Margin="10,0,5,0" Content="Подключить" Command="{Binding CommandBoardAuth}"/>
-            </StackPanel>
+        <Grid Grid.RowSpan="2" Visibility="{Binding NotAuth, Converter={StaticResource BoolToVis}}" Grid.IsSharedSizeScope="True">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition SharedSizeGroup="A" Width="Auto" />
+                <ColumnDefinition SharedSizeGroup="B"  Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Авторизация"  FontSize="24"/>
+
+            <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Логин"  FontSize="14" MinWidth="100"/>
+            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
+
+            <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
+            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
+
+            <Button Margin="5" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Войти" Command="{Binding CommandBoardAuth}" BorderThickness="0" FontSize="14" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
         </Grid>
-        <Grid Grid.Row="0" HorizontalAlignment="Right" Visibility="{Binding HasAccess}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Подключен "/>
-                <TextBlock Margin="5,0,5,0" Text="{Binding BoardLogin}"/>
+
+        <Grid HorizontalAlignment="Stretch" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Margin="3" Text="{Binding BoardLogin}"  FontSize="12" FontWeight="Medium" Background="White"/>
+                <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>
-        </Grid>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Visibility="{Binding HasAccess}">
-            <TextBlock VerticalAlignment="Center" Text="Название: "/>
-            <TextBox Margin="5,0,0,0" Width="100" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding BulletinName}"/>
-            <Button Width="150" Height="30" Content="Добавить" Command="{Binding CommandAddBulletin}" />
-        </StackPanel>
-       
-        <DataGrid Grid.Row="3" ItemsSource="{Binding Bulletins}">
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Width="400">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Url}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+            <TabControl  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
+                <TabItem Header="Список" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
+                    <Grid>
+                        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
+                        <DataGrid  ItemsSource="{Binding Bulletins}" BorderThickness="0" Background="White" Visibility="{Binding Bulletin, Converter={StaticResource BoolToVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="400">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Url}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                   
+                </TabItem>
+                <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
+                    <Grid VerticalAlignment="Top">
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}">
+                            <TextBlock VerticalAlignment="Center" Text="Название: "/>
+                            <TextBox Margin="5,0,0,0" Width="100" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding BulletinName}"/>
+                            <Button Width="150" Height="30" Content="Добавить" Command="{Binding CommandAddBulletin}" />
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid> 
+      
     </Grid>
 </UserControl>
