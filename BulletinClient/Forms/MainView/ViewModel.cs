@@ -29,6 +29,11 @@ namespace BulletinClient.Forms.MainView
         {
             get { return Settings.Default.BoardLogin; }
         }
+
+        public string CardCategory1 { get; set; }
+        public string CardCategory2 { get; set; }
+        public string CardCategory3  { get; set; }
+
         #endregion
         #region Commands
         public ICommand CommandGetXls { get; set; }
@@ -39,9 +44,14 @@ namespace BulletinClient.Forms.MainView
         #region Constructor
         public ViewModel()
         {
+            CardCategory1 = "Хобби и отдых";
+            CardCategory2 = "Спорт и отдых";
+            CardCategory3 = "Другое";
+
+
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
-            CommandAddBulletin = new DelegateCommand(AddBulletin);
+            CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice));
             CommandLogout = new DelegateCommand(Logout);
             GetBulletins();
         }
@@ -128,13 +138,13 @@ namespace BulletinClient.Forms.MainView
             });
         }
 
-        void AddBulletin()
+        void AddBulletin(string cardName, string cardDescription, string cardPrice)
         {
             DCT.Execute(d =>
             {
-                if(string.IsNullOrEmpty(CardName)
-                || string.IsNullOrEmpty(CardDescription)
-                || string.IsNullOrEmpty(CardPrice))
+                if(string.IsNullOrEmpty(cardName)
+                || string.IsNullOrEmpty(cardDescription)
+                || string.IsNullOrEmpty(cardPrice))
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля для добавления объявления");
                     return;
@@ -144,13 +154,13 @@ namespace BulletinClient.Forms.MainView
                     Login = Settings.Default.BoardLogin,
                     Password = Settings.Default.BoardPassword,
                 };
-                var signature = new GroupSignature("Хобби и отдых", "Охота и рыбалка");
+                var signature = new GroupSignature(CardCategory1, CardCategory2, CardCategory3);
                 var fields = new Dictionary<string, string>
                 {
                     {"Вид объявления", "Продаю свое" },
-                    {"Название объявления", CardName },
-                    {"Описание объявления", CardDescription },
-                    {"Цена", CardPrice }
+                    {"Название объявления", cardName },
+                    {"Описание объявления", cardDescription },
+                    {"Цена", cardPrice }
                 };
                 var package = new BulletinPackage
                 {
