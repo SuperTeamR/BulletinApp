@@ -54,7 +54,7 @@ namespace BulletinWebWorker.Managers
 
         private static void AskForBulletinWork(IEnumerable<BulletinPackage> objs)
         {
-            WorkRouter.AssignBulletinWork(objs.Where(q=> q.State == 1 ));
+            WorkRouter.AssignBulletinWork(objs);
         }
 
         ///-------------------------------------------------------------------------------------------------
@@ -67,6 +67,9 @@ namespace BulletinWebWorker.Managers
         {
             DCT.ExecuteAsync(d =>
             {
+                d._SessionInfo.HashUID = "Engine";
+                d._SessionInfo.SessionUID = "Engine";
+
                 using (var client = new EngineService())
                 {
                     var result = client.Ping();

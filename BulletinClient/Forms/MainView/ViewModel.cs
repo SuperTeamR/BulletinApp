@@ -1,12 +1,14 @@
 ﻿using BulletinBridge.Data;
 using BulletinBridge.Messages.BoardApi;
 using BulletinClient.Core;
+using BulletinClient.Data;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -15,58 +17,81 @@ namespace BulletinClient.Forms.MainView
 {
     class ViewModel : VM
     {
-        public Visibility HasAccess
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(Settings.Default.BoardLogin))
-                {
-                    return Visibility.Visible;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
-            }
-        }
+        #region Proiperty
+        public bool Auth => !string.IsNullOrEmpty(Settings.Default.BoardLogin);
+        public bool NotAuth => !Auth;
 
-        public Visibility DontHasAccess
-        {
-            get
-            {
-                if (HasAccess == Visibility.Visible) return Visibility.Collapsed;
-                else return Visibility.Visible;
-            }
-        }
+        public bool Bulletin => Bulletins != null && Bulletins.Any();
+        public bool NotBulletin => Bulletins == null || !Bulletins.Any();
+
         public string Login { get; set; }
         public string Password { get; set; }
-        public string BulletinName { get; set; }
-
         public string BoardLogin
         {
             get { return Settings.Default.BoardLogin; }
         }
 
-        public IEnumerable<BulletinPackage> Bulletins { get; set; }
+        public string CardCategory1 { get; set; }
+        public string CardCategory2 { get; set; }
+        public string CardCategory3  { get; set; }
+        public string CardName { get; set; }
+        public string CardPrice { get; set; }
+        public string CardDescription { get; set; }
+        public string CardImageLinks { get; set; }
+
+        public ObservableCollection<NewBulletin> AddBulletins { get; set; }
+
+        public IEnumerable<BulletinView> Bulletins { get; set; }
+
+        #endregion
+        #region Commands
         public ICommand CommandGetXls { get; set; }
         public ICommand CommandBoardAuth { get; set; }
-        public ICommand CommandAppAuth { get; set; }
         public ICommand CommandAddBulletin { get; set; }
-
+        public ICommand CommandAddBulletins { get; set; }
+        public ICommand CommandLogout { get; set; }
+        #endregion
+        #region Constructor
         public ViewModel()
         {
+            CardCategory1 = "Хобби и отдых";
+            CardCategory2 = "Спорт и отдых";
+            CardCategory3 = "Другое";
+            AddBulletins = new ObservableCollection<NewBulletin>();
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
-            CommandAppAuth = new DelegateCommand(ApplicationAuth);
-            CommandAddBulletin = new DelegateCommand(AddBulletin);
-
-            BulletinName = "Варежки";
+            CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
+            CommandLogout = new DelegateCommand(Logout);
             GetBulletins();
-
+            CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
+        }
+        #endregion
+        #region Methods
+        private void Logout()
+        {
             Settings.Default.BoardLogin = "";
             Settings.Default.BoardPassword = "";
             Settings.Default.Save();
+            Bulletins = Enumerable.Empty<BulletinView>();
+            RaiseDone();
         }
+
+        private void AddBulletinsCollections()
+        {
+            if (AddBulletins.Any())
+            {
+                foreach (var bulletin in AddBulletins)
+                {
+                    AddBulletin(bulletin.Заголовок, bulletin.Описание, bulletin.Цена);
+                }
+            }
+        }
+        #endregion
+
+
+
+
+
 
         void GetXls()
         {
@@ -80,61 +105,6 @@ namespace BulletinClient.Forms.MainView
                 //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
             });
         }
-        string AuthLogin = "";
-        string AuthPassword = "";
-        void ApplicationAuth()
-        {
-            DCT.Execute(d =>
-            {
-                using (var main = new MainService())
-                {
-                    var ping = main.Ping();
-                    if (ping)
-                        Registration(RegistrationCallback);
-                }
-            });
-        }
-
-        void Registration(Action<bool> callback)
-        {
-            using (var main = new MainService())
-            {
-                AuthLogin = "ttt3@ttt.ru";
-                AuthPassword = "799988888";
-                var password = "ttt3";
-                var firstname = "name";
-                var secondname = "sec";
-                var middlename = "sec";
-                main.Registration(callback, AuthLogin, AuthPassword, password, firstname, secondname, middlename);
-            }
-        }
-        void RegistrationCallback(bool result)
-        {
-            DCT.Execute(d =>
-            {
-                if (result)
-                    Console.WriteLine($"Registration succesfull");
-                else
-                    Console.WriteLine($"Registration not sucessfull");
-                SignIn(SignInCallback, AuthLogin, AuthPassword);
-            });
-        }
-        void SignIn(Action<bool> callback, string email, string password)
-        {
-            using (var main = new MainService())
-                main.SignIn(callback, email, password);
-        }
-        void SignInCallback(bool result)
-        {
-            DCT.Execute(d =>
-            {
-                if (result)
-                    Console.WriteLine($"Signin succesfull");
-                else
-                    Console.WriteLine($"Signin not sucessfull");
-                GetBulletins();
-            });
-        }
 
         private void GetBulletins()
         {
@@ -143,11 +113,13 @@ namespace BulletinClient.Forms.MainView
                 client.CollectionLoad<BulletinPackage>(GetBulletinsCallback);
             }
         }
-
         private void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
         {
-            Bulletins = objs;
+            Bulletins = objs.Select(q => new BulletinView(q)).ToArray();
             RaisePropertyChanged(() => Bulletins);
+            RaisePropertyChanged(() => Bulletin);
+            RaisePropertyChanged(() => NotBulletin);
+
         }
 
         void BoardAuth()
@@ -176,29 +148,43 @@ namespace BulletinClient.Forms.MainView
                 Settings.Default.BoardPassword = access.Password;
                 Settings.Default.Save();
 
-                RaisePropertyChanged(() => HasAccess);
-                RaisePropertyChanged(() => DontHasAccess);
+                RaisePropertyChanged(() => Auth);
+                RaisePropertyChanged(() => NotAuth);
                 RaisePropertyChanged(() => BoardLogin);
+
+                GetBulletins();
             });
         }
 
-        void AddBulletin()
+        void AddBulletin(string cardName, string cardDescription, string cardPrice, string cardImageLinks)
         {
             DCT.Execute(d =>
             {
+                if(string.IsNullOrEmpty(cardName)
+                || string.IsNullOrEmpty(cardDescription)
+                || string.IsNullOrEmpty(cardPrice))
+                {
+                    MessageBox.Show("Пожалуйста, заполните все поля для добавления объявления");
+                    return;
+                }
                 var access = new AccessPackage
                 {
                     Login = Settings.Default.BoardLogin,
                     Password = Settings.Default.BoardPassword,
                 };
-                var signature = new GroupSignature("Хобби и отдых", "Спорт и отдых", "Другое");
+                var signature = new GroupSignature(CardCategory1, CardCategory2, CardCategory3);
                 var fields = new Dictionary<string, string>
                 {
                     {"Вид объявления", "Продаю свое" },
-                    {"Название объявления", BulletinName },
-                    {"Описание объявления", "Очень теплые" },
-                    {"Цена", "300" }
+                    {"Название объявления", cardName },
+                    {"Описание объявления", cardDescription },
+                    {"Цена", cardPrice },
                 };
+                if(!string.IsNullOrEmpty(cardImageLinks))
+                {
+                    fields.Add(@"Фотографии 
+Вы можете прикрепить не более 10 фотографий", cardImageLinks);
+                }
                 var package = new BulletinPackage
                 {
                     Signature = signature,
@@ -212,12 +198,20 @@ namespace BulletinClient.Forms.MainView
                     client.Save<BulletinPackage>(AddBulletinCallback, package);
                 }
             });
-            GetBulletins();
         }
 
         private void AddBulletinCallback(BulletinPackage obj)
         {
             MessageBox.Show("Объявление было добавлено");
         }
+    }
+
+
+    public class NewBulletin
+    {
+        public string Заголовок { get; set; }
+        public string Описание { get; set; }
+        public string Цена { get; set; }
+        public string Ссылка { get; set; }
     }
 }

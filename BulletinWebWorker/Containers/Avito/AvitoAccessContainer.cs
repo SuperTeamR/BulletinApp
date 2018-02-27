@@ -40,12 +40,16 @@ namespace BulletinWebWorker.Containers.Avito
             DCT.Execute(d =>
             {
                 if(currentAccess == null || 
-                (currentAccess.Login == access.Login && currentAccess.Password == access.Password))
+                (currentAccess.Login != access.Login && currentAccess.Password != access.Password))
                 {
                     currentAccess = access;
 
                     Exit();
                     result = Auth();
+                }
+                else
+                {
+                    result = true;
                 }
             });
             return result;

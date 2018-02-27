@@ -96,8 +96,8 @@
     <Compile Include="Helpers\ValueFieldHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\AccessResultHelper.cs" />
     <Compile Include="Service\AddWorkResultApiHelper.cs" />
-    <Compile Include="Service\ClientApiHelper.cs" />
     <Compile Include="Service\GetWorkApiHelper.cs" />
     <Compile Include="Tools\Singleton.cs" />
   </ItemGroup>

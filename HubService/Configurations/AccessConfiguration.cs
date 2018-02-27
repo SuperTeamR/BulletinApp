@@ -1,25 +1,25 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Entity.Data;
+using BulletinHub.Service;
+using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Web.DataService.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using FessooFramework.Objects.Data;
-using BulletinHub.Service;
 
 namespace HubService.Configurations
 {
-    class BulletinConfiguration : DataServiceConfiguration<BulletinInstance, BulletinPackage>
+    class AccessConfiguration : DataServiceConfiguration<Access, AccessPackage>
     {
         public override IEnumerable<CacheObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<CacheObject> obj = null, IEnumerable<Guid> id = null)
         {
             var result = Enumerable.Empty<CacheObject>();
-            var objects = obj.OfType<BulletinPackage>();
+            var objects = obj.OfType<AccessPackage>();
             switch (code)
             {
-                case "AssignBulletinWork":
-                    result = AddWorkResultApiHelper.AddWorkResult(objects);
+                case "CheckAccess":
+                    result = AccessResultHelper.MarkAccessAsChecked(objects);
                     break;
                 default:
                     break;

@@ -91,10 +91,11 @@
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
-    <Compile Include="Service\WorkRouter.cs" />
+    <Compile Include="Service\GetWorkRouter.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Service\EngineService.cs" />
     <Compile Include="Managers\WebWorkerManager.cs" />
+    <Compile Include="Service\SendResultRouter.cs" />
     <Compile Include="Tools\TaskController.cs" />
     <Compile Include="Tools\WebWorker.cs" />
     <Page Include="MainWindow.xaml">

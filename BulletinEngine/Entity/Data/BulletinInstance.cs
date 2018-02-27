@@ -70,8 +70,12 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Rejected, BulletinInstanceState.Edited, Edited),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.OnModeration, OnModeration),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Blocked, BulletinInstanceState.Removed, Removed),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Publicated, BulletinInstanceState.Created, Closed),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Created, Closed),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.Created, Closed),
+            new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.Created, Closed),
         };
-        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
+        protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error, BulletinInstanceState.Unchecked, BulletinInstanceState.Checking };
 
         protected override int GetStateValue(BulletinInstanceState state)
         {
@@ -169,6 +173,22 @@ namespace BulletinEngine.Entity.Data
             return arg1;
         }
 
+        private BulletinInstance Closed(BulletinInstance arg1, BulletinInstance arg2)
+        {
+            BCT.Execute(d =>
+            {
+                arg1.BulletinId = arg2.BulletinId;
+                arg1.BoardId = arg2.BoardId;
+                arg1.AccessId = arg2.AccessId;
+                arg1.Url = arg2.Url;
+                arg1.GroupId = arg2.GroupId;
+
+                //d.Queue.Bulletins.Enqueue(arg2.Id);
+            });
+
+            return arg1;
+        }
+
 
 
         #endregion
@@ -183,13 +203,20 @@ namespace BulletinEngine.Entity.Data
         #region DataService -- Methods
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
+            var workStates = new[]
+            {
+                (int)BulletinInstanceState.WaitPublication,
+                (int)BulletinInstanceState.Unchecked,
+                (int)BulletinInstanceState.OnModeration,
+            };
             var result = Enumerable.Empty<EntityObject>();
             BCT.Execute(c =>
             {
                 var id = c._SessionInfo.HashUID;
                 var id2 = c._SessionInfo.SessionUID;
                 if (id == "Engine")
-                    result = c.Db1.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
+                    result = c.Db1.BulletinInstances
+                    .Where(q => workStates.Contains(q.State)).ToArray();
                 else
                     result = base._CollectionObjectLoad();
             });
@@ -205,6 +232,7 @@ namespace BulletinEngine.Entity.Data
             BCT.Execute(d =>
             {
                 d.SaveChanges();
+                result = objs;
             });
             return result;
         }
@@ -221,6 +249,7 @@ namespace BulletinEngine.Entity.Data
         Publicated = 5,
         Edited = 6,
         Removed = 7,
+        Closed = 8,
         Error = 99,
         Unchecked = 100,
         Checking = 101,
