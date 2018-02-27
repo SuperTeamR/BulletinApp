@@ -44,75 +44,6 @@
                 <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>
             <TabControl  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
-                <TabItem Header="Мои" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
-                    <Grid>
-                        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
-                        <DataGrid  
-                            ItemsSource="{Binding Bulletins}" 
-                            BorderThickness="0" 
-                            Background="White" 
-                            AutoGenerateColumns="False"
-                            Visibility="{Binding Bulletin, Converter={StaticResource BoolToVis}}">
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="90" Header="Состояние">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding State}"  HorizontalAlignment="Center"  />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="60" Header="Просмотры">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Views}" HorizontalAlignment="Center"  />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="150" Header="Заголовок">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock  Text="{Binding Title}" TextWrapping="Wrap"  />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="*" Header="Описание">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="100" Header="Цена">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock  Text="{Binding Price}"  HorizontalAlignment="Center"  />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Width="150" Header="Ссылка">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock  Text="{Binding Url}" TextWrapping="Wrap"  />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
-
-                </TabItem>
                 <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
                     <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
@@ -234,6 +165,75 @@
                             </Grid>
                         </ScrollViewer>
                     </Grid>
+                </TabItem>
+                <TabItem Header="Мои" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
+                    <Grid>
+                        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
+                        <DataGrid  
+                            ItemsSource="{Binding Bulletins}" 
+                            BorderThickness="0" 
+                            Background="White" 
+                            AutoGenerateColumns="False"
+                            Visibility="{Binding Bulletin, Converter={StaticResource BoolToVis}}">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Width="90" Header="Состояние">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding State}"  HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="60" Header="Просмотры">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Views}" HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="150" Header="Заголовок">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Title}" TextWrapping="Wrap"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*" Header="Описание">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="100" Header="Цена">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Price}"  HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="150" Header="Ссылка">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Url}" TextWrapping="Wrap"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+
                 </TabItem>
             </TabControl>
         </Grid>

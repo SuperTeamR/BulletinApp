@@ -1,4 +1,5 @@
-﻿using FessooFramework.Core;
+﻿using FessooFramework.Components;
+using FessooFramework.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class BulletinDbContext : _DCTContext
+    public class BulletinDbContext : DCTContext
     {
 
     }

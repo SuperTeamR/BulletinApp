@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBrowserHostTest", "WebBrowserHostTest\WebBrowserHostTest.csproj", "{3746F4EA-3C7C-492F-851E-462D68B7A496}"
 EndProject
@@ -44,19 +44,15 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{3746F4EA-3C7C-492F-851E-462D68B7A496}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3746F4EA-3C7C-492F-851E-462D68B7A496}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3746F4EA-3C7C-492F-851E-462D68B7A496}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3746F4EA-3C7C-492F-851E-462D68B7A496}.Release|Any CPU.Build.0 = Release|Any CPU
 		{15C3C4D1-4FB9-4DC9-AE9D-A21231C9DFB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{15C3C4D1-4FB9-4DC9-AE9D-A21231C9DFB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C3C4D1-4FB9-4DC9-AE9D-A21231C9DFB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C3C4D1-4FB9-4DC9-AE9D-A21231C9DFB7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{797D9475-A26F-42BF-B8A6-99BA4804C562}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{797D9475-A26F-42BF-B8A6-99BA4804C562}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{797D9475-A26F-42BF-B8A6-99BA4804C562}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{797D9475-A26F-42BF-B8A6-99BA4804C562}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5CAAB76-A283-4DC3-A5ED-1B84873C2B34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5CAAB76-A283-4DC3-A5ED-1B84873C2B34}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5CAAB76-A283-4DC3-A5ED-1B84873C2B34}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5CAAB76-A283-4DC3-A5ED-1B84873C2B34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BFAD6DB-04B0-4DAD-80A1-895CF59480E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
