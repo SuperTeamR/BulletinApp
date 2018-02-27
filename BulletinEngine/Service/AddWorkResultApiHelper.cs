@@ -19,7 +19,7 @@ namespace BulletinHub.Service
             {
                 foreach (var bulletin in bulletins)
                 {
-                    //Еще не создано или не добавлено в БД
+                    //Еще не создано или не добавлено в БД 
                     if (d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url) == null)
                     {
                         //Получение группы
