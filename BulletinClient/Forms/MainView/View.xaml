@@ -47,12 +47,64 @@
                 <TabItem Header="Список" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
                     <Grid>
                         <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
-                        <DataGrid  ItemsSource="{Binding Bulletins}" BorderThickness="0" Background="White" Visibility="{Binding Bulletin, Converter={StaticResource BoolToVis}}">
+                        <DataGrid  
+                            ItemsSource="{Binding Bulletins}" 
+                            BorderThickness="0" 
+                            Background="White" 
+                            AutoGenerateColumns="False"
+                            Visibility="{Binding Bulletin, Converter={StaticResource BoolToVis}}">
                             <DataGrid.Columns>
-                                <DataGridTemplateColumn Width="400">
+                                <DataGridTemplateColumn Width="90" Header="Состояние">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Url}"/>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding State}"  HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="60" Header="Просмотры">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Views}" HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="150" Header="Заголовок">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Title}" TextWrapping="Wrap"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="*" Header="Описание">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Description}" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="100" Header="Цена">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Price}"  HorizontalAlignment="Center"  />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Width="150" Header="Ссылка">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel>
+                                                <TextBlock  Text="{Binding Url}" TextWrapping="Wrap"  />
+                                            </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -98,12 +150,11 @@
                                 <TextBox Margin="5" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardName}" BorderThickness="0,0,0,1"/>
 
                                 <TextBlock  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding CardDescription}" 
+                                <TextBox AcceptsReturn="True" Margin="5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding CardDescription}" 
                                  MinLines="5" BorderThickness="0,0,0,1"/>
 
                                 <TextBlock  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Цена"  FontSize="14" MinWidth="100"/>
                                 <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardPrice}" 
-                                         AcceptsReturn="True"
                                   BorderThickness="0,0,0,1"/>
 
                                 <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>

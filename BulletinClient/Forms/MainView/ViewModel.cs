@@ -56,9 +56,11 @@ namespace BulletinClient.Forms.MainView
             RaiseDone();
         }
         #endregion
-        public string BulletinName { get; set; }
-        public string BulletinPrice { get; set; }
-        public string BulletinDescription { get; set; }
+        public string CardName { get; set; }
+        public string CardPrice { get; set; }
+        public string CardDescription { get; set; }
+        public string  CardImageLinks { get; set; } 
+
         public IEnumerable<BulletinView> Bulletins { get; set; }
 
      
@@ -130,9 +132,9 @@ namespace BulletinClient.Forms.MainView
         {
             DCT.Execute(d =>
             {
-                if(string.IsNullOrEmpty(BulletinName)
-                || string.IsNullOrEmpty(BulletinDescription)
-                || string.IsNullOrEmpty(BulletinPrice))
+                if(string.IsNullOrEmpty(CardName)
+                || string.IsNullOrEmpty(CardDescription)
+                || string.IsNullOrEmpty(CardPrice))
                 {
                     MessageBox.Show("Пожалуйста, заполните все поля для добавления объявления");
                     return;
@@ -146,9 +148,9 @@ namespace BulletinClient.Forms.MainView
                 var fields = new Dictionary<string, string>
                 {
                     {"Вид объявления", "Продаю свое" },
-                    {"Название объявления", BulletinName },
-                    {"Описание объявления", BulletinDescription },
-                    {"Цена", BulletinPrice }
+                    {"Название объявления", CardName },
+                    {"Описание объявления", CardDescription },
+                    {"Цена", CardPrice }
                 };
                 var package = new BulletinPackage
                 {
