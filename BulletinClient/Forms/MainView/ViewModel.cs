@@ -82,7 +82,7 @@ namespace BulletinClient.Forms.MainView
             {
                 foreach (var bulletin in AddBulletins)
                 {
-                    AddBulletin(bulletin.Заголовок, bulletin.Описание, bulletin.Цена);
+                    AddBulletin(bulletin.Заголовок, bulletin.Описание, bulletin.Цена, bulletin.Ссылка);
                 }
             }
         }
