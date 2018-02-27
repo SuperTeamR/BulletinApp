@@ -8,6 +8,7 @@ using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -33,12 +34,21 @@ namespace BulletinClient.Forms.MainView
         public string CardCategory1 { get; set; }
         public string CardCategory2 { get; set; }
         public string CardCategory3  { get; set; }
+        public string CardName { get; set; }
+        public string CardPrice { get; set; }
+        public string CardDescription { get; set; }
+        public string CardImageLinks { get; set; }
+
+        public ObservableCollection<NewBulletin> AddBulletins { get; set; }
+
+        public IEnumerable<BulletinView> Bulletins { get; set; }
 
         #endregion
         #region Commands
         public ICommand CommandGetXls { get; set; }
         public ICommand CommandBoardAuth { get; set; }
         public ICommand CommandAddBulletin { get; set; }
+        public ICommand CommandAddBulletins { get; set; }
         public ICommand CommandLogout { get; set; }
         #endregion
         #region Constructor
@@ -47,13 +57,13 @@ namespace BulletinClient.Forms.MainView
             CardCategory1 = "Хобби и отдых";
             CardCategory2 = "Спорт и отдых";
             CardCategory3 = "Другое";
-
-
+            AddBulletins = new ObservableCollection<NewBulletin>();
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice));
             CommandLogout = new DelegateCommand(Logout);
             GetBulletins();
+            CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
         }
         #endregion
         #region Methods
@@ -65,15 +75,23 @@ namespace BulletinClient.Forms.MainView
             Bulletins = Enumerable.Empty<BulletinView>();
             RaiseDone();
         }
+
+        private void AddBulletinsCollections()
+        {
+            if (AddBulletins.Any())
+            {
+                foreach (var bulletin in AddBulletins)
+                {
+                    AddBulletin(bulletin.Заголовок, bulletin.Описание, bulletin.Цена);
+                }
+            }
+        }
         #endregion
-        public string CardName { get; set; }
-        public string CardPrice { get; set; }
-        public string CardDescription { get; set; }
-        public string  CardImageLinks { get; set; } 
 
-        public IEnumerable<BulletinView> Bulletins { get; set; }
 
-     
+
+
+
 
         void GetXls()
         {
@@ -181,5 +199,14 @@ namespace BulletinClient.Forms.MainView
         {
             MessageBox.Show("Объявление было добавлено");
         }
+    }
+
+
+    public class NewBulletin
+    {
+        public string Заголовок { get; set; }
+        public string Описание { get; set; }
+        public string Цена { get; set; }
+        public string Ссылка { get; set; }
     }
 }

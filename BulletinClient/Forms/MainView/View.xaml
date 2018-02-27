@@ -44,7 +44,7 @@
                 <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>
             <TabControl  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
-                <TabItem Header="Список" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
+                <TabItem Header="Мои" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
                     <Grid>
                         <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
                         <DataGrid  
@@ -181,6 +181,56 @@
                                 <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>
                                 <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardImageLinks}" 
                                   BorderThickness="0,0,0,1"  MinLines="2" AcceptsReturn="True"/>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Добавить списком" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
+                    <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Text="Анкета"  FontSize="22" FontWeight="Medium"  />
+                        <StackPanel HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="1"  VerticalAlignment="Center" Orientation="Horizontal" >
+                            <Button HorizontalAlignment="Right" Width="150" Height="30" Content="Очистить" Command="{Binding CommandCardClear}" Background="Black" Foreground="White" FontWeight="Medium" />
+                            <Button HorizontalAlignment="Right" Width="150" Height="30" Content="Сохранить список" Command="{Binding CommandAddBulletins}" Background="Black" Foreground="White" FontWeight="Medium" />
+                        </StackPanel>
+
+                        <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="2" >
+                            <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="B"  />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Категория"  FontSize="14" MinWidth="100"/>
+                                <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory1}" BorderThickness="0,0,0,1"/>
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory2}" BorderThickness="0,0,0,1"/>
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory3}" BorderThickness="0,0,0,1"/>
+                                </StackPanel>
+
+                                <local:CustomDataGrid Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3"  ItemsSource="{Binding AddBulletins}"  
+                                            Background="White" 
+                                            AutoGenerateColumns="False">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Width="150" Header="Заголовок" Binding="{Binding Заголовок}" ClipboardContentBinding="{Binding Заголовок}" />
+                                        <DataGridTextColumn Width="*" Header="Описание" Binding="{Binding Описание}"  ClipboardContentBinding="{Binding Описание}"  />
+                                        <DataGridTextColumn Width="100" Header="Цена" Binding="{Binding Цена}" ClipboardContentBinding="{Binding Цена}"  />
+                                        <DataGridTextColumn Width="150" Header="Изображение" Binding="{Binding Ссылка}" ClipboardContentBinding="{Binding Ссылка}"  />
+                                    </DataGrid.Columns>
+                                </local:CustomDataGrid>
+                             
                             </Grid>
                         </ScrollViewer>
                     </Grid>

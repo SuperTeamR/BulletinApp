@@ -49,6 +49,9 @@
     <Reference Include="FessooFramework, Version=1.0.0.26, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FessooFramework.1.0.0.26\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
+    <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
+      <HintPath>..\packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1-beta3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -65,6 +68,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.107.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -86,6 +90,9 @@
     <Compile Include="Core\ClientContext.cs" />
     <Compile Include="Core\DCT.cs" />
     <Compile Include="Data\BulletinView.cs" />
+    <Compile Include="Forms\MainView\ClipboardHelper.cs" />
+    <Compile Include="Forms\MainView\CsvHelper.cs" />
+    <Compile Include="Forms\MainView\CustomDataGrid.cs" />
     <Compile Include="General\MainWindowVM.cs" />
     <Compile Include="MainService.cs" />
     <Compile Include="Tools\IOC.cs" />
