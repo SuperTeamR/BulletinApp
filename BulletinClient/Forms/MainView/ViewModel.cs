@@ -1,6 +1,7 @@
 ﻿using BulletinBridge.Data;
 using BulletinBridge.Messages.BoardApi;
 using BulletinClient.Core;
+using BulletinClient.Data;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
@@ -32,7 +33,6 @@ namespace BulletinClient.Forms.MainView
         #region Commands
         public ICommand CommandGetXls { get; set; }
         public ICommand CommandBoardAuth { get; set; }
-        public ICommand CommandAppAuth { get; set; }
         public ICommand CommandAddBulletin { get; set; }
         public ICommand CommandLogout { get; set; }
         #endregion
@@ -41,10 +41,8 @@ namespace BulletinClient.Forms.MainView
         {
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
-            CommandAppAuth = new DelegateCommand(ApplicationAuth);
             CommandAddBulletin = new DelegateCommand(AddBulletin);
             CommandLogout = new DelegateCommand(Logout);
-            BulletinName = "Варежки";
             GetBulletins();
         }
         #endregion
@@ -54,12 +52,14 @@ namespace BulletinClient.Forms.MainView
             Settings.Default.BoardLogin = "";
             Settings.Default.BoardPassword = "";
             Settings.Default.Save();
-            Bulletins = Enumerable.Empty<BulletinPackage>();
+            Bulletins = Enumerable.Empty<BulletinView>();
             RaiseDone();
         }
         #endregion
         public string BulletinName { get; set; }
-        public IEnumerable<BulletinPackage> Bulletins { get; set; }
+        public string BulletinPrice { get; set; }
+        public string BulletinDescription { get; set; }
+        public IEnumerable<BulletinView> Bulletins { get; set; }
 
      
 
@@ -75,60 +75,7 @@ namespace BulletinClient.Forms.MainView
                 //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
             });
         }
-        string AuthLogin = "";
-        string AuthPassword = "";
-        void ApplicationAuth()
-        {
-            DCT.Execute(d =>
-            {
-                using (var main = new MainService())
-                {
-                    var ping = main.Ping();
-                    if (ping)
-                        Registration(RegistrationCallback);
-                }
-            });
-        }
-        void Registration(Action<bool> callback)
-        {
-            using (var main = new MainService())
-            {
-                AuthLogin = "ttt3@ttt.ru";
-                AuthPassword = "799988888";
-                var password = "ttt3";
-                var firstname = "name";
-                var secondname = "sec";
-                var middlename = "sec";
-                main.Registration(callback, AuthLogin, AuthPassword, password, firstname, secondname, middlename);
-            }
-        }
-        void RegistrationCallback(bool result)
-        {
-            DCT.Execute(d =>
-            {
-                if (result)
-                    Console.WriteLine($"Registration succesfull");
-                else
-                    Console.WriteLine($"Registration not sucessfull");
-                SignIn(SignInCallback, AuthLogin, AuthPassword);
-            });
-        }
-        void SignIn(Action<bool> callback, string email, string password)
-        {
-            using (var main = new MainService())
-                main.SignIn(callback, email, password);
-        }
-        void SignInCallback(bool result)
-        {
-            DCT.Execute(d =>
-            {
-                if (result)
-                    Console.WriteLine($"Signin succesfull");
-                else
-                    Console.WriteLine($"Signin not sucessfull");
-                GetBulletins();
-            });
-        }
+
         private void GetBulletins()
         {
             using (var client = new ServiceClient())
@@ -138,7 +85,7 @@ namespace BulletinClient.Forms.MainView
         }
         private void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
         {
-            Bulletins = objs;
+            Bulletins = objs.Select(q => new BulletinView(q)).ToArray();
             RaisePropertyChanged(() => Bulletins);
             RaisePropertyChanged(() => Bulletin);
             RaisePropertyChanged(() => NotBulletin);
@@ -174,6 +121,8 @@ namespace BulletinClient.Forms.MainView
                 RaisePropertyChanged(() => Auth);
                 RaisePropertyChanged(() => NotAuth);
                 RaisePropertyChanged(() => BoardLogin);
+
+                GetBulletins();
             });
         }
 
@@ -181,6 +130,13 @@ namespace BulletinClient.Forms.MainView
         {
             DCT.Execute(d =>
             {
+                if(string.IsNullOrEmpty(BulletinName)
+                || string.IsNullOrEmpty(BulletinDescription)
+                || string.IsNullOrEmpty(BulletinPrice))
+                {
+                    MessageBox.Show("Пожалуйста, заполните все поля для добавления объявления");
+                    return;
+                }
                 var access = new AccessPackage
                 {
                     Login = Settings.Default.BoardLogin,
@@ -191,8 +147,8 @@ namespace BulletinClient.Forms.MainView
                 {
                     {"Вид объявления", "Продаю свое" },
                     {"Название объявления", BulletinName },
-                    {"Описание объявления", "Очень теплые" },
-                    {"Цена", "300" }
+                    {"Описание объявления", BulletinDescription },
+                    {"Цена", BulletinPrice }
                 };
                 var package = new BulletinPackage
                 {
@@ -207,7 +163,6 @@ namespace BulletinClient.Forms.MainView
                     client.Save<BulletinPackage>(AddBulletinCallback, package);
                 }
             });
-            GetBulletins();
         }
 
         private void AddBulletinCallback(BulletinPackage obj)

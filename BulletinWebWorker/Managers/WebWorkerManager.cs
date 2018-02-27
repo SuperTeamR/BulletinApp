@@ -67,6 +67,9 @@ namespace BulletinWebWorker.Managers
         {
             DCT.ExecuteAsync(d =>
             {
+                d._SessionInfo.HashUID = "Engine";
+                d._SessionInfo.SessionUID = "Engine";
+
                 using (var client = new EngineService())
                 {
                     var result = client.Ping();

@@ -74,13 +74,7 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             b.State = (int)BulletinState.OnModeration;
                         }
-
-                        using (var client = new EngineService())
-                        {
-                            var r = client.Ping();
-                            Console.WriteLine($"Ping = {r}");
-                            client.Save(null, packages);
-                        }
+                        SendResultRouter.BulletinWorkResult(packages);
                     });
                 });
             });
@@ -152,6 +146,7 @@ namespace BulletinWebWorker.Containers.Avito
                 });
                 Tools.WebWorker.Execute(() =>
                 {
+                    SendResultRouter.AccessWorkResult(accesses);
                     SendResultRouter.BulletinWorkResult(bulletins);
                 });
 
@@ -404,7 +399,7 @@ namespace BulletinWebWorker.Containers.Avito
                 else if (state == BulletinState.WaitPublication)
                 {
                     var radioButton = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                              .FirstOrDefault(q => q.GetAttribute("id") == "pack3");
+                              .FirstOrDefault(q => q.GetAttribute("id") == "pack1");
                     if (radioButton != null) radioButton.InvokeMember("click");
 
 

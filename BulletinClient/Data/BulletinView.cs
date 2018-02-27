@@ -12,9 +12,10 @@ namespace BulletinClient.Data
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Price { get; set; }
         public int Views { get; set; }
         public string State { get; set; }
-
+        public string Url { get; set; }
         public BulletinView(BulletinPackage package)
         {
             if(package.ValueFields != null)
@@ -23,12 +24,41 @@ namespace BulletinClient.Data
                     Title = package.ValueFields["Название объявления"];
                 if (package.ValueFields.ContainsKey("Описание объявления"))
                     Description = package.ValueFields["Описание объявления"];
+                if (package.ValueFields.ContainsKey("Цена"))
+                    Price = package.ValueFields["Цена"];
 
                 if (int.TryParse(package.Views, out int viewResult))
                 {
                     Views = viewResult;
                 }
-                State = EnumHelper.GetValue<BulletinState>(package.State).ToString();
+                State = TranslateState(EnumHelper.GetValue<BulletinState>(package.State));
+                Url = package.Url;
+            }
+        }
+
+
+        string TranslateState(BulletinState state)
+        {
+            switch(state)
+            {
+                case BulletinState.Created:
+                    return "Создано";
+                case BulletinState.WaitPublication:
+                    return "Размещается";
+                case BulletinState.Publicated:
+                    return "Опубликовано";
+                case BulletinState.OnModeration:
+                    return "Проверяется";
+                case BulletinState.Rejected:
+                    return "Отклонено";
+                case BulletinState.Removed:
+                    return "Удалено";
+                case BulletinState.Closed:
+                    return "Завершено";
+                case BulletinState.Error:
+                    return "Ошибка";
+                default:
+                    return string.Empty;
             }
         }
     }

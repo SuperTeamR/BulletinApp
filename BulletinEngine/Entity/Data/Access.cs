@@ -153,7 +153,12 @@ namespace BulletinEngine.Entity.Data
                 {
                     access.BoardId = d.Db1.Boards.FirstOrDefault().Id;
                     access.UserId = d.Db1.Users.FirstOrDefault().Id;
-                    access.StateEnum = AccessState.Activated;
+                    access.StateEnum = AccessState.Unchecked;
+                    d.SaveChanges();
+                }
+                else
+                {
+                    dbAccess.State = (int)AccessState.Unchecked;
                     d.SaveChanges();
                 }
                 result = new TDataModel[] { access as TDataModel };

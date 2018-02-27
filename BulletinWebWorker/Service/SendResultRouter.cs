@@ -10,7 +10,6 @@ namespace BulletinWebWorker.Service
 {
     static class SendResultRouter
     {
-
         public static void BulletinWorkResult(IEnumerable<BulletinPackage> bulletins)
         {
             DCT.ExecuteAsync(d2 =>
@@ -20,6 +19,18 @@ namespace BulletinWebWorker.Service
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
                     client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: bulletins);
+                }
+            });
+        }
+        public static void AccessWorkResult(IEnumerable<AccessPackage> accesses)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new EngineService())
+                {
+                    var r = client.Ping();
+                    Console.WriteLine($"Ping = {r}");
+                    client.SendQueryCollection((a) => { }, "CheckAccess", objects: accesses);
                 }
             });
         }
