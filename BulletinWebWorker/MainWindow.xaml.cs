@@ -1,4 +1,5 @@
-﻿using BulletinWebWorker.Managers;
+﻿using BulletinWebWorker.Containers.Avito;
+using BulletinWebWorker.Managers;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using Microsoft.Win32;
@@ -17,6 +18,10 @@ namespace BulletinWebWorker
             InitializeComponent();
 
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+
+            //var a = new AvitoBulletinPackageContainer();
+            //a.TestImage();
+
         }
 
         //https://stackoverflow.com/questions/40922370/allow-system-windows-forms-webbrowser-to-run-javascript
