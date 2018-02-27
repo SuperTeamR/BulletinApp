@@ -127,10 +127,7 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             var r = client.Ping();
                             Console.WriteLine($"Ping = {r}");
-                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
-                            {
-                                Objects = packages
-                            });
+                            client.SendQueryCollection((a) => {},"AssignBulletinWork", objects:packages);
                         }
                     });
                 });
@@ -260,10 +257,7 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             var r = client.Ping();
                             Console.WriteLine($"Ping = {r}");
-                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
-                            {
-                                Objects = bulletins
-                            });
+                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: bulletins);
                         }
                     });
                 });
@@ -302,10 +296,8 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             var r = client.Ping();
                             Console.WriteLine($"Ping = {r}");
-                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
-                            {
-                                Objects = packages
-                            });
+                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: packages);
+                          
                         }
                     });
 
@@ -333,10 +325,7 @@ namespace BulletinWebWorker.Containers.Avito
                         {
                             var r = client.Ping();
                             Console.WriteLine($"Ping = {r}");
-                            client.Execute<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>(new RequestAddBulletinListWorkModel
-                            {
-                                Objects = packages
-                            });
+                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: packages);
                         }
                     });
 

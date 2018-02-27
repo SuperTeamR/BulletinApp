@@ -204,11 +204,11 @@ namespace BulletinEngine.Entity.Data
             var result = Enumerable.Empty<TDataModel>();
             BCT.Execute(d =>
             {
+                d.SaveChanges();
                 result = objs;
             });
             return result;
         }
-
         #endregion
     }
 

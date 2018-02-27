@@ -63,9 +63,9 @@ namespace BulletinClient.Forms.MainView
             BulletinName = "Варежки";
             GetBulletins();
 
-            //Settings.Default.BoardLogin = "";
-            //Settings.Default.BoardPassword = "";
-            //Settings.Default.Save();
+            Settings.Default.BoardLogin = "";
+            Settings.Default.BoardPassword = "";
+            Settings.Default.Save();
         }
 
         void GetXls()

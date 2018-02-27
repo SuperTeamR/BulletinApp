@@ -37,7 +37,7 @@ namespace BulletinExample
             DispatcherHelper.SetDispatherAsDefault();
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
-            //ApplicationApi.Auth("penzin", "super");
+            ApplicationApi.Auth("penzin", "super");
 
             BoardApi.CheckIntegrity("Avito");
             //BoardApi.GetBulletins("Avito");

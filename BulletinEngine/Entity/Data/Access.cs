@@ -132,6 +132,8 @@ namespace BulletinEngine.Entity.Data
                 var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == access.Login && q.Password == access.Password);
                 if (dbAccess == null)
                 {
+                    access.BoardId = d.Db1.Boards.FirstOrDefault().Id;
+                    access.UserId = d.Db1.Users.FirstOrDefault().Id;
                     access.StateEnum = AccessState.Activated;
                     d.SaveChanges();
                 }

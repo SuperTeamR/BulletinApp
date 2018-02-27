@@ -1,4 +1,5 @@
-﻿using BulletinBridge.Messages.InternalApi;
+﻿using BulletinBridge.Data;
+using BulletinBridge.Messages.InternalApi;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using System;
@@ -11,17 +12,15 @@ namespace BulletinHub.Service
 {
     public static class AddWorkResultApiHelper
     {
-        public static ResponseAddBulletinListWorkModel AddWorkResult(RequestAddBulletinListWorkModel request)
+        public static IEnumerable<BulletinPackage> AddWorkResult(IEnumerable<BulletinPackage> bulletins)
         {
-            ResponseAddBulletinListWorkModel result = null;
-            BCT.Execute(d =>
+            var result = Enumerable.Empty<BulletinPackage>();
+            BCT.Execute(d => 
             {
-                var bulletins = request.Objects;
                 foreach (var bulletin in bulletins)
                 {
                     //Еще не создано или не добавлено в БД
-                    if (bulletin.Id == Guid.Empty
-                    && d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url) == null)
+                    if (d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url) == null)
                     {
                         //Получение группы
                         var hash = bulletin.Signature.GetHash();
