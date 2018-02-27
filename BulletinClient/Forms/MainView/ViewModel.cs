@@ -51,7 +51,7 @@ namespace BulletinClient.Forms.MainView
 
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
-            CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice));
+            CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
             GetBulletins();
         }
@@ -138,7 +138,7 @@ namespace BulletinClient.Forms.MainView
             });
         }
 
-        void AddBulletin(string cardName, string cardDescription, string cardPrice)
+        void AddBulletin(string cardName, string cardDescription, string cardPrice, string cardImageLinks)
         {
             DCT.Execute(d =>
             {
@@ -160,8 +160,13 @@ namespace BulletinClient.Forms.MainView
                     {"Вид объявления", "Продаю свое" },
                     {"Название объявления", cardName },
                     {"Описание объявления", cardDescription },
-                    {"Цена", cardPrice }
+                    {"Цена", cardPrice },
                 };
+                if(!string.IsNullOrEmpty(cardImageLinks))
+                {
+                    fields.Add(@"Фотографии 
+Вы можете прикрепить не более 10 фотографий", cardImageLinks);
+                }
                 var package = new BulletinPackage
                 {
                     Signature = signature,

@@ -19,8 +19,8 @@ namespace BulletinWebWorker
 
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
 
-            var a = new AvitoBulletinPackageContainer();
-            a.TestImage();
+            //var a = new AvitoBulletinPackageContainer();
+            //a.TestImage();
 
         }
 

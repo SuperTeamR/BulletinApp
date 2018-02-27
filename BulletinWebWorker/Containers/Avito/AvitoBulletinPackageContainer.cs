@@ -72,7 +72,14 @@ namespace BulletinWebWorker.Containers.Avito
                     {
                         foreach (var b in packages)
                         {
-                            b.State = (int)BulletinState.OnModeration;
+                            if(string.IsNullOrEmpty(b.Url))
+                            {
+                                b.State = (int)BulletinState.Error;
+                            }
+                            else
+                            {
+                                b.State = (int)BulletinState.OnModeration;
+                            } 
                         }
                         SendResultRouter.BulletinWorkResult(packages);
                     });

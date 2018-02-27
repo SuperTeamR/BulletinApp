@@ -20,7 +20,7 @@ namespace BulletinBridge.Data
             var length = categories.Length < 5 ? categories.Length : 5;
             for (var i = 0; i < length; i++)
             {
-                this.categories[i] = categories[i];
+                this.categories[i] = categories[i] == string.Empty ? null : categories[i];
             }
         }
 

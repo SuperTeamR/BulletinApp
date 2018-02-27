@@ -89,7 +89,7 @@ namespace BulletinWebWorker.Containers.Avito
                 form.Focus();
                 var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
                 {
-                    SendKeys.SendWait("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png");
+                    SendKeys.SendWait(@value);
                     SendKeys.SendWait("{Enter}");
                 });
                 form.InvokeMember("click");
