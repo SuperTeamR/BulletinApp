@@ -204,25 +204,6 @@ namespace BulletinEngine.Entity.Data
             var result = Enumerable.Empty<TDataModel>();
             BCT.Execute(d =>
             {
-                 foreach (var bulletin in objs.OfType<BulletinInstance>().ToArray())
-                {
-                    //Сохранение контейнера буллетинов
-                    var dbBulletin = new Bulletin
-                    {
-                        UserId = Guid.Empty,//d.Objects.CurrentUser.Id,
-                    };
-
-                    //Сохранение инстанций буллетинов для каждой борды
-                    var dbBoards = d.Db1.Boards.ToArray();
-                    foreach (var board in dbBoards)
-                    {
-                        bulletin.BoardId = board.Id;
-                        bulletin.BulletinId = dbBulletin.Id;
-                        bulletin.StateEnum = BulletinInstanceState.WaitPublication;
-                    }
-                    dbBulletin.StateEnum = Entity.Data.BulletinState.WaitPublication;
-                    d.Db1.SaveChanges();
-                }
                 result = objs;
             });
             return result;
