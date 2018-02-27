@@ -146,20 +146,41 @@
                                     <ColumnDefinition Width="Auto" SharedSizeGroup="B"  />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Заголовок"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardName}" BorderThickness="0,0,0,1"/>
 
-                                <TextBlock  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100"/>
-                                <TextBox AcceptsReturn="True" Margin="5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding CardDescription}" 
-                                 MinLines="5" BorderThickness="0,0,0,1"/>
+                                <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Категория"  FontSize="14" MinWidth="100"/>
+                                <StackPanel  Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
 
-                                <TextBlock  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Цена"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardPrice}" 
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory1}" BorderThickness="0,0,0,1"/>
+
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory2}" BorderThickness="0,0,0,1"/>
+
+                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory3}" BorderThickness="0,0,0,1"/>
+
+                                    <!--<ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14" Margin="5" SelectedValue="{Binding CardCategory1}">
+                                        <ComboBoxItem Content="Хобби и отдых"  Background="White" FontSize="14"  />
+                                    </ComboBox>
+                                    <ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14" Margin="5" SelectedValue="{Binding CardCategory2}">
+                                        <ComboBoxItem Content="Спорт и отдых"  Background="White" FontSize="14" />
+                                    </ComboBox>
+                                    <ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14"  Margin="5" SelectedValue="{Binding CardCategory3}">
+                                        <ComboBoxItem Content="Другое"  Background="White" FontSize="14" />
+                                    </ComboBox>-->
+                                </StackPanel>
+                                
+                                <TextBlock  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Заголовок"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardName}" BorderThickness="0,0,0,1"/>
+
+                                <TextBlock  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding CardDescription}" 
+                                 MinLines="5" AcceptsReturn="True" BorderThickness="0,0,0,1"/>
+
+                                <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Цена"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardPrice}" 
                                   BorderThickness="0,0,0,1"/>
 
-                                <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardImageLinks}" 
-                                  BorderThickness="0,0,0,1"/>
+                                <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardImageLinks}" 
+                                  BorderThickness="0,0,0,1"  MinLines="2" AcceptsReturn="True"/>
                             </Grid>
                         </ScrollViewer>
                     </Grid>
