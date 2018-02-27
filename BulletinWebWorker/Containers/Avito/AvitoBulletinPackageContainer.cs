@@ -70,7 +70,7 @@ namespace BulletinWebWorker.Containers.Avito
                 {
                     DCT.ExecuteAsync(d2 =>
                     {
-                        foreach(var b in packages)
+                        foreach (var b in packages)
                         {
                             b.State = (int)BulletinState.OnModeration;
                         }
@@ -79,6 +79,48 @@ namespace BulletinWebWorker.Containers.Avito
                 });
             });
         }
+
+
+        public void TestImage()
+        {
+            DCT.Execute(d =>
+            {
+                Tools.WebWorker.Execute(() =>
+                {
+                    var accessContainer = AccessContainerList.Get(Uid);
+
+                    var access = new AccessPackage
+                    {
+                        Login = "mostrerkilltest@gmail.com",
+                        Password = "OnlineHelp59",
+                    };
+
+                    if (accessContainer.TryAuth(access))
+                    {
+                        Thread.Sleep(2000);
+
+                        Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
+
+                        ChooseCategories(new GroupSignature("Хобби и отдых", "Охота и рыбалка"));
+
+                        var form = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                               .FirstOrDefault(q => q.GetAttribute("name") == "image");
+                        if(form != null)
+                        {
+                            form.Focus();
+                            var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                            {
+                                SendKeys.SendWait("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png");
+                                SendKeys.SendWait("{Enter}");
+                            });
+                            form.InvokeMember("click");
+                            Thread.Sleep(6000);
+                        }
+                    }
+                });
+            });
+        }
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Отредактировать буллетины </summary>
         ///

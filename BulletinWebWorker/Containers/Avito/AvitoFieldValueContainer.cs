@@ -60,21 +60,41 @@ namespace BulletinWebWorker.Containers.Avito
                                 .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
                 if (form == null) return;
 
-                switch (fieldPackage.Tag)
-                {
-                    case "input":
-                    case "textarea":
-                        SetInput(form, value);
-                        break;
-                    case "select":
-                        SetSelect(form, value, fieldPackage);
-                        break;
-                }
 
-                Thread.Sleep(500);
+                if(!string.IsNullOrEmpty(name) && name.Contains("Фотографии"))
+                {
+                    SetImage(form, value);
+                    Thread.Sleep(6000);
+                }
+                else
+                {
+                    switch (fieldPackage.Tag)
+                    {
+                        case "input":
+                        case "textarea":
+                            SetInput(form, value);
+                            break;
+                        case "select":
+                            SetSelect(form, value, fieldPackage);
+                            break;
+                    }
+                    Thread.Sleep(500);
+                }    
             });
         }
-
+        void SetImage(HtmlElement form, string value)
+        {
+            DCT.Execute(data =>
+            {
+                form.Focus();
+                var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                {
+                    SendKeys.SendWait("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png");
+                    SendKeys.SendWait("{Enter}");
+                });
+                form.InvokeMember("click");
+            });
+        }
         void SetInput(HtmlElement form, string value)
         {
             DCT.Execute(data =>

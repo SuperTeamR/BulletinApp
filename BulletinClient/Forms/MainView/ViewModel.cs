@@ -144,7 +144,7 @@ namespace BulletinClient.Forms.MainView
                     Login = Settings.Default.BoardLogin,
                     Password = Settings.Default.BoardPassword,
                 };
-                var signature = new GroupSignature("Хобби и отдых", "Спорт и отдых", "Другое");
+                var signature = new GroupSignature("Хобби и отдых", "Охота и рыбалка");
                 var fields = new Dictionary<string, string>
                 {
                     {"Вид объявления", "Продаю свое" },
