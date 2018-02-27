@@ -123,6 +123,25 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region DataService -- Methods
+        public override IEnumerable<EntityObject> _CollectionObjectLoad()
+        {
+            var workStates = new[]
+            {
+                (int)AccessState.Unchecked,
+            };
+            var result = Enumerable.Empty<EntityObject>();
+            BCT.Execute(c =>
+            {
+                var id = c._SessionInfo.HashUID;
+                var id2 = c._SessionInfo.SessionUID;
+                if (id == "Engine")
+                    result = c.Db1.Accesses
+                    .Where(q => workStates.Contains(q.State)).ToArray();
+                else
+                    result = base._CollectionObjectLoad();
+            });
+            return result;
+        }
         public override IEnumerable<TDataModel> _CacheSave<TDataModel>(IEnumerable<TDataModel> objs)
         {
             var result = Enumerable.Empty<TDataModel>();

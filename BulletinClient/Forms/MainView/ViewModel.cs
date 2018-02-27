@@ -1,6 +1,7 @@
 ﻿using BulletinBridge.Data;
 using BulletinBridge.Messages.BoardApi;
 using BulletinClient.Core;
+using BulletinClient.Data;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
@@ -148,6 +149,8 @@ namespace BulletinClient.Forms.MainView
         {
             Bulletins = objs;
             RaisePropertyChanged(() => Bulletins);
+
+            var b = Bulletins.Select(q => new BulletinView(q)).ToArray();
         }
 
         void BoardAuth()

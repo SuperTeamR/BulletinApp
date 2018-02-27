@@ -34,8 +34,9 @@ namespace BulletinBridge.Data
         Publicated = 5,
         Edited = 6,
         Removed = 7,
-        Unchecked = 8,
-        Checking = 9,
+        Closed = 8,
         Error = 99,
+        Unchecked = 100,
+        Checking = 101,
     }
 }

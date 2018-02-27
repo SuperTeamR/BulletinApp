@@ -40,9 +40,8 @@ namespace BulletinWebWorker.Containers
         {
             //TODO - сделать группировку по бордам
             var bulletinContainer = BulletinPackageContainerList.Get(BoardIds.Avito);
-            var access = collection.Cast<AccessPackage>().FirstOrDefault();
-            if(access != null)
-                bulletinContainer.GetBulletinList(access);
+            var accesses = collection.Cast<AccessPackage>().ToArray();
+            bulletinContainer.GetBulletinList(accesses);
         }
     }
 }

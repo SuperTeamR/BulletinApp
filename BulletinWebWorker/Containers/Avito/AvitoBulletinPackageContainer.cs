@@ -114,22 +114,13 @@ namespace BulletinWebWorker.Containers.Avito
                         Publicate(bulletin);
                     }
                 });
-
                 Tools.WebWorker.Execute(() =>
                 {
-                    DCT.ExecuteAsync(d2 =>
+                    foreach (var b in packages)
                     {
-                        foreach (var b in packages)
-                        {
-                            b.State = (int)BulletinState.OnModeration;
-                        }
-                        using (var client = new EngineService())
-                        {
-                            var r = client.Ping();
-                            Console.WriteLine($"Ping = {r}");
-                            client.SendQueryCollection((a) => {},"AssignBulletinWork", objects:packages);
-                        }
-                    });
+                        b.State = (int)BulletinState.OnModeration;
+                    }
+                    SendResultRouter.BulletinWorkResult(packages);
                 });
             });
         }
@@ -144,125 +135,128 @@ namespace BulletinWebWorker.Containers.Avito
         /// An enumerator that allows foreach to be used to process the bulletins in this collection.
         /// </returns>
         ///-------------------------------------------------------------------------------------------------
-        public override void GetBulletinList(AccessPackage access)
+        public override void GetBulletinList(IEnumerable<AccessPackage> accesses)
         {
             var result = Enumerable.Empty<BulletinPackage>();
+            DCT.Execute(d =>
+            {
+                var bulletins = new List<BulletinPackage>();
+
+                Tools.WebWorker.Execute(() =>
+                {
+                    foreach(var access in accesses)
+                    {
+                        var r = GetBulletinList(access);
+                        bulletins.AddRange(r);
+                    }
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    SendResultRouter.BulletinWorkResult(bulletins);
+                });
+
+            });
+        }
+
+        IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
+        {
+            var result = Enumerable.Empty<BulletinPackage>();
+
             DCT.Execute(d =>
             {
                 var tabStates = new List<TabState>();
                 var bulletins = new List<BulletinPackage>();
 
-                Tools.WebWorker.Execute(() =>
+                var fieldValueContainer = FieldValueContainerList.Get(Uid);
+                var accessContainer = AccessContainerList.Get(Uid);
+
+                if (accessContainer.TryAuth(access))
                 {
-                    var fieldValueContainer = FieldValueContainerList.Get(Uid);
-                    var accessContainer = AccessContainerList.Get(Uid);
+                    Thread.Sleep(2000);
 
-                    if (accessContainer.TryAuth(access))
+                    Tools.WebWorker.NavigatePage(ProfileUrl);
+
+                    var doc = Tools.WebWorker.WebDocument.Body.InnerHtml;
+                    var tabs = Tools.WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
+                        .Where(q => q.GetAttribute("className").Contains("tabs-item")).ToArray();
+
+                    tabStates.Add(new TabState
                     {
-                        Thread.Sleep(2000);
-
-                        Tools.WebWorker.NavigatePage(ProfileUrl);
-
-                        var doc = Tools.WebWorker.WebDocument.Body.InnerHtml;
-                        var tabs = Tools.WebWorker.WebDocument.GetElementsByTagName("li").Cast<HtmlElement>()
-                            .Where(q => q.GetAttribute("className").Contains("tabs-item")).ToArray();
-
-                        tabStates.Add(new TabState
-                        {
-                            Title = "Активные",
-                            Href = ProfileUrl,
-                        });
-
-                        foreach (var tab in tabs)
-                        {
-                            if (!tab.CanHaveChildren) continue;
-
-                            foreach (HtmlElement ch in tab.Children)
-                            {
-                                if (ch.TagName.ToLower() == "a")
-                                {
-                                    var tabUrl = ch.GetAttribute("href");
-                                    var tabState = ch.InnerText;
-
-                                    if (tabState == "Удаленные") continue;
-
-                                    tabStates.Add(new TabState
-                                    {
-                                        Title = tabState,
-                                        Href = tabUrl,
-                                    });
-                                }
-                            }
-                        }
-                    }
-                });
-
-                Tools.WebWorker.Execute(() =>
-                {
-                    foreach (var tabState in tabStates)
-                    {
-                        var bulletinState = GetStateFromTabString(tabState.Title);
-                        if (bulletinState == BulletinState.Blocked
-                        || bulletinState == BulletinState.Removed) continue;
-
-                        Tools.WebWorker.NavigatePage(tabState.Href);
-
-                        var nextPages = new List<string>();
-                        nextPages.Add(tabState.Href);
-
-                        var hasNextPage = true;
-                        do
-                        {
-                            var bulletinsOnPage = GetBulletinPages(tabState.Title);
-                            bulletins.AddRange(bulletinsOnPage);
-
-                            var nextPage = Tools.WebWorker.WebDocument.GetElementsByTagName("a").Cast<HtmlElement>()
-                                .FirstOrDefault(q => q.GetAttribute("className").Contains("js-pagination-next"));
-                            if (nextPage == null) hasNextPage = false;
-                            else
-                            {
-                                var nextPageHref = nextPage.GetAttribute("href");
-                                nextPages.Add(nextPageHref);
-                                hasNextPage = true;
-                                nextPage.InvokeMember("click");
-                                Thread.Sleep(1000);
-                            }
-                        } while (hasNextPage);
-                    }
-                });
-                Tools.WebWorker.Execute(() =>
-                {
-                    foreach (var bulletin in bulletins)
-                    {
-                        var url = Path.Combine(bulletin.Url, "edit");
-                        Tools.WebWorker.NavigatePage(url);
-                        Thread.Sleep(1500);
-
-                        var groupElement = Tools.WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("className") != null && q.GetAttribute("className").Contains("form-category-path"));
-
-                        if (groupElement == null) continue;
-
-                        var categories = groupElement.InnerText.Split('/').Select(q => q.Trim()).ToArray();
-                        bulletin.Signature = new GroupSignature(categories);
-                        bulletin.Access = access;
-                    }
-                    result = bulletins;
-                });
-                Tools.WebWorker.Execute(() =>
-                {
-                    DCT.ExecuteAsync(d2 =>
-                    {
-                        using (var client = new EngineService())
-                        {
-                            var r = client.Ping();
-                            Console.WriteLine($"Ping = {r}");
-                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: bulletins);
-                        }
+                        Title = "Активные",
+                        Href = ProfileUrl,
                     });
-                });
 
+                    foreach (var tab in tabs)
+                    {
+                        if (!tab.CanHaveChildren) continue;
+
+                        foreach (HtmlElement ch in tab.Children)
+                        {
+                            if (ch.TagName.ToLower() == "a")
+                            {
+                                var tabUrl = ch.GetAttribute("href");
+                                var tabState = ch.InnerText;
+
+                                if (tabState == "Удаленные") continue;
+
+                                tabStates.Add(new TabState
+                                {
+                                    Title = tabState,
+                                    Href = tabUrl,
+                                });
+                            }
+                        }
+                    }
+                }
+                foreach (var tabState in tabStates)
+                {
+                    var bulletinState = GetStateFromTabString(tabState.Title);
+                    if (bulletinState == BulletinState.Blocked
+                    || bulletinState == BulletinState.Removed) continue;
+
+                    Tools.WebWorker.NavigatePage(tabState.Href);
+
+                    var nextPages = new List<string>();
+                    nextPages.Add(tabState.Href);
+
+                    var hasNextPage = true;
+                    do
+                    {
+                        var bulletinsOnPage = GetBulletinPages(tabState.Title);
+                        bulletins.AddRange(bulletinsOnPage);
+
+                        var nextPage = Tools.WebWorker.WebDocument.GetElementsByTagName("a").Cast<HtmlElement>()
+                            .FirstOrDefault(q => q.GetAttribute("className").Contains("js-pagination-next"));
+                        if (nextPage == null) hasNextPage = false;
+                        else
+                        {
+                            var nextPageHref = nextPage.GetAttribute("href");
+                            nextPages.Add(nextPageHref);
+                            hasNextPage = true;
+                            nextPage.InvokeMember("click");
+                            Thread.Sleep(1000);
+                        }
+                    } while (hasNextPage);
+                }
+
+                foreach (var bulletin in bulletins)
+                {
+                    var url = Path.Combine(bulletin.Url, "edit");
+                    Tools.WebWorker.NavigatePage(url);
+                    Thread.Sleep(1500);
+
+                    var groupElement = Tools.WebWorker.WebDocument.GetElementsByTagName("div").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("className") != null && q.GetAttribute("className").Contains("form-category-path"));
+
+                    if (groupElement == null) continue;
+
+                    var categories = groupElement.InnerText.Split('/').Select(q => q.Trim()).ToArray();
+                    bulletin.Signature = new GroupSignature(categories);
+                    bulletin.Access = access;
+                }
+                result = bulletins;
             });
+            return result;
         }
         public override void GetBulletinDetails(IEnumerable<BulletinPackage> packages)
         {
@@ -271,38 +265,37 @@ namespace BulletinWebWorker.Containers.Avito
                 Tools.WebWorker.Execute(() =>
                 {
                     var fieldValueContainer = FieldValueContainerList.Get(Uid);
+                    var accessContainer = AccessContainerList.Get(Uid);
 
-                    foreach (var bulletin in packages)
+                    var accessCollection = packages.Cast<BulletinPackage>().Where(q => q.Access != null).GroupBy(q => q.Access.Login).Select(q => new { Access = q.Key, Collection = q.ToList() }).ToList();
+                    foreach (var a in accessCollection)
                     {
-                        var url = Path.Combine(bulletin.Url, "edit");
-                        Tools.WebWorker.NavigatePage(url);
-                        Thread.Sleep(1500);
-                        var values = new Dictionary<string, string>();
-                        foreach (var pair in bulletin.AccessFields)
+                        var bulletins = a.Collection;
+                        foreach (var bulletin in bulletins)
                         {
-                            var v = fieldValueContainer.GetFieldValue(bulletin.AccessFields, pair.Key);
-                            values.Add(pair.Key, v);
+                            if (accessContainer.TryAuth(bulletin.Access))
+                            {
+                                Thread.Sleep(2000);
+
+                                var url = Path.Combine(bulletin.Url, "edit");
+                                Tools.WebWorker.NavigatePage(url);
+                                Thread.Sleep(1500);
+                                var values = new Dictionary<string, string>();
+                                foreach (var pair in bulletin.AccessFields)
+                                {
+                                    var v = fieldValueContainer.GetFieldValue(bulletin.AccessFields, pair.Key);
+                                    values.Add(pair.Key, v);
+                                }
+                                bulletin.ValueFields = values;
+                                bulletin.State = (int)CheckBulletinState(bulletin.Url);
+                            }
                         }
-                        bulletin.ValueFields = values;
-                        bulletin.State = (int)CheckBulletinState(bulletin.Url);
                     }
                 });
-
                 Tools.WebWorker.Execute(() =>
                 {
-                    DCT.ExecuteAsync(d2 =>
-                    {
-                        using (var client = new EngineService())
-                        {
-                            var r = client.Ping();
-                            Console.WriteLine($"Ping = {r}");
-                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: packages);
-                          
-                        }
-                    });
-
+                    SendResultRouter.BulletinWorkResult(packages);
                 });
-
             });
         }
         public override void CheckModerationState(IEnumerable<BulletinPackage> packages)
@@ -319,16 +312,7 @@ namespace BulletinWebWorker.Containers.Avito
                 });
                 Tools.WebWorker.Execute(() =>
                 {
-                    DCT.ExecuteAsync(d2 =>
-                    {
-                        using (var client = new EngineService())
-                        {
-                            var r = client.Ping();
-                            Console.WriteLine($"Ping = {r}");
-                            client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: packages);
-                        }
-                    });
-
+                    SendResultRouter.BulletinWorkResult(packages);
                 });
             });
         }
@@ -624,6 +608,8 @@ namespace BulletinWebWorker.Containers.Avito
                     return BulletinState.Rejected;
                 case "Удалённые":
                     return BulletinState.Removed;
+                case "Завершённые":
+                    return BulletinState.Closed;
                 default:
                     return BulletinState.Error;
             }
