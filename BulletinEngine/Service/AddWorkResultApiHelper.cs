@@ -15,7 +15,7 @@ namespace BulletinHub.Service
         public static IEnumerable<BulletinPackage> AddWorkResult(IEnumerable<BulletinPackage> bulletins)
         {
             var result = Enumerable.Empty<BulletinPackage>();
-            BCT.Execute(d =>
+            BCT.Execute(d => 
             {
                 foreach (var bulletin in bulletins)
                 {
