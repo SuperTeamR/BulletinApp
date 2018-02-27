@@ -26,10 +26,10 @@
             <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Авторизация"  FontSize="24"/>
 
             <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Логин"  FontSize="14" MinWidth="100"/>
-            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
+            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
 
             <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
-            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
+            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
 
             <Button Margin="5" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Войти" Command="{Binding CommandBoardAuth}" BorderThickness="0" FontSize="14" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
         </Grid>
@@ -59,19 +59,62 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
-                   
+
                 </TabItem>
                 <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
-                    <Grid VerticalAlignment="Top">
-                        <StackPanel Orientation="Horizontal" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}">
-                            <TextBlock VerticalAlignment="Center" Text="Название: "/>
-                            <TextBox Margin="5,0,0,0" Width="100" Height="30" VerticalAlignment="Center" VerticalContentAlignment="Center" Text="{Binding BulletinName}"/>
-                            <Button Width="150" Height="30" Content="Добавить" Command="{Binding CommandAddBulletin}" />
+                    <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Text="Анкета"  FontSize="22" FontWeight="Medium"  />
+                        <StackPanel HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="1"  VerticalAlignment="Center" Orientation="Horizontal" >
+                            <Button HorizontalAlignment="Right" Width="150" Height="30" Content="Очистить" Command="{Binding CommandCardClear}" Background="Black" Foreground="White" FontWeight="Medium" />
+                            <Button HorizontalAlignment="Right" Width="150" Height="30" Content="Сохранить" Command="{Binding CommandAddBulletin}" Background="Black" Foreground="White" FontWeight="Medium" />
                         </StackPanel>
+
+                        <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="2" >
+                            <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="B"  />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Заголовок"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardName}" BorderThickness="0,0,0,1"/>
+
+                                <TextBlock  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding CardDescription}" 
+                                 MinLines="5" BorderThickness="0,0,0,1"/>
+
+                                <TextBlock  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Цена"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardPrice}" 
+                                         AcceptsReturn="True"
+                                  BorderThickness="0,0,0,1"/>
+
+                                <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>
+                                <TextBox Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardImageLinks}" 
+                                  BorderThickness="0,0,0,1"/>
+                            </Grid>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
             </TabControl>
-        </Grid> 
-      
+        </Grid>
+
     </Grid>
 </UserControl>
