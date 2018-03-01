@@ -7,6 +7,7 @@ using FessooFramework.Tools.DCT;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace BulletinWebWorker.Managers
 {
@@ -18,15 +19,27 @@ namespace BulletinWebWorker.Managers
 
     static class WebWorkerManager
     {
-        internal static TaskController BulletinWork = new TaskController(
-            execute: () => AskForBulletinWork(),
-            check: () => true,
-            checkTimeout: () => 600000);
 
-        internal static TaskController ProfileWork = new TaskController(
-           execute: () => AskForProfileWork(),
-           check: () => true,
-           checkTimeout: () => 600000);
+        internal static void Execute()
+        {
+            DCT.ExecuteAsync(d =>
+            {
+                AskForBulletinWork();
+                AskForProfileWork();
+            }, 
+            continueMethod:c => Application.Current.Shutdown());
+        }
+
+
+        //internal static TaskController BulletinWork = new TaskController(
+        //    execute: () => AskForBulletinWork(),
+        //    check: () => true,
+        //    checkTimeout: () => 600000);
+
+        //internal static TaskController ProfileWork = new TaskController(
+        //   execute: () => AskForProfileWork(),
+        //   check: () => true,
+        //   checkTimeout: () => 600000);
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Запрашивает работу с Hub по буллетинам </summary>
         ///
@@ -37,7 +50,7 @@ namespace BulletinWebWorker.Managers
 
         static void AskForBulletinWork()
         {
-            DCT.ExecuteAsync(d =>
+            DCT.Execute(d =>
             {
                 d._SessionInfo.HashUID = "Engine";
                 d._SessionInfo.SessionUID = "Engine";
@@ -65,7 +78,7 @@ namespace BulletinWebWorker.Managers
 
         static void AskForProfileWork()
         {
-            DCT.ExecuteAsync(d =>
+            DCT.Execute(d =>
             {
                 d._SessionInfo.HashUID = "Engine";
                 d._SessionInfo.SessionUID = "Engine";

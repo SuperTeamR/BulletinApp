@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class BulletinDbContext : _DCTContext
-    {
+    //public class BulletinDbContext : _DCTContext
+    //{
 
-    }
+    //}
 }

@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public class BulletinBootstrapper : Bootstrapper
-    {
-        public override string ApplicationName => "BulletinApp";
+    //public class BulletinBootstrapper : Bootstrapper
+    //{
+    //    public override string ApplicationName => "BulletinApp";
 
-        public override void SetComponents(ref List<SystemComponent> components)
-        {
-        }
+    //    public override void SetComponents(ref List<SystemComponent> components)
+    //    {
+    //    }
 
-        public override void SetConfiguration(ref SystemCoreConfiguration configuration)
-        {
-        }
-    }
+    //    public override void SetConfiguration(ref SystemCoreConfiguration configuration)
+    //    {
+    //    }
+    //}
 }

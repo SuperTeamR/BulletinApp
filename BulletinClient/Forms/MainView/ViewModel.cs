@@ -191,12 +191,7 @@ namespace BulletinClient.Forms.MainView
                     ValueFields = fields,
                     Access = access,
                 };
-                using (var client = new ServiceClient())
-                {
-                    var result = client.Ping();
-                    Console.WriteLine($"Ping = {result}");
-                    client.Save<BulletinPackage>(AddBulletinCallback, package);
-                }
+                ServiceClient._CreateBulletin(package);
             });
         }
 

@@ -41,6 +41,8 @@ namespace BulletinExample.Entity.Data
         };
         protected override IEnumerable<UserState> DefaultState => new[] { UserState.Error };
 
+        protected override IEnumerable<EntityObjectALMCreator<User>> CreatorsService => throw new System.NotImplementedException();
+
         protected override int GetStateValue(UserState state)
         {
             return (int)state;

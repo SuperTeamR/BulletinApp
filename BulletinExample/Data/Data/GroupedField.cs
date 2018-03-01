@@ -48,6 +48,7 @@ namespace BulletinExample.Entity.Data
             GroupedFieldState.Error
         };
 
+        protected override IEnumerable<EntityObjectALMCreator<GroupedField>> CreatorsService => throw new NotImplementedException();
 
         protected override int GetStateValue(GroupedFieldState state)
         {

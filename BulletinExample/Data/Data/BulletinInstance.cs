@@ -69,6 +69,8 @@ namespace BulletinExample.Entity.Data
         };
         protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error };
 
+        protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(BulletinInstanceState state)
         {
             return (int)state;

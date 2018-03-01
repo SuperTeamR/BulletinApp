@@ -41,7 +41,7 @@ namespace BulletinExample.Entity.Data
             GroupedCategoryState.Error,
         };
 
-
+        protected override IEnumerable<EntityObjectALMCreator<GroupedCategory>> CreatorsService => throw new NotImplementedException();
 
         protected override int GetStateValue(GroupedCategoryState state)
         {

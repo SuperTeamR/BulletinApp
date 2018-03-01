@@ -64,6 +64,9 @@ namespace BulletinExample.Entity.Data
         {
             FieldTemplateState.Error
         };
+
+        protected override IEnumerable<EntityObjectALMCreator<FieldTemplate>> CreatorsService => throw new System.NotImplementedException();
+
         protected override int GetStateValue(FieldTemplateState state)
         {
             return (int)state;
