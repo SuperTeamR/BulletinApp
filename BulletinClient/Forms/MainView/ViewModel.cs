@@ -182,8 +182,7 @@ namespace BulletinClient.Forms.MainView
                 };
                 if(!string.IsNullOrEmpty(cardImageLinks))
                 {
-                    fields.Add(@"Фотографии 
-Вы можете прикрепить не более 10 фотографий", cardImageLinks);
+                    fields.Add(@"Фотографии", cardImageLinks);
                 }
                 var package = new BulletinPackage
                 {

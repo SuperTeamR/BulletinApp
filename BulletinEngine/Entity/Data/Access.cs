@@ -54,13 +54,14 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => new[]
         {
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, Activated),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, Activated),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, Blocked),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, Banned),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
         };
-        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error, AccessState.Unchecked, AccessState.Checking };
+        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error, AccessState.Checking };
 
         protected override int GetStateValue(AccessState state)
         {
