@@ -53,6 +53,8 @@ namespace BulletinExample.Entity.Data
             BulletinFieldState.Error
         };
 
+        protected override IEnumerable<EntityObjectALMCreator<BulletinField>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(BulletinFieldState state)
         {
             return (int)state;

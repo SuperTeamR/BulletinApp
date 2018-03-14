@@ -59,6 +59,8 @@ namespace BulletinExample.Entity.Data
         };
         protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error };
 
+        protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(AccessState state)
         {
             return (int)state;

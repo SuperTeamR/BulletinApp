@@ -45,6 +45,8 @@ namespace BulletinExample.Entity.Data
             ApplicationState.Error
         };
 
+        protected override IEnumerable<EntityObjectALMCreator<Application>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(ApplicationState state)
         {
             return (int)state;

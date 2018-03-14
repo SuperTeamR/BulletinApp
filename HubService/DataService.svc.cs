@@ -72,6 +72,6 @@ namespace HubService
             new DataServiceConfiguration<Access, AccessPackage>(),
         };
 
-        
+        protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();
     }
 }

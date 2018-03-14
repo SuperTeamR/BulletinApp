@@ -48,6 +48,9 @@ namespace BulletinExample.Entity.Data
         {
             SelectOptionState.Error
         };
+
+        protected override IEnumerable<EntityObjectALMCreator<SelectOption>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(SelectOptionState state)
         {
             return (int)state;

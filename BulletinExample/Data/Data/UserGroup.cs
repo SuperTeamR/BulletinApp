@@ -41,6 +41,9 @@ namespace BulletinExample.Entity.Data
         {
             UserGroupState.Error,
         };
+
+        protected override IEnumerable<EntityObjectALMCreator<UserGroup>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(UserGroupState state)
         {
             return (int)state;

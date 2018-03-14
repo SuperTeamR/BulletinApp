@@ -34,6 +34,8 @@ namespace BulletinExample.Entity.Data
         };
         protected override IEnumerable<BoardState> DefaultState => new[] { BoardState.Error };
 
+        protected override IEnumerable<EntityObjectALMCreator<Board>> CreatorsService => throw new System.NotImplementedException();
+
         protected override int GetStateValue(BoardState state)
         {
             return (int)state;

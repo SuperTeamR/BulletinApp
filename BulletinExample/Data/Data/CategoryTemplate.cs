@@ -47,6 +47,7 @@ namespace BulletinExample.Entity.Data
             CategoryTemplateState.Error
         };
 
+        protected override IEnumerable<EntityObjectALMCreator<CategoryTemplate>> CreatorsService => throw new NotImplementedException();
 
         protected override int GetStateValue(CategoryTemplateState state)
         {

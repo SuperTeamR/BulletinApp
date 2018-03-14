@@ -43,6 +43,8 @@ namespace BulletinExample.Entity.Data
             GroupState.Error
         };
 
+        protected override IEnumerable<EntityObjectALMCreator<Group>> CreatorsService => throw new NotImplementedException();
+
         protected override int GetStateValue(GroupState state)
         {
             return (int)state;
