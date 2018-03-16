@@ -1,5 +1,6 @@
 ﻿using BulletinEngine.Entity.Data;
 using FessooFramework.Tools.Helpers;
+using System.Configuration;
 using System.Data.Entity;
 
 namespace BulletinEngine.Entity.Context
@@ -25,9 +26,14 @@ namespace BulletinEngine.Entity.Context
         {
             base.Configuration.ProxyCreationEnabled = false;
             base.Configuration.LazyLoadingEnabled = true;
-            //base.Database.Connection.ConnectionString = EntityHelper.CreateLocalSQL("BulletinDb");
+            //base.Database.Connection.ConnectionString =
+            //    EntityHelper.CreateRemoteSQL("BulletinDb",
+            //   "192.168.26.116",
+            //   "ExtUser",
+            //   "123QWEasd");
             Database.SetInitializer(new CreateDatabaseIfNotExists<BulletinDb>());
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinExample.Entity.Context.BulletinDbConfiguration>());
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BulletinDb>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinHub.Migrations.Configuration>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

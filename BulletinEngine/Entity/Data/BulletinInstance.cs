@@ -192,7 +192,7 @@ namespace BulletinEngine.Entity.Data
 
 
         #endregion
-
+        
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
         {
@@ -208,6 +208,7 @@ namespace BulletinEngine.Entity.Data
                 (int)BulletinInstanceState.WaitPublication,
                 (int)BulletinInstanceState.Unchecked,
                 (int)BulletinInstanceState.OnModeration,
+                (int)BulletinInstanceState.Publicated,
             };
             var result = Enumerable.Empty<EntityObject>();
             BCT.Execute(c =>

@@ -34,6 +34,14 @@ namespace BulletinWebWorker.Containers.Base
 
         public abstract void EditBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
 
+        /// <summary>
+        /// Перепубликация буллетинов
+        /// </summary>
+        /// <param name="packages"></param>
+        public abstract void RepublicateBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
+
+
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает коллекцию буллетинов для заданного доступа </summary>
         ///

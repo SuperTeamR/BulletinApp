@@ -26,6 +26,9 @@ namespace BulletinWebWorker.Containers
                     case BulletinState.WaitPublication:
                         bulletinContainer.AddBulletins(s.Collection);
                         break;
+                    case BulletinState.Publicated:
+                        bulletinContainer.RepublicateBulletins(s.Collection);
+                        break;
                     case BulletinState.Edited:
                         bulletinContainer.EditBulletins(s.Collection);
                         break;

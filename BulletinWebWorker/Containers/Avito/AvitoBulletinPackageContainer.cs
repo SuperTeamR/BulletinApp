@@ -87,45 +87,107 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
-
-        public void TestImage()
+        /// <summary>
+        /// Перепубликация буллетинов
+        /// </summary>
+        /// <param name="packages"></param>
+        public override void RepublicateBulletins(IEnumerable<BulletinPackage> packages)
         {
             DCT.Execute(d =>
             {
                 Tools.WebWorker.Execute(() =>
                 {
+                    var fieldValueContainer = FieldValueContainerList.Get(Uid);
                     var accessContainer = AccessContainerList.Get(Uid);
-
-                    var access = new AccessPackage
+                    foreach(var bulletin in packages)
                     {
-                        Login = "mostrerkilltest@gmail.com",
-                        Password = "OnlineHelp59",
-                    };
-
-                    if (accessContainer.TryAuth(access))
-                    {
-                        Thread.Sleep(2000);
-
-                        Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
-
-                        ChooseCategories(new GroupSignature("Хобби и отдых", "Охота и рыбалка"));
-
-                        var form = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                               .FirstOrDefault(q => q.GetAttribute("name") == "image");
-                        if(form != null)
+                        if (accessContainer.TryAuth(bulletin.Access))
                         {
-                            form.Focus();
-                            var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
-                            {
-                                SendKeys.SendWait("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png");
-                                SendKeys.SendWait("{Enter}");
-                            });
-                            form.InvokeMember("click");
-                            Thread.Sleep(6000);
+                            Thread.Sleep(2000);
+
+                            //Edit a bulletin
+                            string cachedName, cachedDesc;
+                            var r = new Random();
+
+                        
+                            cachedName = ChangeField(bulletin, "Название объявления", r.Next(1000, 100000).ToString());
+                            cachedDesc = ChangeField(bulletin, "Описание объявления", r.Next(1000, 100000).ToString());
+                            //Костыль - притворяемся, что состояние буллетина Edit
+                            var cachedState = bulletin.State;
+                            bulletin.State = (int)BulletinState.Edited;
+
+                            Tools.WebWorker.NavigatePage(Path.Combine(bulletin.Url, "edit"));
+                            SetValueFields(bulletin, fieldValueContainer);
+                           
+                            ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
+
+                            Thread.Sleep(1000);
+
+                            Publicate(bulletin);
+
+                            Thread.Sleep(1000);
+
+                            //Remove a bulletin
+                            Tools.WebWorker.NavigatePage(Path.Combine(bulletin.Url, "do"));
+                            Thread.Sleep(1000);
+                            RemoveBulletin();
+
+                            //Re-add a bulletin
+                            //Возвращаем прежнее состояние
+                            bulletin.State = cachedState;
+                            ChangeField(bulletin, "Название объявления", cachedName);
+                            ChangeField(bulletin, "Описание объявления", cachedDesc);
+
+                            Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
+                            Thread.Sleep(1000);
+
+                            ChooseCategories(bulletin.Signature);
+
+                            SetValueFields(bulletin, fieldValueContainer);
+
+                            ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
+
+                            Thread.Sleep(1000);
+
+                            Publicate(bulletin);
+
+                            Thread.Sleep(1000);
+
+                            GetUrl(bulletin);
                         }
                     }
                 });
+                Tools.WebWorker.Execute(() =>
+                {
+                    DCT.ExecuteAsync(d2 =>
+                    {
+                        foreach (var b in packages)
+                        {
+                            if (string.IsNullOrEmpty(b.Url))
+                            {
+                                b.State = (int)BulletinState.Error;
+                            }
+                            else
+                            {
+                                b.State = (int)BulletinState.OnModeration;
+                            }
+                        }
+                        SendResultRouter.BulletinWorkResult(packages);
+                    });
+                });
             });
+        }
+
+
+        string ChangeField(BulletinPackage bulletin, string fieldKey, string newValue)
+        {
+            var cached = string.Empty;
+            if (bulletin.ValueFields.ContainsKey(fieldKey))
+            {
+                cached = bulletin.ValueFields[fieldKey];
+                bulletin.ValueFields[fieldKey] = newValue;
+            }
+            return cached;
         }
 
         ///-------------------------------------------------------------------------------------------------
@@ -361,9 +423,6 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
-
-
-
         void ChooseCategories(GroupSignature signature)
         {
             DCT.Execute(d =>
@@ -445,7 +504,7 @@ namespace BulletinWebWorker.Containers.Avito
                     if (button != null)
                         button.InvokeMember("click");
                 }
-                else if (state == BulletinState.WaitPublication)
+                else if (state == BulletinState.WaitPublication || state == BulletinState.Publicated)
                 {
                     var radioButton = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                               .FirstOrDefault(q => q.GetAttribute("id") == "pack1");
@@ -506,6 +565,36 @@ namespace BulletinWebWorker.Containers.Avito
                     buttonContinue.InvokeMember("click");
 
             });
+        }
+
+        bool RemoveBulletin()
+        {
+            var result = false;
+            DCT.Execute(d =>
+            {
+                var closeButton = GetByTag("input", e => e.GetAttribute("className").Contains("js-close-item"));
+                closeButton.InvokeMember("click");
+
+                var continueButton = GetByTag("button", e => e.InnerText.Contains("Далее"));
+                continueButton.InvokeMember("click");
+                Thread.Sleep(1000);
+
+                //Снятие с публикации
+                var reasonButton = GetByTag("button", e => e.InnerText.Contains("Другая причина"));
+                reasonButton.InvokeMember("click");
+                Thread.Sleep(1000);
+
+                //Окончательное удаление
+                var removeButton = GetByTag("button", e => e.GetAttribute("className").Contains("js-confirm-action"));
+                var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                {
+                    SendKeys.SendWait("{Enter}");
+                });
+                removeButton.InvokeMember("click");
+
+                result = true;
+            });
+            return result;
         }
 
         void GetUrl(BulletinPackage bulletin)
@@ -722,6 +811,49 @@ namespace BulletinWebWorker.Containers.Avito
             return result;
         }
 
+
+        #region Tests
+
+        public void TestImage()
+        {
+            DCT.Execute(d =>
+            {
+                Tools.WebWorker.Execute(() =>
+                {
+                    var accessContainer = AccessContainerList.Get(Uid);
+
+                    var access = new AccessPackage
+                    {
+                        Login = "mostrerkilltest@gmail.com",
+                        Password = "OnlineHelp59",
+                    };
+
+                    if (accessContainer.TryAuth(access))
+                    {
+                        Thread.Sleep(2000);
+
+                        Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
+
+                        ChooseCategories(new GroupSignature("Хобби и отдых", "Охота и рыбалка"));
+
+                        var form = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                               .FirstOrDefault(q => q.GetAttribute("name") == "image");
+                        if (form != null)
+                        {
+                            form.Focus();
+                            var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                            {
+                                SendKeys.SendWait("https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png");
+                                SendKeys.SendWait("{Enter}");
+                            });
+                            form.InvokeMember("click");
+                            Thread.Sleep(6000);
+                        }
+                    }
+                });
+            });
+        }
+        #endregion
 
     }
 }

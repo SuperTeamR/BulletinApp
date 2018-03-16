@@ -1,4 +1,4 @@
-namespace BulletinEngine.Migrations
+namespace BulletinHub.Migrations
 {
     using System;
     using System.Data.Entity;
