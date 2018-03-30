@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AccessPackage.cs" />
+    <Compile Include="Data\AggregateBulletinPackage.cs" />
     <Compile Include="Data\BulletinPackage.cs" />
     <Compile Include="Data\CategoryTree.cs" />
     <Compile Include="Data\FieldPackage.cs" />

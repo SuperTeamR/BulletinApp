@@ -60,6 +60,7 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, Banned),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
+             new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, Activated),
         };
         protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error, AccessState.Checking };
 
@@ -159,6 +160,8 @@ namespace BulletinEngine.Entity.Data
                 }
                 else
                 {
+                    dbAccess.Login = access.Login;
+                    dbAccess.Password = access.Password;
                     dbAccess.State = (int)AccessState.Unchecked;
                     d.SaveChanges();
                 }
@@ -181,6 +184,7 @@ namespace BulletinEngine.Entity.Data
         Closed = 5,
         Unchecked = 6,
         Checking = 7,
+        Cloning = 8,
         Error = 99,
     }
 }

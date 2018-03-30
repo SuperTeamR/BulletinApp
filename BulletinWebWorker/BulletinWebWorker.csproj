@@ -91,7 +91,7 @@
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
-    <Compile Include="Service\GetWorkRouter.cs" />
+    <Compile Include="Service\WorkRouter.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Service\EngineService.cs" />
     <Compile Include="Helpers\WebWorkerHelper.cs" />

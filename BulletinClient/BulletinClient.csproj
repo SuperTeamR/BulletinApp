@@ -89,6 +89,7 @@
     </ApplicationDefinition>
     <Compile Include="Core\ClientContext.cs" />
     <Compile Include="Core\DCT.cs" />
+    <Compile Include="Data\AccessView.cs" />
     <Compile Include="Data\BulletinView.cs" />
     <Compile Include="Forms\MainView\ClipboardHelper.cs" />
     <Compile Include="Forms\MainView\CsvHelper.cs" />

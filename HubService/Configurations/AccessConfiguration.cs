@@ -1,6 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Entity.Data;
-using BulletinHub.Service;
+using BulletinEngine.Helpers;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Web.DataService.Configuration;
 using System;
@@ -19,7 +19,10 @@ namespace HubService.Configurations
             switch (code)
             {
                 case "CheckAccess":
-                    result = AccessResultHelper.MarkAccessAsChecked(objects);
+                    result = AccessHelper.MarkAccessAsChecked(objects);
+                    break;
+                case "CreateAccesses":
+                    result = AccessHelper.AddAccesses(objects);
                     break;
                 default:
                     break;

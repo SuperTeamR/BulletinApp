@@ -4,9 +4,7 @@ using FessooFramework.Tools.Web.DataService.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using FessooFramework.Objects.Data;
-using BulletinHub.Service;
 using BulletinHub.Helpers;
 
 namespace HubService.Configurations
@@ -20,7 +18,7 @@ namespace HubService.Configurations
             switch (code)
             {
                 case "AssignBulletinWork":
-                    result = AddWorkResultApiHelper.AddWorkResult(objects);
+                    result = BulletinHelper.AddWorkResult(objects);
                     break;
                 case "CreateBulletins":
                     result = BulletinHelper.CreateBulletins(objects);

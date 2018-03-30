@@ -6,6 +6,7 @@ using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
+using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,7 +18,10 @@ namespace BulletinClient.Forms.MainView
 {
     class ViewModel : VM
     {
-        #region Proiperty
+        #region Property
+        public string NewAccessLogin { get; set; }
+        public string NewAccessPassword { get; set; }
+
         public bool Auth => !string.IsNullOrEmpty(Settings.Default.BoardLogin);
         public bool NotAuth => !Auth;
 
@@ -42,6 +46,7 @@ namespace BulletinClient.Forms.MainView
         public ObservableCollection<NewBulletin> AddBulletins { get; set; }
 
         public IEnumerable<BulletinView> Bulletins { get; set; }
+        public ObservableCollection<AccessView> Accesses { get; set; }
 
         #endregion
         #region Commands
@@ -50,19 +55,24 @@ namespace BulletinClient.Forms.MainView
         public ICommand CommandAddBulletin { get; set; }
         public ICommand CommandAddBulletins { get; set; }
         public ICommand CommandLogout { get; set; }
+        public ICommand CommandAddAccess { get; set; }
         #endregion
         #region Constructor
         public ViewModel()
         {
-            CardCategory1 = "Хобби и отдых";
-            CardCategory2 = "Спорт и отдых";
-            CardCategory3 = "Другое";
+            CardCategory1 = "Бытовая электроника";
+            CardCategory2 = "Телефоны";
+            CardCategory3 = "Acer";
             AddBulletins = new ObservableCollection<NewBulletin>();
+            Accesses = new ObservableCollection<AccessView>();
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
+            CommandAddAccess = new DelegateCommand(AddAccess);
             GetBulletins();
+            GetAccesses();
+
             CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
         }
         #endregion
@@ -106,20 +116,67 @@ namespace BulletinClient.Forms.MainView
             });
         }
 
-        private void GetBulletins()
+        void GetBulletins()
         {
             using (var client = new ServiceClient())
             {
                 client.CollectionLoad<BulletinPackage>(GetBulletinsCallback);
             }
         }
-        private void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
+
+        void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
         {
             Bulletins = objs.Select(q => new BulletinView(q)).ToArray();
             RaisePropertyChanged(() => Bulletins);
             RaisePropertyChanged(() => Bulletin);
             RaisePropertyChanged(() => NotBulletin);
 
+        }
+
+        void GetAccesses()
+        {
+            using (var client = new ServiceClient())
+            {
+                client.CollectionLoad<AccessPackage>(GetAccessesCallback);
+            }
+        }
+
+        void GetAccessesCallback(IEnumerable<AccessPackage> objs)
+        {
+            Accesses = new ObservableCollection<AccessView>(objs.Select(q => new AccessView(q)).ToArray());
+            RaisePropertyChanged(() => Accesses);
+        }
+
+        void AddAccess()
+        {
+            DCT.Execute(d => 
+            {
+                var access = new AccessPackage
+                {
+                    Login = NewAccessLogin,
+                    Password = NewAccessPassword,
+                };
+
+                using (var client = new ServiceClient())
+                {
+                    var r = client.Ping();
+                    Console.WriteLine($"Ping = {r}");
+                    client.SendQueryCollection((a) => { }, "CreateAccesses", objects: new[] { access });
+                }
+            });
+        }
+
+        void NewAccessAdded(AccessPackage a)
+        {
+            DCT.Execute(d =>
+            {
+                NewAccessLogin = string.Empty;
+                NewAccessPassword = string.Empty;
+                RaisePropertyChanged(() => NewAccessLogin);
+                RaisePropertyChanged(() => NewAccessPassword);
+
+                GetAccesses();
+            });
         }
 
         void BoardAuth()
@@ -208,4 +265,5 @@ namespace BulletinClient.Forms.MainView
         public string Цена { get; set; }
         public string Ссылка { get; set; }
     }
+
 }

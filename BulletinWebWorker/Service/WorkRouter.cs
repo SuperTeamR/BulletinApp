@@ -26,7 +26,7 @@ namespace BulletinWebWorker.Containers
                     case BulletinState.WaitPublication:
                         bulletinContainer.AddBulletins(s.Collection);
                         break;
-                    case BulletinState.Publicated:
+                    case BulletinState.WaitRepublication:
                         bulletinContainer.RepublicateBulletins(s.Collection);
                         break;
                     case BulletinState.Edited:
@@ -37,6 +37,13 @@ namespace BulletinWebWorker.Containers
                         break;
                 }
             }
+        }
+
+
+        public static void AssignAggregateBulletinWork(IEnumerable<AggregateBulletinPackage> collection)
+        {
+            var bulletinContainer = BulletinPackageContainerList.Get(BoardIds.Avito);
+            bulletinContainer.CloneBulletins(collection);
         }
 
         public static void AssignProfileWork(IEnumerable<AccessPackage> collection)

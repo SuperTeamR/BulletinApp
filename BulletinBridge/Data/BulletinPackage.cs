@@ -7,6 +7,7 @@ namespace BulletinBridge.Data
 {
     public class BulletinPackage : CacheObject
     {
+        public Guid BulletinId { get; set; }
         public Guid BulletinInstanceId { get; set; }
         public string Url { get; set; }
         public string Title { get; set; }
@@ -35,6 +36,7 @@ namespace BulletinBridge.Data
         Edited = 6,
         Removed = 7,
         Closed = 8,
+        WaitRepublication = 9,
         Error = 99,
         Unchecked = 100,
         Checking = 101,

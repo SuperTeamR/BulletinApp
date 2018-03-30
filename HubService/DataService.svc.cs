@@ -69,7 +69,8 @@ namespace HubService
         public override IEnumerable<DataServiceConfigurationBase> Convertors => new DataServiceConfigurationBase[]
         {
             new BulletinConfiguration(),
-            new DataServiceConfiguration<Access, AccessPackage>(),
+            new AccessConfiguration(),
+            new DataServiceConfiguration<Bulletin, AggregateBulletinPackage>(),
         };
 
         protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,7 +29,27 @@ namespace BulletinWebWorker.Containers.Avito
                 var attribute = fieldPackage.HasId ? "id" : "name";
                 var form = WebWorker.WebDocument.GetElementsByTagName(fieldPackage.Tag).Cast<HtmlElement>()
                                 .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
-                if (form == null) return;
+                if (form == null)
+                {
+                    //Временное рабочее решение после того, как борда поменяла у ряда категорий поле "Вид объявлений" с combobox на radiobutton
+                    if (fieldPackage.Tag == "select")
+                    {
+                        if (fieldPackage.Options != null && fieldPackage.Options.Length > 0)
+                        {
+
+                            var code = Regex.Match(fieldPackage.HtmlId, @"\d+").Value;
+                            form = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                               .Where(q => q.GetAttribute("name") == $"params[{code}]")
+                               .FirstOrDefault(q => q.GetAttribute("checked") != null);
+                            var formValue = form.GetAttribute("value");
+                            var option = fieldPackage.Options.FirstOrDefault(q => q.Value == formValue);
+                            if (option != null)
+                                result = option.Text;
+
+                        }
+                    }
+                    return;
+                }
 
                 if(fieldPackage.Tag == "select" && fieldPackage.Options != null)
                 {
@@ -58,7 +79,24 @@ namespace BulletinWebWorker.Containers.Avito
                 var attribute = fieldPackage.HasId ? "id" : "name";
                 var form = WebWorker.WebDocument.GetElementsByTagName(fieldPackage.Tag).Cast<HtmlElement>()
                                 .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
-                if (form == null) return;
+                if (form == null)
+                {
+                    //Временное рабочее решение после того, как борда поменяла у ряда категорий поле "Вид объявлений" с combobox на radiobutton
+                    if(fieldPackage.Tag == "select")
+                    {
+                        if (fieldPackage.Options != null && fieldPackage.Options.Length > 0)
+                        {
+
+                            var option = fieldPackage.Options.FirstOrDefault(q => q.Text == value);
+                            var code = option.Value;
+                            form = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                              .FirstOrDefault(q => q.GetAttribute("value") == code);
+                            form.InvokeMember("click");
+                        }
+
+                    }
+                    return;
+                }
 
 
                 if(!string.IsNullOrEmpty(name) && name.Contains("Фотографии"))
@@ -115,5 +153,18 @@ namespace BulletinWebWorker.Containers.Avito
                 }
             });
         }
+        void SetRadio(HtmlElement form, string value, FieldPackage package)
+        {
+            DCT.Execute(data =>
+            {
+                if (package.Options != null && package.Options.Length > 0)
+                {
+                    var option = package.Options.FirstOrDefault(q => q.Text == value);
+                    var code = option.Value;
+                    form.SetAttribute("value", code);
+                }
+            });
+        }
+
     }
 }

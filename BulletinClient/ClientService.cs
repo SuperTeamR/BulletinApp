@@ -28,6 +28,18 @@ namespace BulletinClient
             CreateBulletins(new [] { obj }, (a) => act(a.FirstOrDefault()));
         }
 
+        public void CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            CreateAccesses(new[] { obj }, (a) => act(a.FirstOrDefault()));
+        }
+
+        public void CreateAccesses(IEnumerable<AccessPackage> objs, Action<IEnumerable<AccessPackage>> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            SendQueryCollection((a) => act(a), "CreateAccesses", objects: objs);
+        }
+
         public static void _CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
         {
             DCT.ExecuteAsync(d2 =>
@@ -42,6 +54,15 @@ namespace BulletinClient
             {
                 using (var client = new ServiceClient())
                     client.CreateBulletins(bulletins, action);
+            });
+        }
+
+        public static void _CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
+        {
+            DCT.ExecuteAsync(d =>
+            {
+                using (var client = new ServiceClient())
+                    client.CreateAccess(obj, action);
             });
         }
 

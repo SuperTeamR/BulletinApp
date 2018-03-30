@@ -24,8 +24,10 @@ namespace BulletinWebWorker.Managers
         {
             DCT.ExecuteAsync(d =>
             {
+                AskForAggregateBulletinWork();
                 AskForBulletinWork();
                 AskForProfileWork();
+                
             }, 
             continueMethod:c => Application.Current.Shutdown());
         }
@@ -68,6 +70,31 @@ namespace BulletinWebWorker.Managers
         private static void AskForBulletinWork(IEnumerable<BulletinPackage> objs)
         {
             WorkRouter.AssignBulletinWork(objs);
+        }
+
+        /// <summary>
+        /// Запрашивает работу с Hub по буллетинам (не инстанций)
+        /// </summary>
+        static void AskForAggregateBulletinWork()
+        {
+            DCT.Execute(d =>
+            {
+                d._SessionInfo.HashUID = "Engine";
+                d._SessionInfo.SessionUID = "Engine";
+
+                using (var client = new EngineService())
+                {
+                    var result = client.Ping();
+                    Console.WriteLine($"Ping = {result}");
+                    client.CollectionLoad<AggregateBulletinPackage>(AskForAggregateBulletinWorkCallback);
+                }
+
+            });
+        }
+
+        static void AskForAggregateBulletinWorkCallback(IEnumerable<AggregateBulletinPackage> objs)
+        {
+            WorkRouter.AssignAggregateBulletinWork(objs);
         }
 
         ///-------------------------------------------------------------------------------------------------

@@ -74,6 +74,7 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.OnModeration, BulletinInstanceState.Created, Closed),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Edited, BulletinInstanceState.Created, Closed),
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.Created, Closed),
+             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.Unchecked, Closed),
         };
         protected override IEnumerable<BulletinInstanceState> DefaultState => new[] { BulletinInstanceState.Error, BulletinInstanceState.Unchecked, BulletinInstanceState.Checking };
 
@@ -208,7 +209,7 @@ namespace BulletinEngine.Entity.Data
                 (int)BulletinInstanceState.WaitPublication,
                 (int)BulletinInstanceState.Unchecked,
                 (int)BulletinInstanceState.OnModeration,
-                (int)BulletinInstanceState.Publicated,
+                (int)BulletinInstanceState.WaitRepublication,
             };
             var result = Enumerable.Empty<EntityObject>();
             BCT.Execute(c =>
@@ -251,6 +252,7 @@ namespace BulletinEngine.Entity.Data
         Edited = 6,
         Removed = 7,
         Closed = 8,
+        WaitRepublication = 9,
         Error = 99,
         Unchecked = 100,
         Checking = 101,

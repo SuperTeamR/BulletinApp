@@ -40,8 +40,11 @@ namespace BulletinWebWorker.Containers.Base
         /// <param name="packages"></param>
         public abstract void RepublicateBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
 
-
-
+        /// <summary>
+        /// Клонировать буллетины
+        /// </summary>
+        /// <param name="packages"></param>
+        public abstract void CloneBulletins(IEnumerable<AggregateBulletinPackage> packages);
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает коллекцию буллетинов для заданного доступа </summary>
         ///

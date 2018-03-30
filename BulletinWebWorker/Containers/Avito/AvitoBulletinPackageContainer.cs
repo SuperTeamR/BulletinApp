@@ -59,7 +59,7 @@ namespace BulletinWebWorker.Containers.Avito
                             Thread.Sleep(1000);
 
                             Publicate(bulletin);
-
+                            //
                             Thread.Sleep(1000);
 
                             GetUrl(bulletin);
@@ -72,14 +72,14 @@ namespace BulletinWebWorker.Containers.Avito
                     {
                         foreach (var b in packages)
                         {
-                            if(string.IsNullOrEmpty(b.Url))
+                            if (string.IsNullOrEmpty(b.Url))
                             {
                                 b.State = (int)BulletinState.Error;
                             }
                             else
                             {
                                 b.State = (int)BulletinState.OnModeration;
-                            } 
+                            }
                         }
                         SendResultRouter.BulletinWorkResult(packages);
                     });
@@ -229,6 +229,71 @@ namespace BulletinWebWorker.Containers.Avito
                 });
             });
         }
+
+
+        public override void CloneBulletins(IEnumerable<AggregateBulletinPackage> packages)
+        {
+            DCT.Execute(d =>
+            {
+               
+                var createdBulletins = new List<BulletinPackage>();
+
+                Tools.WebWorker.Execute(() =>
+                {
+                    var fieldValueContainer = FieldValueContainerList.Get(Uid);
+                    var accessContainer = AccessContainerList.Get(Uid);
+
+                    foreach (var package in packages)
+                    {
+                        var accesses = package.Accesses.ToArray();
+                        foreach (var access in accesses)
+                        {
+                            if (accessContainer.TryAuth(access))
+                            {
+                                Thread.Sleep(2000);
+
+                                Tools.WebWorker.NavigatePage("https://www.avito.ru/additem");
+
+                                ChooseCategories(package.Bulletin.Signature);
+
+                                SetValueFields(package.Bulletin, fieldValueContainer);
+
+                                ContinueAddOrEdit(BulletinState.WaitPublication);
+
+                                Thread.Sleep(1000);
+
+                                Publicate(package.Bulletin);
+                                //
+                                Thread.Sleep(1000);
+
+                                GetUrl(package.Bulletin);
+
+
+                                var newBulletin = new BulletinPackage
+                                {
+                                    Access = access,
+                                    BulletinId = package.Bulletin.BulletinId,
+                                    Url = package.Bulletin.Url,
+                                    Title = package.Bulletin.Title,
+                                    State = package.Bulletin.State,
+                                    Signature = package.Bulletin.Signature,
+                                    ValueFields = package.Bulletin.ValueFields
+                                };
+                                createdBulletins.Add(newBulletin);
+                            }
+                        }
+                    }
+
+                  
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    SendResultRouter.BulletinWorkResult(createdBulletins);
+                });
+            });
+        }
+
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает коллекцию буллетинов для заданного доступа </summary>
         ///
@@ -480,6 +545,7 @@ namespace BulletinWebWorker.Containers.Avito
             {
                 foreach (var pair in bulletin.ValueFields)
                 {
+                    if (string.IsNullOrEmpty(pair.Value)) continue;
                     var template = bulletin.AccessFields.FirstOrDefault(q => q.Key == pair.Key);
                     fieldContainer.SetFieldValue(bulletin.AccessFields, template.Key, pair.Value);
                 }
@@ -504,7 +570,7 @@ namespace BulletinWebWorker.Containers.Avito
                     if (button != null)
                         button.InvokeMember("click");
                 }
-                else if (state == BulletinState.WaitPublication || state == BulletinState.Publicated)
+                else if (state == BulletinState.WaitPublication || state == BulletinState.WaitRepublication)
                 {
                     var radioButton = Tools.WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
                               .FirstOrDefault(q => q.GetAttribute("id") == "pack1");
@@ -573,26 +639,42 @@ namespace BulletinWebWorker.Containers.Avito
             DCT.Execute(d =>
             {
                 var closeButton = GetByTag("input", e => e.GetAttribute("className").Contains("js-close-item"));
-                closeButton.InvokeMember("click");
-
-                var continueButton = GetByTag("button", e => e.InnerText.Contains("Далее"));
-                continueButton.InvokeMember("click");
-                Thread.Sleep(1000);
-
-                //Снятие с публикации
-                var reasonButton = GetByTag("button", e => e.InnerText.Contains("Другая причина"));
-                reasonButton.InvokeMember("click");
-                Thread.Sleep(1000);
-
-                //Окончательное удаление
-                var removeButton = GetByTag("button", e => e.GetAttribute("className").Contains("js-confirm-action"));
-                var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                if(closeButton != null)
                 {
-                    SendKeys.SendWait("{Enter}");
-                });
-                removeButton.InvokeMember("click");
+                    closeButton.InvokeMember("click");
 
-                result = true;
+                    var continueButton = GetByTag("button", e => e.InnerText.Contains("Далее"));
+                    continueButton.InvokeMember("click");
+                    Thread.Sleep(1000);
+
+                    //Снятие с публикации
+                    var reasonButton = GetByTag("button", e => e.InnerText.Contains("Другая причина"));
+                    reasonButton.InvokeMember("click");
+                    Thread.Sleep(1000);
+
+                    //Окончательное удаление
+                    var removeButton = GetByTag("button", e => e.GetAttribute("className").Contains("js-confirm-action"));
+                    var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                    {
+                        SendKeys.SendWait("{Enter}");
+                    });
+                    removeButton.InvokeMember("click");
+
+                    result = true;
+                }
+                else
+                {
+                    //Окончательное удаление
+                    var removeButton = GetByTag("button", e => e.GetAttribute("className").Contains("js-confirm-action"));
+                    var sendKeyTask = Task.Delay(500).ContinueWith((_) =>
+                    {
+                        SendKeys.SendWait("{Enter}");
+                    });
+                    removeButton.InvokeMember("click");
+
+                    result = true;
+                }
+                
             });
             return result;
         }
