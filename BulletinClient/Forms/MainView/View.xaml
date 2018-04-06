@@ -40,6 +40,22 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="10"
+                     Height="10"
+                     Command="{Binding CommandCheckConnection}" >
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid>
+                                <Ellipse Stroke="Black"
+                                        StrokeThickness="2"
+                                        Fill="{Binding ConnectionColor}">
+                                </Ellipse>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
                 <TextBlock Margin="3" Text="{Binding BoardLogin}"  FontSize="12" FontWeight="Medium" Background="White"/>
                 <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>

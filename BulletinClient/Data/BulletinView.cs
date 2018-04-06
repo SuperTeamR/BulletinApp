@@ -10,6 +10,7 @@ namespace BulletinClient.Data
 {
     class BulletinView
     {
+        public Guid BulletinId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Price { get; set; }
@@ -18,6 +19,8 @@ namespace BulletinClient.Data
         public string Url { get; set; }
         public BulletinView(BulletinPackage package)
         {
+            BulletinId = package.BulletinId;
+
             if(package.ValueFields != null)
             {
                 if(package.ValueFields.ContainsKey("Название объявления"))

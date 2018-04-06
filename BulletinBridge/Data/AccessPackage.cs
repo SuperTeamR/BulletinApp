@@ -25,6 +25,7 @@ namespace BulletinBridge.Data
         Closed = 5,
         Unchecked = 6,
         Checking = 7,
+        Cloning = 8,
         Error = 99,
     }
 }

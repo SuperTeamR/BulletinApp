@@ -78,6 +78,7 @@ namespace BulletinHub.Helpers
                             var board = d.Db1.Boards.FirstOrDefault(q => q.Name == "Avito");
 
 
+                            bool hasBulletin = false;
                             Bulletin dbBulletin = null;
                             if (bulletin.BulletinId == Guid.Empty)
                             {
@@ -89,6 +90,7 @@ namespace BulletinHub.Helpers
                             }
                             else
                             {
+                                hasBulletin = true;
                                 dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == bulletin.BulletinId);
                                 dbBulletin.StateEnum = BulletinEngine.Entity.Data.BulletinState.Created;
                             }
@@ -102,8 +104,16 @@ namespace BulletinHub.Helpers
                                 BulletinId = dbBulletin.Id,
                                 BoardId = board.Id
                             };
-                            dbInstance.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.Unchecked;
-                            
+                            if(!hasBulletin)
+                                dbInstance.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.Unchecked;
+                            else
+                            {
+                                dbInstance.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.Created;
+                                dbInstance.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.WaitPublication;
+                                dbInstance.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.OnModeration;
+                            }
+                               
+
                         }
                     }
                     dbInstance.State = bulletin.State;

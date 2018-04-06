@@ -101,8 +101,12 @@ namespace BulletinWebWorker.Containers.Avito
 
                 if(!string.IsNullOrEmpty(name) && name.Contains("Фотографии"))
                 {
-                    SetImage(form, value);
-                    Thread.Sleep(6000);
+                    var values = value.Split(new[] { "\r\n" }, StringSplitOptions.None);
+                    foreach(var v in values)
+                    {
+                        SetImage(form, v);
+                        Thread.Sleep(6000);
+                    }
                 }
                 else
                 {

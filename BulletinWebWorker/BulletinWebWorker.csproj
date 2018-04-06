@@ -91,13 +91,16 @@
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
+    <Compile Include="Data\ProxyData.cs" />
     <Compile Include="Service\WorkRouter.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Service\EngineService.cs" />
     <Compile Include="Helpers\WebWorkerHelper.cs" />
     <Compile Include="Service\SendResultRouter.cs" />
+    <Compile Include="Tools\ProxyManager.cs" />
     <Compile Include="Tools\TaskController.cs" />
     <Compile Include="Tools\WebWorker.cs" />
+    <Compile Include="Tools\WinInetInterop.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

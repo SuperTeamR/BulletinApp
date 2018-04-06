@@ -60,7 +60,9 @@ namespace BulletinWebWorker.Containers.Avito
             var result = false;
             DCT.Execute(d =>
             {
-            WebWorker.NavigatePage(LoginUrl);
+                ProxyManager.UseProxy();
+
+                WebWorker.NavigatePage(LoginUrl);
             //WebWorker.DownloadPage(LoginUrl, (doc) =>
             //{
                     if (WebWorker.WebDocument != null)

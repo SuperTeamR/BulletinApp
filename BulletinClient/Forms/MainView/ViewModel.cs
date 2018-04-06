@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace BulletinClient.Forms.MainView
 {
@@ -48,6 +49,8 @@ namespace BulletinClient.Forms.MainView
         public IEnumerable<BulletinView> Bulletins { get; set; }
         public ObservableCollection<AccessView> Accesses { get; set; }
 
+        public Brush ConnectionColor { get; set; }
+
         #endregion
         #region Commands
         public ICommand CommandGetXls { get; set; }
@@ -56,13 +59,15 @@ namespace BulletinClient.Forms.MainView
         public ICommand CommandAddBulletins { get; set; }
         public ICommand CommandLogout { get; set; }
         public ICommand CommandAddAccess { get; set; }
+
+        public ICommand CommandCheckConnection { get; set; }
         #endregion
         #region Constructor
         public ViewModel()
         {
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
-            CardCategory3 = "Acer";
+            CardCategory3 = "Samsung";
             AddBulletins = new ObservableCollection<NewBulletin>();
             Accesses = new ObservableCollection<AccessView>();
             CommandGetXls = new DelegateCommand(GetXls);
@@ -70,6 +75,8 @@ namespace BulletinClient.Forms.MainView
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
             CommandAddAccess = new DelegateCommand(AddAccess);
+            CommandCheckConnection = new DelegateCommand(CheckConnection);
+            CheckConnection();
             GetBulletins();
             GetAccesses();
 
@@ -101,7 +108,24 @@ namespace BulletinClient.Forms.MainView
 
 
 
+        void CheckConnection()
+        {
+            DCT.Execute(d =>
+            {
+                ConnectionColor = Brushes.Orange;
+                RaisePropertyChanged(() => ConnectionColor);
+                using (var client = new ServiceClient())
+                {
+                    var ping = client.Ping();
+                    if (ping)
+                        ConnectionColor = Brushes.Green;
+                    else
+                        ConnectionColor = Brushes.Red;
 
+                    RaisePropertyChanged(() => ConnectionColor);
+                }
+            });
+        }
 
         void GetXls()
         {
@@ -126,11 +150,16 @@ namespace BulletinClient.Forms.MainView
 
         void GetBulletinsCallback(IEnumerable<BulletinPackage> objs)
         {
-            Bulletins = objs.Select(q => new BulletinView(q)).ToArray();
-            RaisePropertyChanged(() => Bulletins);
-            RaisePropertyChanged(() => Bulletin);
-            RaisePropertyChanged(() => NotBulletin);
+            DCT.Execute(d =>
+            {
+                if (objs.Count() == 0) return;
+                var temp = objs.Select(q => new BulletinView(q)).GroupBy(q => q.BulletinId).FirstOrDefault().ToArray();
+                Bulletins = temp;
+                RaisePropertyChanged(() => Bulletins);
+                RaisePropertyChanged(() => Bulletin);
+                RaisePropertyChanged(() => NotBulletin);
 
+            });
         }
 
         void GetAccesses()

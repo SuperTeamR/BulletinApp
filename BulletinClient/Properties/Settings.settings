@@ -12,7 +12,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DataServiceAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://localhost:59888/DataService.svc</Value>
+      <Value Profile="(Default)">http://176.111.73.51/BulletinHub/DataService.svc</Value>
     </Setting>
     <Setting Name="MainServiceAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://176.111.73.51/MainService.svc</Value>

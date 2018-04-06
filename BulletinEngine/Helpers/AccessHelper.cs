@@ -78,6 +78,7 @@ namespace BulletinEngine.Helpers
                     Login = q.Login,
                     Password = q.Password,
                     BoardId = q.BoardId,
+                    State = q.State,
                 }).ToList();
             });
             return result;
@@ -116,7 +117,7 @@ namespace BulletinEngine.Helpers
                         BoardId = d.Db1.Boards.FirstOrDefault().Id,
                         UserId = d.Db1.Users.FirstOrDefault().Id
                     };
-                    dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Created;
+                    dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
 
                     var dbBulletins = d.Db1.Bulletins.Where(q => q.UserId == dbAccess.UserId).ToArray();
                     foreach(var b in dbBulletins)

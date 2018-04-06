@@ -1,9 +1,11 @@
 ﻿using BulletinWebWorker.Containers.Avito;
 using BulletinWebWorker.Managers;
+using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using Microsoft.Win32;
 using System;
+using System.Net;
 using System.Windows;
 
 namespace BulletinWebWorker
@@ -18,6 +20,25 @@ namespace BulletinWebWorker
             InitializeComponent();
 
             WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+
+
+            //using(var s = new EngineService())
+            //{
+            //    var ping = s.Ping();
+            //}
+            //var webProxy = new WebProxy
+            //{
+            //    Address = new Uri("http://5.101.64.68:55907"),
+            //};
+            //WebRequest.DefaultWebProxy = webProxy;
+
+            //WinInetInterop.SetConnectionProxy("http://217.23.6.40:8080");
+
+            //WebWorker.NavigatePage("https://www.whatismyip.com/my-ip-information/");
+
+            //WebRequest request = WebRequest.Create("http://google.com");
+            //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
 
             //var a = new AvitoBulletinPackageContainer();
             //a.TestImage();
