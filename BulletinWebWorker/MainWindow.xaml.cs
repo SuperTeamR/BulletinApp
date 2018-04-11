@@ -1,4 +1,5 @@
 ﻿using BulletinWebWorker.Containers.Avito;
+using BulletinWebWorker.Helpers;
 using BulletinWebWorker.Managers;
 using BulletinWebWorker.Service;
 using BulletinWebWorker.Tools;
@@ -19,8 +20,11 @@ namespace BulletinWebWorker
         {
             InitializeComponent();
 
-            WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+            UiHelper.SetAction(q => ActionState.Text = q, q => GlobalState.Text = q, q => ObjectState.Text = q);
 
+            WebWorker.SetBrowser((MyWebBrowser.Child as System.Windows.Forms.WebBrowser));
+            UiHelper.UpdateWorkState("Ожидание работы");
+            UiHelper.UpdateActionState("WebWorker инициализирован");
 
             //using(var s = new EngineService())
             //{

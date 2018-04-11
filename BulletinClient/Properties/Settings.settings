@@ -23,5 +23,8 @@
     <Setting Name="SessionUID" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="ImageServiceAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://176.111.73.51/ImageHub/ImageService.svc</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

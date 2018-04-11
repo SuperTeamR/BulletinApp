@@ -31,6 +31,7 @@ namespace BulletinEngine.Entity.Converters
 
                 result = new BulletinPackage
                 {
+                    BulletinId = obj.BulletinId,
                     BulletinInstanceId = obj.Id,
                     Url = obj.Url,
                     Signature = groupSignature,

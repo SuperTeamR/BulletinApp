@@ -91,7 +91,11 @@
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
     <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
+    <Compile Include="Containers\Fake\FakeAccessContainer.cs" />
+    <Compile Include="Containers\Fake\FakeBulletinPackageContainer.cs" />
+    <Compile Include="Containers\Fake\FakeFieldValueContainer.cs" />
     <Compile Include="Data\ProxyData.cs" />
+    <Compile Include="Helpers\UiHelper.cs" />
     <Compile Include="Service\WorkRouter.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Service\EngineService.cs" />

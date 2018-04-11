@@ -23,6 +23,9 @@ namespace HubService.Configurations
                 case "CreateBulletins":
                     result = BulletinHelper.CreateBulletins(objects);
                     break;
+                case "CloneBulletins":
+                    result = BulletinHelper.CloneBulletins(objects);
+                    break;
                 default:
                     break;
             }

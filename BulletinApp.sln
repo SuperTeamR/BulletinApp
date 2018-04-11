@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BulletinSystem", "BulletinS
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Obsolute", "Obsolute", "{2853BE17-DDB5-4FE5-BB2D-F7BF3B4AED38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotoService", "PhotoService\PhotoService.csproj", "{3ECEC42B-6C16-4576-B79B-3BCCA805415E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ECEC42B-6C16-4576-B79B-3BCCA805415E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ECEC42B-6C16-4576-B79B-3BCCA805415E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ECEC42B-6C16-4576-B79B-3BCCA805415E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ECEC42B-6C16-4576-B79B-3BCCA805415E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{CB84E637-97C1-425B-B543-50F9FA2F1E11} = {2853BE17-DDB5-4FE5-BB2D-F7BF3B4AED38}
 		{375F6916-0078-461D-831C-CE8DC7197A28} = {41B575BA-862A-4E6E-A50C-8FADF8A24167}
 		{AB1BE70A-8827-4DC4-8877-BEE152C3CEE1} = {41B575BA-862A-4E6E-A50C-8FADF8A24167}
+		{3ECEC42B-6C16-4576-B79B-3BCCA805415E} = {41B575BA-862A-4E6E-A50C-8FADF8A24167}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A69438C-04C5-46BA-AD05-8B572AA8DF24}

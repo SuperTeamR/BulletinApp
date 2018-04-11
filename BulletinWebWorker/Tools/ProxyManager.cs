@@ -1,4 +1,5 @@
 ﻿using BulletinWebWorker.Data;
+using BulletinWebWorker.Helpers;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace BulletinWebWorker.Tools
 {
     static class ProxyManager
     {
-        static readonly string query = @"http://api.best-proxies.ru/proxylist.txt?key=57025e2e9890832ff2246ded5dbb82d2&type=http&ports=80,8080&pex=1";
+        static readonly string query = @"http://api.best-proxies.ru/proxylist.txt?key=b756db66158ef04199d68b83d2cc2ade&type=http&ports=80,8080&pex=1&level=3&limit=0";
 
         static Queue<ProxyData> proxies = new Queue<ProxyData>();
 
@@ -52,6 +53,7 @@ namespace BulletinWebWorker.Tools
                 }
                 if (hasValidProxy)
                 {
+                    UiHelper.UpdateActionState($"Валидный прокси найден - {currentProxy.Address}");
                     WinInetInterop.SetConnectionProxy("http://" + currentProxy.Address);
                 }
 
@@ -68,15 +70,26 @@ namespace BulletinWebWorker.Tools
                 {
                     Address = new Uri("http://" + proxy.Address)
                 };
-                var request = WebRequest.Create("http://yandex.ru");
+                var request = WebRequest.Create("http://avito.ru");
                 request.Timeout = 5000;
-                response = (HttpWebResponse)request.GetResponse();
-                if (response.StatusCode == HttpStatusCode.OK)
+                try
                 {
-                    result = true;
+                    response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        result = true;
+                    }
                 }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    if (response != null) response.Close();
+                }
+                
             });
-            if (response != null) response.Close();
             return result;
         }
 

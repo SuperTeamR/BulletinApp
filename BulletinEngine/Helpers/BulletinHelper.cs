@@ -1,6 +1,7 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
+using BulletinEngine.Helpers;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,29 @@ namespace BulletinHub.Helpers
 {
     public static class BulletinHelper
     {
+        public static IEnumerable<BulletinPackage> CloneBulletins(IEnumerable<BulletinPackage> objs)
+        {
+            var result = objs;
+            BCT.Execute(d =>
+            {
+                foreach(var obj in objs)
+                {
+                    var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == obj.BulletinId);
+                    dbBulletin.StateEnum = BulletinEngine.Entity.Data.BulletinState.Cloning;
+
+                    var allAccesses = d.Db1.Accesses.ToArray();
+                    var usedAccesses = d.Db1.BulletinInstances.Where(q => q.BulletinId == dbBulletin.Id).Select(q => q.AccessId).ToArray();
+
+                    var unusedAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id));
+                    foreach (var a in unusedAccesses)
+                        a.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
+
+                    d.Db1.SaveChanges();
+                }
+            });
+            return result;
+        }
+
         public static IEnumerable<BulletinPackage> CreateBulletins(IEnumerable<BulletinPackage> objs)
         {
             var result = objs;
@@ -39,6 +63,26 @@ namespace BulletinHub.Helpers
                         BulletinId = dbBulletin.Id,
                         BoardId = board.Id
                     };
+
+                    var bulletinName = obj.ValueFields["Название объявления"];
+
+                    var sameBulletinNames = d.Db1.BulletinFields.Where(q => q.Value == bulletinName).ToArray();
+                    var hasDublicates = false;
+                    foreach(var s in sameBulletinNames)
+                    {
+                        var sameBulletin = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == s.BulletinInstanceId && q.AccessId == dbAccess.Id);
+                        if(sameBulletin != null)
+                        {
+                            hasDublicates = true;
+                            break;
+                        }
+                    }
+                    if(hasDublicates)
+                    {
+                        obj.State = -1;
+                        continue;
+                    }
+
                     model.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.WaitPublication;
                     foreach (var field in obj.ValueFields)
                     {

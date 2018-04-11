@@ -106,5 +106,17 @@ namespace BulletinClient.Properties {
                 this["SessionUID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://176.111.73.51/ImageHub/ImageService.svc")]
+        public string ImageServiceAddress {
+            get {
+                return ((string)(this["ImageServiceAddress"]));
+            }
+            set {
+                this["ImageServiceAddress"] = value;
+            }
+        }
     }
 }

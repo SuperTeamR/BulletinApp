@@ -1,4 +1,5 @@
 ﻿using BulletinWebWorker.Containers.Avito;
+using BulletinWebWorker.Containers.Fake;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace BulletinWebWorker.Containers.Base.FieldValue
         static FieldValueContainerList()
         {
             Add(new AvitoFieldValueContainer());
+            Add(new FakeFieldValueContainer());
         }
         #endregion
         #region Methods

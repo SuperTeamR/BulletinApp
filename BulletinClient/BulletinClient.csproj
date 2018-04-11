@@ -69,6 +69,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -95,6 +96,8 @@
     <Compile Include="Forms\MainView\CsvHelper.cs" />
     <Compile Include="Forms\MainView\CustomDataGrid.cs" />
     <Compile Include="General\MainWindowVM.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="ImageService.cs" />
     <Compile Include="MainService.cs" />
     <Compile Include="Tools\IOC.cs" />
     <Page Include="Forms\DataTemplate.xaml">

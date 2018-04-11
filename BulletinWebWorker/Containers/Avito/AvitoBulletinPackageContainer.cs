@@ -60,7 +60,7 @@ namespace BulletinWebWorker.Containers.Avito
 
                             Publicate(bulletin);
                             //
-                            Thread.Sleep(1000);
+                            Thread.Sleep(10000);
 
                             GetUrl(bulletin);
                         }
@@ -264,7 +264,7 @@ namespace BulletinWebWorker.Containers.Avito
 
                                 Publicate(package.Bulletin);
                                 //
-                                Thread.Sleep(1000);
+                                Thread.Sleep(20000);
 
                                 GetUrl(package.Bulletin);
 

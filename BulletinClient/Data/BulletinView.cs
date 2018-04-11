@@ -1,4 +1,5 @@
 ﻿using BulletinBridge.Data;
+using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BulletinClient.Data
 {
-    class BulletinView
+    class BulletinView : NotifyObject
     {
         public Guid BulletinId { get; set; }
         public string Title { get; set; }
@@ -17,6 +18,13 @@ namespace BulletinClient.Data
         public int Views { get; set; }
         public string State { get; set; }
         public string Url { get; set; }
+
+        bool _canRepublicate;
+        public bool CanRepublicate
+        {
+            get { return _canRepublicate; }
+            set { _canRepublicate = value; RaisePropertyChanged(() => CanRepublicate); }
+        }
         public BulletinView(BulletinPackage package)
         {
             BulletinId = package.BulletinId;

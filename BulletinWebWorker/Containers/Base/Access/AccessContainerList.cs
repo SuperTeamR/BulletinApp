@@ -1,4 +1,5 @@
 ﻿using BulletinWebWorker.Containers.Avito;
+using BulletinWebWorker.Containers.Fake;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace BulletinWebWorker.Containers.Base.Access
         static AccessContainerList()
         {
             Add(new AvitoAccessContainer());
+            Add(new FakeAccessContainer());
         }
         #endregion
         #region Methods

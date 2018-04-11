@@ -17,6 +17,17 @@ namespace BulletinClient
         public override string SessionUID => Settings.Default.SessionUID;
 
 
+
+        public void CloneBulletins(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            SendQueryCollection((a) => act(a), "CloneBulletins", objects: objs);
+        }
+        public void CloneBulletins(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            CloneBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
+        }
         public void CreateBulletins(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
         {
             var act = action == null ? (a) => { } : action;
@@ -40,6 +51,14 @@ namespace BulletinClient
             SendQueryCollection((a) => act(a), "CreateAccesses", objects: objs);
         }
 
+        public static void _CloneBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new ServiceClient())
+                    client.CloneBulletins(obj, action);
+            });
+        }
         public static void _CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
         {
             DCT.ExecuteAsync(d2 =>

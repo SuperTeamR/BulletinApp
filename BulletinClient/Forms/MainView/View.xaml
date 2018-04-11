@@ -59,7 +59,7 @@
                 <TextBlock Margin="3" Text="{Binding BoardLogin}"  FontSize="12" FontWeight="Medium" Background="White"/>
                 <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>
-            <TabControl  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
+            <TabControl SelectedIndex="{Binding SelectedIndexTab}"  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
                 <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
                     <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
@@ -101,7 +101,13 @@
 
                                     <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory2}" BorderThickness="0,0,0,1"/>
 
-                                    <TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory3}" BorderThickness="0,0,0,1"/>
+                                    <ComboBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" IsEditable="True" Text="{Binding CardCategory3}">
+                                        <ComboBoxItem IsSelected="True">iPhone</ComboBoxItem>
+                                        <ComboBoxItem>Samsung</ComboBoxItem>
+                                      
+                                    </ComboBox>
+
+                                    <!--<TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory3}" BorderThickness="0,0,0,1"/>-->
 
                                     <!--<ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14" Margin="5" SelectedValue="{Binding CardCategory1}">
                                         <ComboBoxItem Content="Хобби и отдых"  Background="White" FontSize="14"  />
@@ -128,6 +134,41 @@
                                 <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Изображения"  FontSize="14" MinWidth="100"/>
                                 <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding CardImageLinks}" 
                                   BorderThickness="0,0,0,1"  MinLines="2" AcceptsReturn="True"/>
+
+                                <ContentControl Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left">
+                                    <ContentControl.Template>
+                                        <ControlTemplate>
+                                            <Grid Cursor="Hand" Width="200">
+                                                <Grid>
+                                                    <Ellipse Height="176" 
+                                                    Width="176"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Center"
+                                                    Fill="Gray"/>
+                                                </Grid>
+
+                                                <Button x:Name="ButtonChangeImage" Background="Transparent" BorderThickness="0" Command="{Binding CommandAddImage}" Style="{x:Null}">
+                                                    <Button.Template>
+                                                        <ControlTemplate>
+                                                            <Grid x:Name="GridChangeImage" Width="176" Height="176" Background="#35388a" Opacity="0.9">
+                                                                <TextBlock x:Name="TextChangeImage" 
+                                                                Grid.Row="0" 
+                                                                TextAlignment="Center" 
+                                                                VerticalAlignment="Center" 
+                                                                HorizontalAlignment="Center" 
+                                                                Text="Добавить фото" 
+                                                                FontSize="15" 
+                                                                Foreground="White" Width="100" TextWrapping="Wrap"  />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </ContentControl.Template>
+                                </ContentControl>
+                                <TextBox Margin="5" IsReadOnly="True" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding UploadedImageLink}" 
+                                  BorderThickness="0,0,0,1" />
                             </Grid>
                         </ScrollViewer>
                     </Grid>
@@ -186,7 +227,7 @@
                     <Grid>
                         <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Получение данных"  FontSize="21" Visibility="{Binding NotBulletin, Converter={StaticResource BoolToVis}}"/>
                         <DataGrid  
-                            ItemsSource="{Binding Bulletins}" 
+                            ItemsSource="{Binding Bulletins, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" 
                             BorderThickness="0" 
                             Background="White" 
                             AutoGenerateColumns="False"
@@ -243,6 +284,21 @@
                                             <StackPanel>
                                                 <TextBlock  Text="{Binding Url}" TextWrapping="Wrap"  />
                                             </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Width="150" Header="">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button HorizontalAlignment="Right" Width="150" Height="30" 
+                                                    Content="Републикация" Command="{Binding Path=DataContext.CommandCloneBulletin,
+                                                        RelativeSource={RelativeSource 
+                                                        FindAncestor,
+                                                        AncestorType={x:Type UserControl}}}"  CommandParameter="{Binding }"
+                                                    Background="Black" Foreground="White" FontWeight="Medium" 
+                                                    Visibility="{Binding CanRepublicate, Converter={StaticResource BoolToVis}, 
+                                                Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>

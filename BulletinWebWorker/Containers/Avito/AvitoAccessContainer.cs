@@ -84,7 +84,7 @@ namespace BulletinWebWorker.Containers.Avito
                     }
                // });
                 //Без принудительного ожидания даже с Application.DoEvents авторизация не сработает, если перейти на другую страницу
-                WebWorker.JustWait(2);
+                WebWorker.JustWait(10);
                 result = true;
             });
             return result;

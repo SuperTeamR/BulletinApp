@@ -1,12 +1,15 @@
 ﻿using BulletinBridge.Data;
 using BulletinBridge.Messages.BoardApi;
+using BulletinBridge.Services.ServiceModels;
 using BulletinClient.Core;
 using BulletinClient.Data;
+using BulletinClient.Helpers;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.Helpers;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -14,6 +17,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace BulletinClient.Forms.MainView
 {
@@ -51,6 +55,9 @@ namespace BulletinClient.Forms.MainView
 
         public Brush ConnectionColor { get; set; }
 
+        public int SelectedIndexTab { get; set; }
+        public string UploadedImageLink { get; set; }
+
         #endregion
         #region Commands
         public ICommand CommandGetXls { get; set; }
@@ -60,14 +67,17 @@ namespace BulletinClient.Forms.MainView
         public ICommand CommandLogout { get; set; }
         public ICommand CommandAddAccess { get; set; }
 
+        public ICommand CommandCloneBulletin { get; set; }
+
         public ICommand CommandCheckConnection { get; set; }
+        public ICommand CommandAddImage { get; set; }
         #endregion
         #region Constructor
         public ViewModel()
         {
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
-            CardCategory3 = "Samsung";
+            CardCategory3 = "iPhone";
             AddBulletins = new ObservableCollection<NewBulletin>();
             Accesses = new ObservableCollection<AccessView>();
             CommandGetXls = new DelegateCommand(GetXls);
@@ -77,11 +87,15 @@ namespace BulletinClient.Forms.MainView
             CommandAddAccess = new DelegateCommand(AddAccess);
             CommandCheckConnection = new DelegateCommand(CheckConnection);
             CheckConnection();
-            GetBulletins();
             GetAccesses();
-
+            GetBulletins();
+        
             CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
+            CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
+            CommandAddImage = new DelegateCommand(AddImage);
         }
+
+
         #endregion
         #region Methods
         private void Logout()
@@ -107,7 +121,41 @@ namespace BulletinClient.Forms.MainView
 
 
 
+        void AddImage()
+        {
+            DCT.ExecuteMainThread(d =>
+            {
+                var openFile = new Microsoft.Win32.OpenFileDialog
+                {
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    FilterIndex = 2,
+                    RestoreDirectory = true
+                };
+                if (openFile.ShowDialog() == true)
+                {
+                    using (var client = new ImageService())
+                    {
+                        var r = client.Ping();
+                        Console.WriteLine($"Ping = {r}");
+                        var bitmap = new BitmapImage(new Uri(openFile.FileName));
+                        var bytes = ImageHelper.ConvertImageToByte(bitmap);
+                        client.AddImage(AddImageCallback, System.IO.Path.GetFileNameWithoutExtension(openFile.SafeFileName), bytes);
+                    }
 
+
+                    //data.Property.Profile.Value.Avatar = ImageHelper.ConvertImageToByte(new BitmapImage(new Uri(ОткрытьФайл.FileName)));
+                    //CacheData.UserProfiles._Update(data.Property.Profile.Value);
+                }
+
+            });
+           
+        }
+
+        void AddImageCallback(Response_AddImage result)
+        {
+            UploadedImageLink = result.Url;
+            RaisePropertyChanged(() => UploadedImageLink);
+        }
         void CheckConnection()
         {
             DCT.Execute(d =>
@@ -153,7 +201,14 @@ namespace BulletinClient.Forms.MainView
             DCT.Execute(d =>
             {
                 if (objs.Count() == 0) return;
-                var temp = objs.Select(q => new BulletinView(q)).GroupBy(q => q.BulletinId).FirstOrDefault().ToArray();
+                var grouped = objs.Select(q => new BulletinView(q)).GroupBy(q => q.BulletinId);
+                var temp = new List<BulletinView>();
+                foreach(var g in grouped)
+                {
+                    var bulletin = g.FirstOrDefault();
+                    bulletin.CanRepublicate = g.Count() < Accesses.Count;
+                    temp.Add(bulletin);
+                } 
                 Bulletins = temp;
                 RaisePropertyChanged(() => Bulletins);
                 RaisePropertyChanged(() => Bulletin);
@@ -190,15 +245,17 @@ namespace BulletinClient.Forms.MainView
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "CreateAccesses", objects: new[] { access });
+                    client.SendQueryCollection(NewAccessAdded, "CreateAccesses", objects: new[] { access });
                 }
             });
         }
 
-        void NewAccessAdded(AccessPackage a)
+        void NewAccessAdded(IEnumerable<AccessPackage> a)
         {
             DCT.Execute(d =>
             {
+                MessageBox.Show("Учетная запись была добавлена");
+
                 NewAccessLogin = string.Empty;
                 NewAccessPassword = string.Empty;
                 RaisePropertyChanged(() => NewAccessLogin);
@@ -206,6 +263,30 @@ namespace BulletinClient.Forms.MainView
 
                 GetAccesses();
             });
+        }
+
+        void CloneBulletin(BulletinView bulletin)
+        {
+            var package = new BulletinPackage
+            {
+                BulletinId = bulletin.BulletinId
+            };
+            using (var client = new ServiceClient())
+            {
+                var r = client.Ping();
+                Console.WriteLine($"Ping = {r}");
+
+                ServiceClient._CloneBulletin(package, CloneBulletinCallback);
+            }
+
+        }
+
+        void CloneBulletinCallback(BulletinPackage bulletin)
+        {
+            MessageBox.Show("Объявление отправлено на републикацию");
+
+            var b = Bulletins.FirstOrDefault(q => q.BulletinId == bulletin.BulletinId);
+            b.CanRepublicate = false;
         }
 
         void BoardAuth()
@@ -264,7 +345,7 @@ namespace BulletinClient.Forms.MainView
                     {"Вид объявления", "Продаю свое" },
                     {"Название объявления", cardName },
                     {"Описание объявления", cardDescription },
-                    {"Цена", cardPrice },
+                    {"Цена", cardPrice }, 
                 };
                 if(!string.IsNullOrEmpty(cardImageLinks))
                 {
@@ -276,13 +357,16 @@ namespace BulletinClient.Forms.MainView
                     ValueFields = fields,
                     Access = access,
                 };
-                ServiceClient._CreateBulletin(package);
+                ServiceClient._CreateBulletin(package, AddBulletinCallback);
             });
         }
 
         private void AddBulletinCallback(BulletinPackage obj)
         {
             MessageBox.Show("Объявление было добавлено");
+            SelectedIndexTab = 2;
+            RaisePropertyChanged(() => SelectedIndexTab);
+            GetBulletins();
         }
     }
 

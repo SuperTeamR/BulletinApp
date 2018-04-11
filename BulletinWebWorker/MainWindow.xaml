@@ -8,10 +8,43 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
         <WindowsFormsHost Name="MyWebBrowser">
             <WindowsFormsHost.Child>
                 <forms:WebBrowser ScriptErrorsSuppressed="True"  />
             </WindowsFormsHost.Child>
         </WindowsFormsHost>
+        <Border Grid.Row="1" BorderThickness="0,1,0,0" BorderBrush="Black">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="1"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           x:Name="GlobalState"
+                           Margin="5,0,5,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+                <Border Grid.Row="0" Grid.Column="1" Margin="0,5,0,5" BorderThickness="1,0,0,0" BorderBrush="Black"  />
+                <TextBlock Grid.Row="0" Grid.Column="2"
+                           x:Name="ObjectState"
+                           Margin="5,0,5,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="16" FontWeight="Bold"/>
+
+
+                <Border Grid.Row="1"  Grid.ColumnSpan="3" Margin="5,0,5,0" BorderThickness="0,1,0,0" BorderBrush="Black" />
+                <TextBlock x:Name="ActionState" Grid.Row="2" Grid.ColumnSpan="3"
+                           Margin="5,0,5,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="12" FontWeight="Bold"/>
+            </Grid>
+            
+            
+         
+        </Border>
     </Grid>
 </Window>
