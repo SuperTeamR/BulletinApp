@@ -44,14 +44,15 @@ namespace BulletinEngine.Entity.Converters
             });
             return result;
         }
-        public static BulletinInstance Convert(BulletinPackage obj)
+        public static BulletinInstance Convert(BulletinPackage obj, BulletinInstance entity)
         {
             BulletinInstance result = null;
             BCT.Execute(d =>
             {
-                result = new BulletinInstance();
-                result.State = obj.State;
-                result.Url = obj.Url;
+                entity.State = obj.State;
+                entity.Url = obj.Url;
+
+                result = entity;
             });
             return result;
         }

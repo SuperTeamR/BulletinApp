@@ -8,7 +8,7 @@ namespace BulletinEngine.Entity.Context
     public class BulletinDb : DbContext
     {
         public DbSet<Application> Applications { get; set; }
-        public DbSet<User> Users { get; set; }
+        //public DbSet<User> Users { get; set; }
         public DbSet<Access> Accesses { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Bulletin> Bulletins { get; set; }
@@ -21,6 +21,7 @@ namespace BulletinEngine.Entity.Context
         public DbSet<CategoryTemplate> CategoryTemplates { get; set; }
         public DbSet<GroupedCategory> GroupedCategories { get; set; }
         public DbSet<BulletinField> BulletinFields { get; set; }
+        public DbSet<BulletinHub.Entity.Data.Task> Tasks { get; set; }
 
         public BulletinDb()
         {
@@ -31,14 +32,19 @@ namespace BulletinEngine.Entity.Context
             //   "192.168.26.116",
             //   "ExtUser",
             //   "123QWEasd");
-            Database.SetInitializer(new CreateDatabaseIfNotExists<BulletinDb>());
+            base.Database.Connection.ConnectionString =
+            EntityHelper.CreateRemoteSQL("BulletinDb",
+           "176.111.73.51",
+           "AMK2",
+           "OnlineHelp59");
+            //Database.SetInitializer(new CreateDatabaseIfNotExists<BulletinDb>());
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BulletinDb>());
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinHub.Migrations.Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinHub.Migrations.Configuration>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<BulletinHub.Entity.Data.Task>().Property(x => x.TargetDate).HasColumnType("datetime2");
         }
 
         protected override void Dispose(bool disposing)

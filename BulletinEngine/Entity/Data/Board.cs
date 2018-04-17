@@ -27,13 +27,11 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Board, BoardState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Active, BoardState.Checked, Checked),
-            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Checked, BoardState.Changed, Changed),
-            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Checked, BoardState.Active, Active),
-            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Changed, BoardState.Active, Active),
+            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Active, BoardState.Checked, SetValueDefault),
+            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Checked, BoardState.Changed, SetValueDefault),
+            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Checked, BoardState.Active, SetValueDefault),
+            new EntityObjectALMConfiguration<Board, BoardState>(BoardState.Changed, BoardState.Active, SetValueDefault),
         };
-        protected override IEnumerable<BoardState> DefaultState => new[] { BoardState.Error };
-
         protected override int GetStateValue(BoardState state)
         {
             return (int)state;
@@ -41,21 +39,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private Board Active(Board arg1, Board arg2)
-        {
-            arg1.Name = arg2.Name;
-
-            return arg1;
-        }
-
-        private Board Changed(Board arg1, Board arg2)
-        {
-            arg1.Name = arg2.Name;
-
-            return arg1;
-        }
-
-        private Board Checked(Board arg1, Board arg2)
+        protected override Board SetValueDefault(Board arg1, Board arg2)
         {
             arg1.Name = arg2.Name;
 

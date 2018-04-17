@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace BulletinHub.Entity.Converters
 {
+    [Obsolete]
     /// <summary>
     /// Конвертер буллетинов
     /// </summary>

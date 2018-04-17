@@ -54,16 +54,15 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, Activated),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, Activated),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, Blocked),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, Banned),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, DemandPay),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, Activated),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, Activated),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, Activated),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
+            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
         };
-        protected override IEnumerable<AccessState> DefaultState => new[] { AccessState.Error, AccessState.Checking };
 
         protected override int GetStateValue(AccessState state)
         {
@@ -72,7 +71,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private Access DemandPay(Access arg1, Access arg2)
+        protected override Access SetValueDefault(Access arg1, Access arg2)
         {
             arg1.Id = arg2.Id;
             arg1.BoardId = arg2.BoardId;
@@ -82,40 +81,6 @@ namespace BulletinEngine.Entity.Data
 
             return arg1;
         }
-
-        private Access Banned(Access arg1, Access arg2)
-        {
-            arg1.Id = arg2.Id;
-            arg1.BoardId = arg2.BoardId;
-            arg1.UserId = arg2.UserId;
-            arg1.Login = arg2.Login;
-            arg1.Password = arg2.Password;
-
-            return arg1;
-        }
-
-        private Access Blocked(Access arg1, Access arg2)
-        {
-            arg1.Id = arg2.Id;
-            arg1.BoardId = arg2.BoardId;
-            arg1.UserId = arg2.UserId;
-            arg1.Login = arg2.Login;
-            arg1.Password = arg2.Password;
-
-            return arg1;
-        }
-
-        private Access Activated(Access arg1, Access arg2)
-        {
-            arg1.Id = arg2.Id;
-            arg1.BoardId = arg2.BoardId;
-            arg1.UserId = arg2.UserId;
-            arg1.Login = arg2.Login;
-            arg1.Password = arg2.Password;
-
-            return arg1;
-        }
-
         #endregion
 
         #region ALM -- Creators
@@ -155,7 +120,7 @@ namespace BulletinEngine.Entity.Data
                 if (dbAccess == null)
                 {
                     access.BoardId = d.Db1.Boards.FirstOrDefault().Id;
-                    access.UserId = d.Db1.Users.FirstOrDefault().Id;
+                    access.UserId = d.MainDb.UserAccesses.FirstOrDefault().Id;
                     access.StateEnum = AccessState.Unchecked;
                     d.SaveChanges();
                 }
@@ -171,6 +136,8 @@ namespace BulletinEngine.Entity.Data
               
             return result;
         }
+
+
 
         #endregion
     }

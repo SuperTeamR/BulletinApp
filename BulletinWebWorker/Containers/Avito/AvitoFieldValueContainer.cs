@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinWebWorker.Containers.Base.FieldValue;
+using BulletinWebWorker.Helpers;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using System;
@@ -23,6 +24,8 @@ namespace BulletinWebWorker.Containers.Avito
             var result = string.Empty;
             DCT.Execute(d =>
             {
+                UiHelper.UpdateActionState($"Получение значения для {name}");
+
                 var fieldPackage = fields.FirstOrDefault(q => q.Key == name).Value;
                 if (fieldPackage == null) return;
 
@@ -72,6 +75,8 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(d =>
             {
+                UiHelper.UpdateActionState($"Установка {name} : {value}");
+
                 var fieldPackage = fields.FirstOrDefault(q => q.Key == name).Value;
 
                 if (fieldPackage == null) return;
@@ -104,8 +109,10 @@ namespace BulletinWebWorker.Containers.Avito
                     var values = value.Split(new[] { "\r\n" }, StringSplitOptions.None);
                     foreach(var v in values)
                     {
+                        form = WebWorker.WebDocument.GetElementsByTagName(fieldPackage.Tag).Cast<HtmlElement>()
+                                .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
                         SetImage(form, v);
-                        Thread.Sleep(6000);
+                        Thread.Sleep(10000);
                     }
                 }
                 else

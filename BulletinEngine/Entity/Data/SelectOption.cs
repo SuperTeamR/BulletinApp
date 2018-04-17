@@ -42,11 +42,7 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<SelectOption, SelectOptionState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<SelectOption, SelectOptionState>(SelectOptionState.Created, SelectOptionState.Handled, Handled)
-        };
-        protected override IEnumerable<SelectOptionState> DefaultState => new[]
-        {
-            SelectOptionState.Error
+            new EntityObjectALMConfiguration<SelectOption, SelectOptionState>(SelectOptionState.Created, SelectOptionState.Handled, SetValueDefault)
         };
         protected override int GetStateValue(SelectOptionState state)
         {
@@ -55,7 +51,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private SelectOption Handled(SelectOption arg1, SelectOption arg2)
+        protected override SelectOption SetValueDefault(SelectOption arg1, SelectOption arg2)
         {
             arg1.Name = arg2.Name;
             arg1.Code = arg2.Code;

@@ -1,11 +1,13 @@
 ﻿using BulletinBridge.Data;
 using BulletinWebWorker.Containers.Base.Access;
+using BulletinWebWorker.Helpers;
 using BulletinWebWorker.Tools;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -60,31 +62,36 @@ namespace BulletinWebWorker.Containers.Avito
             var result = false;
             DCT.Execute(d =>
             {
+                UiHelper.UpdateActionState("Поиск валидного прокси");
                 ProxyManager.UseProxy();
 
+                UiHelper.UpdateActionState("Навигация на страницу авторизации");
                 WebWorker.NavigatePage(LoginUrl);
-            //WebWorker.DownloadPage(LoginUrl, (doc) =>
-            //{
-                    if (WebWorker.WebDocument != null)
-                    {
-                        var e = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>();
-                        var loginForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("name") == "login");
-                        if (loginForm != null) loginForm.SetAttribute("value", currentAccess.Login);
+                if (WebWorker.WebDocument != null)
+                {
+                    UiHelper.UpdateActionState("Заполнение логина и пароля");
+                    var e = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>();
+                    var loginForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("name") == "login");
+                    if (loginForm != null) loginForm.SetAttribute("value", currentAccess.Login);
 
-                        var passwordForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
-                            .FirstOrDefault(q => q.GetAttribute("type") == "password");
-                        if (passwordForm != null) passwordForm.SetAttribute("value", currentAccess.Password);
+                    var passwordForm = WebWorker.WebDocument.GetElementsByTagName("input").Cast<HtmlElement>()
+                        .FirstOrDefault(q => q.GetAttribute("type") == "password");
+                    if (passwordForm != null) passwordForm.SetAttribute("value", currentAccess.Password);
 
-                        var signIn = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
-                               .FirstOrDefault(btn => btn.InnerText == "Войти" && btn.GetAttribute("type") == "submit");
+                    var signIn = WebWorker.WebDocument.GetElementsByTagName("button").Cast<HtmlElement>()
+                           .FirstOrDefault(btn => btn.InnerText == "Войти" && btn.GetAttribute("type") == "submit");
 
-                        if (signIn != null)
-                            signIn.InvokeMember("click");
-                    }
-               // });
-                //Без принудительного ожидания даже с Application.DoEvents авторизация не сработает, если перейти на другую страницу
-                WebWorker.JustWait(10);
+                    if (signIn != null)
+                        signIn.InvokeMember("click");
+                }
+                else
+                {
+                    UiHelper.UpdateActionState("Страница авторизации is NULL");
+                    Thread.Sleep(2000);
+                }
+                UiHelper.UpdateActionState("Ожидание авторизации...");
+                Thread.Sleep(10000);
                 result = true;
             });
             return result;
@@ -94,6 +101,7 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(data =>
             {
+                UiHelper.UpdateActionState("Выход из профиля");
                 WebWorker.NavigatePage("https://www.avito.ru/profile/exit");
             });
         }

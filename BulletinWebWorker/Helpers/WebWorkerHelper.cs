@@ -8,6 +8,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows;
+using FessooFramework.Tools.Helpers;
+using BulletinWebWorker.Containers.Base.BulletinPackage;
 
 namespace BulletinWebWorker.Managers
 {
@@ -24,13 +26,53 @@ namespace BulletinWebWorker.Managers
         {
             DCT.ExecuteAsync(d =>
             {
-                AskForAggregateBulletinWork();
-                AskForBulletinWork();
-                AskForProfileWork();
-                
+                AskForWork();
             }, 
             continueMethod:c => Application.Current.Shutdown());
         }
+
+        static void AskForWork()
+        {
+            DCT.Execute(d =>
+            {
+                d._SessionInfo.HashUID = "Engine";
+                d._SessionInfo.SessionUID = "Engine";
+
+                using (var client = new EngineService())
+                {
+                    var result = client.Ping();
+                    Console.WriteLine($"Ping = {result}");
+
+                    client.SendQueryCollection<TaskCache>(AskForWorkCallback, "Load", objects: Enumerable.Empty<TaskCache>(), sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+                    //client.CollectionLoad<TaskCache>(AskForWorkCallback);
+                }
+
+            });
+        }
+
+        static void AskForWorkCallback(IEnumerable<TaskCache> tasks)
+        {
+            var bulletinContainer = BulletinPackageContainerList.Get(BoardIds.Avito);
+
+            var bulletinWork = tasks.Where(q => q.TargetType == "BulletinEngine.Entity.Data.BulletinInstance").ToArray();
+            var accessWork = tasks.Where(q => q.TargetType == "BulletinEngine.Entity.Data.Access").ToArray();
+
+
+            var commandCollection = bulletinWork.GroupBy(q => q.Command).Select(q => new { Command = q.Key, Collection = q.ToList() }).ToList();
+            foreach (var c in commandCollection)
+            {
+                switch (EnumHelper.GetValue<TaskCacheCommand>(c.Command))
+                {
+                    case TaskCacheCommand.Creation:
+                        bulletinContainer.AddBulletins2(c.Collection);
+                        break;
+                    case TaskCacheCommand.Checking:
+                        //bulletinContainer.GetBulletinList(c.Collection);
+                        break;
+                }
+            }
+        }
+
 
 
         //internal static TaskController BulletinWork = new TaskController(

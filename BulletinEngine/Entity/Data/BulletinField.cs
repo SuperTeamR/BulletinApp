@@ -44,15 +44,10 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<BulletinField, BulletinFieldState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Created, BulletinFieldState.Filled, Filled),
-            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Error, Error),
-            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Edited, Edited),
+            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Created, BulletinFieldState.Filled, SetValueDefault),
+            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Error, SetValueDefault),
+            new EntityObjectALMConfiguration<BulletinField, BulletinFieldState>(BulletinFieldState.Filled, BulletinFieldState.Edited, SetValueDefault),
         };
-        protected override IEnumerable<BulletinFieldState> DefaultState => new[]
-        {
-            BulletinFieldState.Error
-        };
-
         protected override int GetStateValue(BulletinFieldState state)
         {
             return (int)state;
@@ -60,25 +55,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private BulletinField Edited(BulletinField arg1, BulletinField arg2)
-        {
-            arg1.BulletinInstanceId = arg2.BulletinInstanceId;
-            arg1.FieldId = arg2.FieldId;
-            arg1.Value = arg2.Value;
-
-            return arg1;
-        }
-
-        private BulletinField Error(BulletinField arg1, BulletinField arg2)
-        {
-            arg1.BulletinInstanceId = arg2.BulletinInstanceId;
-            arg1.FieldId = arg2.FieldId;
-            arg1.Value = arg2.Value;
-
-            return arg1;
-        }
-
-        private BulletinField Filled(BulletinField arg1, BulletinField arg2)
+        protected override BulletinField SetValueDefault(BulletinField arg1, BulletinField arg2)
         {
             arg1.BulletinInstanceId = arg2.BulletinInstanceId;
             arg1.FieldId = arg2.FieldId;

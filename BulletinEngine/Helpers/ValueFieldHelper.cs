@@ -9,6 +9,26 @@ namespace BulletinEngine.Helpers
 {
     static class ValueFieldHelper
     {
+
+
+        public static Dictionary<string, string> GetValueFields2(Guid bulletinId)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            BCT.Execute(d =>
+            {
+                var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
+                result.Add("Название объявления", dbBulletin.Title);
+                result.Add("Описание объявления", dbBulletin.Description);
+                result.Add("Цена", dbBulletin.Price);
+                result.Add("Вид объявления ", "Продаю свое");
+                if (!string.IsNullOrEmpty(dbBulletin.Images))
+                    result.Add("Фотографии", dbBulletin.Images);
+            });
+            return result;
+        }
+
+
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает словарь полей со значениями для инстанции буллетина </summary>
         ///
@@ -19,6 +39,7 @@ namespace BulletinEngine.Helpers
         /// <returns>   The value fields. </returns>
         ///-------------------------------------------------------------------------------------------------
 
+        [Obsolete]
         public static Dictionary<string, string> GetValueFields(Guid instanceId)
         {
             Dictionary<string, string> result = new Dictionary<string, string>();

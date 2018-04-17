@@ -40,13 +40,8 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>(CategoryTemplateState.Created, CategoryTemplateState.Handled, Handled)
+            new EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>(CategoryTemplateState.Created, CategoryTemplateState.Handled, SetValueDefault)
         };
-        protected override IEnumerable<CategoryTemplateState> DefaultState => new[]
-        {
-            CategoryTemplateState.Error
-        };
-
 
         protected override int GetStateValue(CategoryTemplateState state)
         {
@@ -55,7 +50,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private CategoryTemplate Handled(CategoryTemplate arg1, CategoryTemplate arg2)
+        protected override CategoryTemplate SetValueDefault(CategoryTemplate arg1, CategoryTemplate arg2)
         {
             arg1.BoardId = arg2.BoardId;
             arg1.ParentId = arg2.ParentId;

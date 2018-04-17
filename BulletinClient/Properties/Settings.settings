@@ -15,7 +15,7 @@
       <Value Profile="(Default)">http://176.111.73.51/BulletinHub/DataService.svc</Value>
     </Setting>
     <Setting Name="MainServiceAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://176.111.73.51/MainService.svc</Value>
+      <Value Profile="(Default)">http://176.111.73.51/MainService/MainService.svc</Value>
     </Setting>
     <Setting Name="HashUID" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

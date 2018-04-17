@@ -11,6 +11,41 @@ namespace BulletinEngine.Helpers
 {
     public static class AccessHelper
     {
+
+        public static Guid? GetActiveAccessId(Guid bulletinId)
+        {
+            Guid? result = null;
+
+            BCT.Execute(d =>
+            {
+                var allAccesses = d.Db1.Accesses.Where(q => q.UserId == d.UserId).ToArray();
+                var bulletins = d.Db1.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
+                if(bulletins.Any())
+                {
+                    var usedAccesses = bulletins.Select(q => q.AccessId).Distinct().ToArray();
+                    var freeAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id)).ToArray();
+                    
+                    if(freeAccesses.Any())
+                    {
+                        //Если есть неиспользованный аккаунт - берем его
+                        var freeAccess = freeAccesses.FirstOrDefault();
+                        result = freeAccess.Id;
+                        return;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                var grouped = bulletins.GroupBy(q => q.AccessId);
+
+            });
+
+            return result;
+        }
+
+
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает свободный доступ к борде для пользователя из инстанции буллетина </summary>
         ///
@@ -115,7 +150,7 @@ namespace BulletinEngine.Helpers
                         Login = p.Login,
                         Password = p.Password,
                         BoardId = d.Db1.Boards.FirstOrDefault().Id,
-                        UserId = d.Db1.Users.FirstOrDefault().Id
+                        UserId = d.MainDb.UserAccesses.FirstOrDefault().Id
                     };
                     dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
 

@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Data\AccessPackage.cs" />
     <Compile Include="Data\AggregateBulletinPackage.cs" />
+    <Compile Include="Data\BulletinInstanceCache.cs" />
     <Compile Include="Data\BulletinPackage.cs" />
     <Compile Include="Data\CategoryTree.cs" />
     <Compile Include="Data\FieldPackage.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Data\GroupSignature.cs" />
     <Compile Include="Data\OptionTag.cs" />
     <Compile Include="Data\TabState.cs" />
+    <Compile Include="Data\TaskCache.cs" />
     <Compile Include="Data\XlsPackage.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardApi_AddBulletins.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_EditBulletins.cs" />

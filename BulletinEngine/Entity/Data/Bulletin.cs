@@ -1,7 +1,9 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinHub.Entity.Converters;
+using BulletinHub.Tools;
 using FessooFramework.Objects.Data;
+using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,20 +26,21 @@ namespace BulletinEngine.Entity.Data
         ///-------------------------------------------------------------------------------------------------
 
         public Guid UserId { get; set; }
+        public Guid? GroupId { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Price { get; set; }
+        public string Images { get; set; }
+
         #endregion
 
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Bulletin, BulletinState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.WaitPublication, Default),
-            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Closed, Default),
-            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Cloning, Default),
-            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Created, Default)
-        };
-
-        protected override IEnumerable<BulletinState> DefaultState => new[]
-        {
-            BulletinState.Error, BulletinState.Cloning
+            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.WaitPublication, SetValueDefault),
+            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Closed, SetValueDefault),
+            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Cloning, SetValueDefault),
+            new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Created, SetValueDefault)
         };
 
         protected override int GetStateValue(BulletinState state)
@@ -47,9 +50,15 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private Bulletin Default(Bulletin arg1, Bulletin arg2)
+        protected override Bulletin SetValueDefault(Bulletin arg1, Bulletin arg2)
         {
             arg1.UserId = arg2.UserId;
+            arg1.Title = arg2.Title;
+            arg1.Description = arg2.Description;
+            arg1.Price = arg2.Price;
+            arg1.Images = arg2.Images;
+            arg1.GroupId = arg2.GroupId;
+     
 
             return arg1;
         }
@@ -58,11 +67,38 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Bulletin>> CreatorsService => new[]
         {
-             EntityObjectALMCreator<Bulletin>.New(BulletinConverter.Convert, BulletinConverter.Convert, new Version(1,0,0,0))
+             EntityObjectALMCreator<Bulletin>.New(BulletinContainerConverter.Convert, BulletinContainerConverter.Convert, new Version(1,0,0,0))
         };
         #endregion
 
         #region DataService -- Methods
+
+        public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
+        {
+            TaskGenerator.Initialize();
+
+
+            var result = Enumerable.Empty<EntityObject>();
+            DCT.Execute(d =>
+            {
+                var bulletinModels = Enumerable.Empty<Bulletin>();
+                if(obj != null && obj.Any())
+                {
+                    bulletinModels = obj.Cast<Bulletin>().ToArray();
+
+                    switch(code)
+                    {
+                        case "Create":
+                            result = BulletinGenerator.Create(bulletinModels);
+                            break;
+                    }
+                }
+
+            });
+            return result;
+        }
+
+
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             var workStates = new[]
@@ -77,7 +113,7 @@ namespace BulletinEngine.Entity.Data
                 if (id == "Engine")
                 {
                     result = c.Db1.Bulletins
-                    .Where(q => workStates.Contains(q.State)).ToArray();
+                    .Where(q => workStates.Contains(q.State)).Take(1).ToArray();
                 }
                 else
                     result = base._CollectionObjectLoad();
@@ -99,6 +135,8 @@ namespace BulletinEngine.Entity.Data
             });
             return result;
         }
+
+
 
 
         #endregion

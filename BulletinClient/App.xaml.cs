@@ -14,6 +14,9 @@ namespace BulletinClient
         {
             DCT.Execute(d =>
             {
+                d._SessionInfo.HashUID = "Example";
+                d._SessionInfo.SessionUID = "Example";
+
                 var t = d.ServiceClient.Ping();
                 t = t;
 

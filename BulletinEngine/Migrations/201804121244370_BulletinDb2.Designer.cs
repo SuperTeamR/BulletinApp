@@ -7,13 +7,13 @@ namespace BulletinHub.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class BulletinDbTest : IMigrationMetadata
+    public sealed partial class BulletinDb2 : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BulletinDbTest));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(BulletinDb2));
         
         string IMigrationMetadata.Id
         {
-            get { return "201803130756229_BulletinDbTest"; }
+            get { return "201804121244370_BulletinDb2"; }
         }
         
         string IMigrationMetadata.Source

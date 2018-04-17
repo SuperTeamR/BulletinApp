@@ -33,13 +33,9 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<UserGroup, UserGroupState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Created, UserGroupState.Active, Active),
-            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Active, UserGroupState.Limited, Limited),
-            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Limited, UserGroupState.Active, Active),
-        };
-        protected override IEnumerable<UserGroupState> DefaultState => new[]
-        {
-            UserGroupState.Error,
+            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Created, UserGroupState.Active, SetValueDefault),
+            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Active, UserGroupState.Limited, SetValueDefault),
+            new EntityObjectALMConfiguration<UserGroup, UserGroupState>(UserGroupState.Limited, UserGroupState.Active, SetValueDefault),
         };
         protected override int GetStateValue(UserGroupState state)
         {
@@ -48,15 +44,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private UserGroup Limited(UserGroup arg1, UserGroup arg2)
-        {
-            arg1.GroupId = arg2.GroupId;
-            arg1.UserId = arg2.UserId;
-
-            return arg1;
-        }
-
-        private UserGroup Active(UserGroup arg1, UserGroup arg2)
+        protected override UserGroup SetValueDefault(UserGroup arg1, UserGroup arg2)
         {
             arg1.GroupId = arg2.GroupId;
             arg1.UserId = arg2.UserId;

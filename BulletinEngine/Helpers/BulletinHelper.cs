@@ -47,7 +47,7 @@ namespace BulletinHub.Helpers
                     var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
                     var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == obj.Access.Login
                           && q.Password == obj.Access.Password);
-                    var dbUser = d.Db1.Users.FirstOrDefault(q => q.Id == dbAccess.UserId);
+                    var dbUser = d.MainDb.UserAccesses.FirstOrDefault(q => q.Id == dbAccess.UserId);
                     var dbBulletin = new Bulletin
                     {
                         UserId = dbUser.Id,
@@ -118,7 +118,7 @@ namespace BulletinHub.Helpers
                         {
                             var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == bulletin.Access.Login
                                     && q.Password == bulletin.Access.Password);
-                            var dbUser = d.Db1.Users.FirstOrDefault(q => q.Id == dbAccess.UserId);
+                            var dbUser = d.MainDb.UserAccesses.FirstOrDefault(q => q.Id == dbAccess.UserId);
                             var board = d.Db1.Boards.FirstOrDefault(q => q.Name == "Avito");
 
 

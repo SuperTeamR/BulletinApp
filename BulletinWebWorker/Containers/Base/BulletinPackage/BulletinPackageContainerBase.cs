@@ -14,6 +14,8 @@ namespace BulletinWebWorker.Containers.Base
     {
         public abstract Guid Uid { get; }
 
+
+        public abstract void AddBulletins2(IEnumerable<BulletinBridge.Data.TaskCache> packages);
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Добавить буллетины </summary>
         ///
@@ -22,6 +24,7 @@ namespace BulletinWebWorker.Containers.Base
         /// <param name="packages"> Пакет буллетинов </param>
         ///-------------------------------------------------------------------------------------------------
 
+        [Obsolete]
         public abstract void AddBulletins(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
 
         ///-------------------------------------------------------------------------------------------------
@@ -56,7 +59,8 @@ namespace BulletinWebWorker.Containers.Base
         /// An enumerator that allows foreach to be used to process the bulletins in this collection.
         /// </returns>
         ///-------------------------------------------------------------------------------------------------
-
+        public abstract void GetBulletinList2(IEnumerable<TaskCache> tasks);
+        public abstract void GetBulletinDetails2(IEnumerable<TaskCache> tasks);
         public abstract void GetBulletinList(IEnumerable<AccessPackage> accesses);
         public abstract void GetBulletinDetails(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
         public abstract void CheckModerationState(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);

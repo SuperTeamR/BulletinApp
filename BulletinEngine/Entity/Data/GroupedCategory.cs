@@ -34,14 +34,8 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>(GroupedCategoryState.Created, GroupedCategoryState.Handled, Handled)
+            new EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>(GroupedCategoryState.Created, GroupedCategoryState.Handled, SetValueDefault)
         };
-        protected override IEnumerable<GroupedCategoryState> DefaultState => new[]
-        {
-            GroupedCategoryState.Error,
-        };
-
-
 
         protected override int GetStateValue(GroupedCategoryState state)
         {
@@ -50,7 +44,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private GroupedCategory Handled(GroupedCategory arg1, GroupedCategory arg2)
+        protected override GroupedCategory SetValueDefault(GroupedCategory arg1, GroupedCategory arg2)
         {
             arg1.CategoryId = arg2.CategoryId;
             arg1.GroupId = arg2.GroupId;

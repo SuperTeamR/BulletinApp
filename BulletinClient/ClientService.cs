@@ -13,8 +13,73 @@ namespace BulletinClient
 
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
 
-        public override string HashUID => Settings.Default.HashUID;
-        public override string SessionUID => Settings.Default.SessionUID;
+        public override string HashUID => "Example";
+        public override string SessionUID => "Example";
+
+
+
+        #region Create
+        public static void _CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new ServiceClient())
+                    client.CreateBulletin(obj, action);
+            });
+        }
+        public void CreateBulletins(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
+        {
+            DCT.Execute(d =>
+            {
+                var act = action == null ? (a) => { } : action;
+                
+                SendQueryCollection((a) => act(a), "Create", objects: objs, sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+            });
+          
+        }
+        public void CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            DCT.Execute(d =>
+            {
+                var act = action == null ? (a) => { } : action;
+
+                SendQueryObject((a) => act(a), "Create", obj: obj, sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+                //CreateBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
+            });
+        }
+        #endregion
+
+        #region Prepare
+        public static void _PrepareInstance(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new ServiceClient())
+                    client.CreateBulletin(obj, action);
+            });
+        }
+        public static void _PrepareInstances(IEnumerable<BulletinPackage> bulletins, Action<IEnumerable<BulletinPackage>> action = null)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new ServiceClient())
+                    client.CreateBulletins(bulletins, action);
+            });
+        }
+        public void PrepareInstances(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            SendQueryCollection((a) => act(a), "PrepareInstances", objects: objs);
+        }
+        public void PrepareInstance(BulletinPackage obj, Action<BulletinPackage> action = null)
+        {
+            var act = action == null ? (a) => { } : action;
+            CreateBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
+        }
+        #endregion
+
+
+
 
 
 
@@ -28,16 +93,7 @@ namespace BulletinClient
             var act = action == null ? (a) => { } : action;
             CloneBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
         }
-        public void CreateBulletins(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
-        {
-            var act = action == null ? (a) => { } : action;
-            SendQueryCollection((a) => act(a), "CreateBulletins", objects: objs);
-        }
-        public void CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
-        {
-            var act = action == null ? (a) => { } : action;
-            CreateBulletins(new [] { obj }, (a) => act(a.FirstOrDefault()));
-        }
+
 
         public void CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
         {
@@ -59,22 +115,7 @@ namespace BulletinClient
                     client.CloneBulletins(obj, action);
             });
         }
-        public static void _CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
-        {
-            DCT.ExecuteAsync(d2 =>
-            {
-                using (var client = new ServiceClient())
-                    client.CreateBulletin(obj, action);
-            });
-        }
-        public static void _CreateBulletins(IEnumerable<BulletinPackage> bulletins, Action<IEnumerable<BulletinPackage>> action = null)
-        {
-            DCT.ExecuteAsync(d2 =>
-            {
-                using (var client = new ServiceClient())
-                    client.CreateBulletins(bulletins, action);
-            });
-        }
+        
 
         public static void _CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
         {

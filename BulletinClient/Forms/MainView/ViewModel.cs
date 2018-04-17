@@ -24,6 +24,9 @@ namespace BulletinClient.Forms.MainView
     class ViewModel : VM
     {
         #region Property
+        public string UserLogin { get; set; }
+        public string UserPassword { get; set; }
+
         public string NewAccessLogin { get; set; }
         public string NewAccessPassword { get; set; }
 
@@ -66,11 +69,12 @@ namespace BulletinClient.Forms.MainView
         public ICommand CommandAddBulletins { get; set; }
         public ICommand CommandLogout { get; set; }
         public ICommand CommandAddAccess { get; set; }
-
         public ICommand CommandCloneBulletin { get; set; }
-
         public ICommand CommandCheckConnection { get; set; }
         public ICommand CommandAddImage { get; set; }
+        public ICommand CommandSignIn { get; set; }
+
+
         #endregion
         #region Constructor
         public ViewModel()
@@ -80,24 +84,86 @@ namespace BulletinClient.Forms.MainView
             CardCategory3 = "iPhone";
             AddBulletins = new ObservableCollection<NewBulletin>();
             Accesses = new ObservableCollection<AccessView>();
+
             CommandGetXls = new DelegateCommand(GetXls);
             CommandBoardAuth = new DelegateCommand(BoardAuth);
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
             CommandAddAccess = new DelegateCommand(AddAccess);
             CommandCheckConnection = new DelegateCommand(CheckConnection);
-            CheckConnection();
-            GetAccesses();
-            GetBulletins();
-        
             CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
             CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
             CommandAddImage = new DelegateCommand(AddImage);
+            CommandSignIn = new DelegateCommand(SignIn);
+
+            SignIn("penzin", "megaprogger");
+            CheckConnection();
+           
+            GetBulletins();
         }
 
 
         #endregion
         #region Methods
+
+        void SignIn()
+        {
+            DCT.Execute(d =>
+            {
+                SignIn(UserLogin, UserPassword);
+            });
+        }
+        void SignIn(string email, string password)
+        {
+            DCT.Execute(c =>
+            {
+                using (var main = new MainService())
+                {
+                    var ping = main.Ping();
+                    Console.WriteLine($"Ping = {ping}");
+                    //main.Registration(RegCallback, email, "12345", password, "arthur", "borat", "penzin");
+                    main.SignIn(SignInCallback, email, password);
+                }
+                   
+            });
+        }
+        void RegCallback(bool result)
+        {
+            DCT.Execute(c =>
+            {
+                if (result)
+                {
+
+                }
+                else
+                {
+
+                }
+
+            });
+        }
+
+        void SignInCallback(bool result)
+        {
+            DCT.Execute(c =>
+            {
+             if (result)
+                {
+                    Console.WriteLine($"Signin succesfull");
+                    Settings.Default.HashUID = c._SessionInfo.HashUID;
+                    Settings.Default.SessionUID = c._SessionInfo.SessionUID;
+                    Settings.Default.Save();
+
+                    GetAccesses();
+                }
+                else
+                    Console.WriteLine($"Signin not sucessfull");
+
+                Console.WriteLine($"SessionUID Request = {c._SessionInfo.SessionUID}");
+                Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
+            });
+        }
+
         private void Logout()
         {
             Settings.Default.BoardLogin = "";
@@ -201,15 +267,14 @@ namespace BulletinClient.Forms.MainView
             DCT.Execute(d =>
             {
                 if (objs.Count() == 0) return;
-                var grouped = objs.Select(q => new BulletinView(q)).GroupBy(q => q.BulletinId);
-                var temp = new List<BulletinView>();
-                foreach(var g in grouped)
-                {
-                    var bulletin = g.FirstOrDefault();
-                    bulletin.CanRepublicate = g.Count() < Accesses.Count;
-                    temp.Add(bulletin);
-                } 
-                Bulletins = temp;
+                //var grouped = objs.Select(q => new BulletinView(q));
+                //var temp = new List<BulletinView>();
+                //foreach(var g in grouped)
+                //{
+                //    //bulletin.CanRepublicate = g.Count() < Accesses.Count;
+                //    temp.Add(bulletin);
+                //} 
+                Bulletins = objs.Select(q => new BulletinView(q));
                 RaisePropertyChanged(() => Bulletins);
                 RaisePropertyChanged(() => Bulletin);
                 RaisePropertyChanged(() => NotBulletin);
@@ -219,10 +284,16 @@ namespace BulletinClient.Forms.MainView
 
         void GetAccesses()
         {
-            using (var client = new ServiceClient())
+            DCT.Execute(d =>
             {
-                client.CollectionLoad<AccessPackage>(GetAccessesCallback);
-            }
+                var hash = d._SessionInfo.HashUID;
+                using (var client = new ServiceClient())
+                {
+                    client.CollectionLoad<AccessPackage>(GetAccessesCallback);
+                }
+
+            });
+           
         }
 
         void GetAccessesCallback(IEnumerable<AccessPackage> objs)
@@ -357,12 +428,20 @@ namespace BulletinClient.Forms.MainView
                     ValueFields = fields,
                     Access = access,
                 };
+
+
+
                 ServiceClient._CreateBulletin(package, AddBulletinCallback);
             });
         }
 
         private void AddBulletinCallback(BulletinPackage obj)
         {
+            if(obj == null)
+            {
+                MessageBox.Show("Ошибка соединения с сервером");
+                return;
+            }
             MessageBox.Show("Объявление было добавлено");
             SelectedIndexTab = 2;
             RaisePropertyChanged(() => SelectedIndexTab);

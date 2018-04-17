@@ -31,7 +31,7 @@ namespace BulletinHub.Entity.Converters
             });
             return result;
         }
-        public static Access ConvertToModel(AccessPackage obj)
+        public static Access ConvertToModel(AccessPackage obj, Access entity)
         {
             var result = new Access
             {

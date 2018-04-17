@@ -41,13 +41,8 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<GroupedField, GroupedFieldState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<GroupedField, GroupedFieldState>(GroupedFieldState.Created, GroupedFieldState.Handled, Handled),
+            new EntityObjectALMConfiguration<GroupedField, GroupedFieldState>(GroupedFieldState.Created, GroupedFieldState.Handled, SetValueDefault),
         };
-        protected override IEnumerable<GroupedFieldState> DefaultState => new[]
-        {
-            GroupedFieldState.Error
-        };
-
 
         protected override int GetStateValue(GroupedFieldState state)
         {
@@ -56,7 +51,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private GroupedField Handled(GroupedField arg1, GroupedField arg2)
+        protected override GroupedField SetValueDefault(GroupedField arg1, GroupedField arg2)
         {
             arg1.FieldId = arg2.FieldId;
             arg1.GroupId = arg2.GroupId;

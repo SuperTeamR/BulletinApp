@@ -20,6 +20,21 @@ namespace BulletinEngine.Helpers
         /// <returns>   The group signature. </returns>
         ///-------------------------------------------------------------------------------------------------
 
+        public static GroupSignature GetGroupSignature2(Guid bulletinId)
+        {
+            GroupSignature result = null;
+            BCT.Execute(d =>
+            {
+                var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
+                var groupId = dbBulletin.GroupId;
+                var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Id == groupId);
+                var groupHash = dbGroup.Hash;
+                result = GetGroupSignature(groupHash);
+            });
+            return result;
+        }
+
+        [Obsolete]
         public static GroupSignature GetGroupSignature(Guid instanceId)
         {
             GroupSignature result = null;

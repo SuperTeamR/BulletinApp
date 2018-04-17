@@ -34,13 +34,9 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Group, GroupState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Created, GroupState.Loaded, Loaded),
-            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Loaded, GroupState.Changed, Changed),
-            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Changed, GroupState.Loaded, Loaded),
-        };
-        protected override IEnumerable<GroupState> DefaultState => new[]
-        {
-            GroupState.Error
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Created, GroupState.Loaded, SetValueDefault),
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Loaded, GroupState.Changed, SetValueDefault),
+            new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Changed, GroupState.Loaded, SetValueDefault),
         };
 
         protected override int GetStateValue(GroupState state)
@@ -50,21 +46,14 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private Group Changed(Group arg1, Group arg2)
+        protected override Group SetValueDefault(Group arg1, Group arg2)
         {
             arg1.BoardId = arg2.BoardId;
             arg1.Hash = arg2.Hash;
 
             return arg1;
         }
-
-        private Group Loaded(Group arg1, Group arg2)
-        {
-            arg1.BoardId = arg2.BoardId;
-            arg1.Hash = arg2.Hash;
-
-            return arg1;
-        }
+        
         #endregion
 
         #region ALM -- Creators

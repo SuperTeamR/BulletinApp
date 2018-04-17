@@ -37,12 +37,7 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Application, ApplicationState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<Application, ApplicationState>(ApplicationState.Created, ApplicationState.Closed, Closed)
-        };
-
-        protected override IEnumerable<ApplicationState> DefaultState => new[]
-        {
-            ApplicationState.Error
+            new EntityObjectALMConfiguration<Application, ApplicationState>(ApplicationState.Created, ApplicationState.Closed, SetValueDefault)
         };
 
         protected override int GetStateValue(ApplicationState state)
@@ -52,7 +47,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private Application Closed(Application arg1, Application arg2)
+        protected override Application SetValueDefault(Application arg1, Application arg2)
         {
             arg1.UserId = arg2.UserId;
             arg1.Token = arg2.Token;

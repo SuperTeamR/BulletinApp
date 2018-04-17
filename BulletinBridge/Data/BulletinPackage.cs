@@ -11,7 +11,6 @@ namespace BulletinBridge.Data
         public Guid BulletinInstanceId { get; set; }
         public string Url { get; set; }
         public string Title { get; set; }
-        public int State { get; set; }
         public string Views { get; set; }
         public GroupSignature Signature { get; set; }
         public AccessPackage Access { get; set; }

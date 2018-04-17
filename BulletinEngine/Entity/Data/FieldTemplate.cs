@@ -58,11 +58,7 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<FieldTemplate, FieldTemplateState>> Configurations => new[]
         {
-            new EntityObjectALMConfiguration<FieldTemplate, FieldTemplateState>(FieldTemplateState.Created, FieldTemplateState.Handled, Handled)
-        };
-        protected override IEnumerable<FieldTemplateState> DefaultState => new[]
-        {
-            FieldTemplateState.Error
+            new EntityObjectALMConfiguration<FieldTemplate, FieldTemplateState>(FieldTemplateState.Created, FieldTemplateState.Handled, SetValueDefault)
         };
         protected override int GetStateValue(FieldTemplateState state)
         {
@@ -71,7 +67,7 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Methods
-        private FieldTemplate Handled(FieldTemplate arg1, FieldTemplate arg2)
+        protected override FieldTemplate SetValueDefault(FieldTemplate arg1, FieldTemplate arg2)
         {
             arg1.Name = arg2.Name;
             arg1.Tag = arg2.Tag;

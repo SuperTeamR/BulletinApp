@@ -9,6 +9,5 @@ namespace BulletinEngine.Core
 {
     public class BCT : _DCT<BulletinContext>
     {
-        
     }
 }
