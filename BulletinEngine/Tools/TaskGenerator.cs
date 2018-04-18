@@ -31,7 +31,7 @@ namespace BulletinHub.Tools
             BCT.Execute(d =>
             {
                 var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
-                if (userSettings.NextTaskGeneration.HasValue
+                if (!userSettings.NextTaskGeneration.HasValue
                 || userSettings.NextTaskGeneration.Value.Ticks >= DateTime.Now.Ticks)
                     result = true;
 
