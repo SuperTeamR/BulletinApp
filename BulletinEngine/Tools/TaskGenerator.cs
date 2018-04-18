@@ -1,5 +1,6 @@
 ﻿using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
+using BulletinHub.Helpers;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace BulletinHub.Tools
             var result = false;
             BCT.Execute(d =>
             {
-                var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
+                var userSettings = SettingsHelper.GetSettings(userId);
                 if (!userSettings.NextTaskGeneration.HasValue
                 || userSettings.NextTaskGeneration.Value.Ticks >= DateTime.Now.Ticks)
                     result = true;
@@ -97,7 +98,7 @@ namespace BulletinHub.Tools
         {
             BCT.Execute(d =>
             {
-                var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
+                var userSettings = SettingsHelper.GetSettings(userId);
                 userSettings.LastTimeGeneration = DateTime.Now;
                 userSettings.NextTaskGeneration = userSettings.LastTimeGeneration.Value.AddHours(userSettings.TaskGenerationPeriod);
 

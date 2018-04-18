@@ -58,12 +58,6 @@ namespace BulletinClient.ViewModels
                 {
                     Console.WriteLine($"Signin succesfull");
 
-                    if (Settings.Default.UserLogin != DataHelper.UserLogin.Value
-                             && Settings.Default.UserLogin != DataHelper.UserPassword.Value)
-                    {
-                        SettingsHelper.Save();
-                    }
-
                     Settings.Default.UserLogin = DataHelper.UserLogin.Value;
                     Settings.Default.UserPassword = DataHelper.UserPassword.Value;
 
