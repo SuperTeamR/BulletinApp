@@ -32,6 +32,9 @@ namespace BulletinClient.ViewModels
         #region Constructor
         public BulletinCardVM()
         {
+            CardCategory1 = "Бытовая электроника";
+            CardCategory2 = "Телефоны";
+            CardCategory3 = "iPhone";
             CommandAdd = new DelegateCommand(AddAvito);
         }
         #endregion
@@ -57,7 +60,7 @@ namespace BulletinClient.ViewModels
         }
         public void SetSignature()
         {
-           Item.GroupSignature = BulletinHelper.StringToSha256String();
+           Item.GroupSignature = BulletinHelper.StringToSha256String(CardCategory1, CardCategory2, CardCategory3, CardCategory4, CardCategory5);
         }
         private bool Check()
         {

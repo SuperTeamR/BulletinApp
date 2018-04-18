@@ -29,6 +29,11 @@
 
         <TextBlock Text="Bulletin card" Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
 
+
+        <TextBlock   Text="Категория"  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsEnabled="False" Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.CurrentGroup, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+                 TextChanged="TextBox_TextChanged"/>
+
         <StackPanel  Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 
             <TextBox IsEnabled="False" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory1}" BorderThickness="0,0,0,1"/>
@@ -54,18 +59,18 @@
                                     </ComboBox>-->
         </StackPanel>
 
-        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+        <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+        <TextBlock  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock   Text="Цена"  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Цена"  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
     </Grid>
 </UserControl>

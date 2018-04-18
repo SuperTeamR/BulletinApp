@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
+using BulletinEngine.Helpers;
 using BulletinHub.Entity.Converters;
 using BulletinHub.Helpers;
 using BulletinHub.Tools;
@@ -95,6 +96,11 @@ namespace BulletinEngine.Entity.Data
             cache.Description = entity.Description;
             cache.Images = entity.Images;
             cache.Price = entity.Price;
+            var group = GroupHelper.GetGroupSignature2(entity.Id);
+            if (group != null)
+            {
+                cache.CurrentGroup = group.ToString();
+            }
             return cache;
         }
         #endregion

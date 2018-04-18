@@ -23,6 +23,8 @@ namespace BulletinBridge.Data
         public string Price { get; set; }
         [DataMember]
         public string GroupSignature { get; set; }
+        [DataMember]
+        public string CurrentGroup { get; set; }
 
     }
 }
