@@ -56,14 +56,14 @@ namespace BulletinHub.Tools
             {
                 var board = d.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
 
-                var bulletinIds = d.BulletinDb.Bulletins.Select(q => q.Id).ToArray();
+                var bulletinIds = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).Select(q => q.Id).ToArray();
                 var usedBulletinIds = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).Select(q => q.BulletinId).ToArray();
                 var unusedBulletinsIds = bulletinIds.Where(q => usedBulletinIds.Contains(q)).ToArray();
 
                 var targetType = typeof(BulletinInstance).ToString();
 
-                var bulletins = d.BulletinDb.BulletinInstances.Where(q => unusedBulletinsIds.Contains(q.Id)).ToArray();
-                if (bulletins.Length == 0) return;
+               var bulletins = d.BulletinDb.Bulletins.Where(q => unusedBulletinsIds.Contains(q.Id)).ToArray();
+               if (bulletins.Length == 0) return;
 
                 var accesses = d.BulletinDb.Accesses.Where(q => q.State == (int)AccessState.Activated).ToArray();
                 var cycles = bulletins.Length >= accesses.Length ? bulletins.Length / accesses.Length : 1;
