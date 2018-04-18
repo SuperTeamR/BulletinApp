@@ -65,7 +65,6 @@ namespace BulletinHub.Helpers
                     };
 
                     var bulletinName = obj.ValueFields["Название объявления"];
-
                     var sameBulletinNames = d.Db1.BulletinFields.Where(q => q.Value == bulletinName).ToArray();
                     var hasDublicates = false;
                     foreach(var s in sameBulletinNames)

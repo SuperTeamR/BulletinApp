@@ -97,8 +97,8 @@
     <Compile Include="Forms\MainView\CustomDataGrid.cs" />
     <Compile Include="General\MainWindowVM.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
-    <Compile Include="ImageService.cs" />
-    <Compile Include="MainService.cs" />
+    <Compile Include="Core\ImageService.cs" />
+    <Compile Include="Core\MainService.cs" />
     <Compile Include="Tools\IOC.cs" />
     <Page Include="Forms\DataTemplate.xaml">
       <SubType>Designer</SubType>
@@ -116,7 +116,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ClientService.cs" />
+    <Compile Include="Core\ClientService.cs" />
     <Compile Include="Forms\MainView\View.xaml.cs">
       <DependentUpon>View.xaml</DependentUpon>
     </Compile>

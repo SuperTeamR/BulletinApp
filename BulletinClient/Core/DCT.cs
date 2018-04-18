@@ -2,7 +2,7 @@
 
 namespace BulletinClient.Core
 {
-    class DCT : _DCT<ClientContext>
+    internal class DCT : _DCT<ClientContext>
     {
     }
 }

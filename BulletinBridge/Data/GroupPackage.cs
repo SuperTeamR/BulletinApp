@@ -1,5 +1,5 @@
-﻿using BulletinTools;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
+using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -45,14 +45,6 @@ namespace BulletinBridge.Data
         public override string ToString()
         {
             return string.Join(";", Categories);
-        }
-
-        string hash;
-        public string GetHash()
-        {
-            if (hash == null)
-                hash = Сryptography.StringToSha256String(Categories);
-            return hash;
         }
     }
 }

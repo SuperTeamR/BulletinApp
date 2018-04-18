@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BulletinClient.Core
 {
-    class ClientContext : DCTContext
+    internal class ClientContext : DCTContext
     {
         public IOC<object> ContainerViewModel => _ContainerViewModel;
         private static IOC<object> _ContainerViewModel = new IOC<object>();

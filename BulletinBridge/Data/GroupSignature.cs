@@ -1,5 +1,5 @@
-﻿using BulletinTools;
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
+using FessooFramework.Tools.Helpers;
 using System.Runtime.Serialization;
 
 namespace BulletinBridge.Data
@@ -32,13 +32,28 @@ namespace BulletinBridge.Data
         public string GetHash()
         {
             if (hash == null)
-                hash = Сryptography.StringToSha256String(categories);
+                hash = StringToSha256String(categories);
             return hash;
         }
 
         public string[] GetCategories()
         {
             return categories;
+        }
+
+        /// <summary>
+        /// Конвертирую строку в Hash строку шифрованную с помощью 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string StringToSha256String(params string[] str)
+        {
+            var temp = string.Empty;
+            foreach (var s in str)
+            {
+                temp += s ?? string.Empty;
+            }
+            return StringToSha256String(temp);
         }
     }
 }
