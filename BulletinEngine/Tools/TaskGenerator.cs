@@ -33,7 +33,7 @@ namespace BulletinHub.Tools
             {
                 var userSettings = SettingsHelper.GetSettings(userId);
                 if (!userSettings.NextTaskGeneration.HasValue
-                || userSettings.NextTaskGeneration.Value.Ticks >= DateTime.Now.Ticks)
+                || userSettings.NextTaskGeneration.Value.Ticks <= DateTime.Now.Ticks)
                     result = true;
 
             });

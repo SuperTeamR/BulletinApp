@@ -20,7 +20,6 @@ namespace BulletinWebWorker.Managers
 
     static class WebWorkerManager
     {
-
         internal static void Execute()
         {
             DCT.ExecuteAsync(d =>

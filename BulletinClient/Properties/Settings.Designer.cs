@@ -61,7 +61,7 @@ namespace BulletinClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:59888/DataService.svc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://176.111.73.51/BulletinHub/DataService.svc")]
         public string DataServiceAddress {
             get {
                 return ((string)(this["DataServiceAddress"]));

@@ -13,7 +13,7 @@ namespace BulletinWebWorker.Tools
 {
     static class ProxyManager
     {
-        static readonly string query = @"http://api.best-proxies.ru/proxylist.txt?key=b756db66158ef04199d68b83d2cc2ade&type=http&ports=80,8080&pex=1&level=3&limit=0";
+        static readonly string query = @"http://api.best-proxies.ru/proxylist.txt?key=faa165ff460844283e7e5fa2875ee106&type=http&ports=80,8080&pex=1&level=3&limit=0";
 
         static Queue<ProxyData> proxies = new Queue<ProxyData>();
 
