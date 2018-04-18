@@ -88,27 +88,62 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Bootstrappercs.cs" />
     <Compile Include="Core\ClientContext.cs" />
     <Compile Include="Core\DCT.cs" />
     <Compile Include="Data\AccessView.cs" />
     <Compile Include="Data\BulletinView.cs" />
-    <Compile Include="Forms\MainView\ClipboardHelper.cs" />
-    <Compile Include="Forms\MainView\CsvHelper.cs" />
-    <Compile Include="Forms\MainView\CustomDataGrid.cs" />
-    <Compile Include="General\MainWindowVM.cs" />
+    <Compile Include="HelperService\AccessHelper.cs" />
+    <Compile Include="HelperService\BulletinHelper.cs" />
+    <Compile Include="HelperService\HubServiceHelper.cs" />
+    <Compile Include="HelperService\MainServiceHelper.cs" />
+    <Compile Include="Helpers\ClipboardHelper.cs" />
+    <Compile Include="Helpers\CsvHelper.cs" />
+    <Compile Include="Helpers\CustomDataGrid.cs" />
+    <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="ViewModels\AccessCardVM.cs" />
+    <Compile Include="ViewModels\AccessCollectionVM.cs" />
+    <Compile Include="ViewModels\BulletinCardVM.cs" />
+    <Compile Include="ViewModels\BulletinCollectionVM.cs" />
+    <Compile Include="ViewModels\BulletinCreateListVM.cs" />
+    <Compile Include="ViewModels\LoginVM.cs" />
+    <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Core\ImageService.cs" />
     <Compile Include="Core\MainService.cs" />
-    <Compile Include="Tools\IOC.cs" />
-    <Page Include="Forms\DataTemplate.xaml">
+    <Page Include="DataTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Forms\MainView\View.xaml">
+    <Page Include="Views\AccessCardV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="General\MainWindow.xaml">
+    <Page Include="Views\AccessCollectionV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BulletinCardV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BulletinCollectionV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BulletinCreateListV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkTableV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -117,12 +152,29 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\ClientService.cs" />
-    <Compile Include="Forms\MainView\View.xaml.cs">
-      <DependentUpon>View.xaml</DependentUpon>
+    <Compile Include="Views\AccessCardV.xaml.cs">
+      <DependentUpon>AccessCardV.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Forms\MainView\ViewModel.cs" />
-    <Compile Include="Helpers\WindowHelper.cs" />
-    <Compile Include="General\MainWindow.xaml.cs">
+    <Compile Include="Views\AccessCollectionV.xaml.cs">
+      <DependentUpon>AccessCollectionV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BulletinCardV.xaml.cs">
+      <DependentUpon>BulletinCardV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BulletinCollectionV.xaml.cs">
+      <DependentUpon>BulletinCollectionV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BulletinCreateListV.xaml.cs">
+      <DependentUpon>BulletinCreateListV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoginV.xaml.cs">
+      <DependentUpon>LoginV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\WorkTableV.xaml.cs">
+      <DependentUpon>WorkTableV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\WorkTableVM.cs" />
+    <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -166,6 +218,7 @@
   <ItemGroup>
     <Resource Include="bulletin.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.107.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.107.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

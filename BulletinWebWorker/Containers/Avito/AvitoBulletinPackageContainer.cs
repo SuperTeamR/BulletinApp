@@ -1,5 +1,4 @@
 ﻿using BulletinBridge.Data;
-using BulletinBridge.Messages.InternalApi;
 using BulletinWebWorker.Containers.Base;
 using BulletinWebWorker.Containers.Base.Access;
 using BulletinWebWorker.Containers.Base.FieldValue;

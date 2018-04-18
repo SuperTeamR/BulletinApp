@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
+using BulletinEngine.Helpers;
 using BulletinHub.Entity.Converters;
 using FessooFramework.Objects.Data;
 using System;
@@ -53,16 +54,16 @@ namespace BulletinEngine.Entity.Data
 
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => Enumerable.Empty<EntityObjectALMConfiguration<Access, AccessState>>();
-            //new[]
+        //new[]
         //{
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
-            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
+        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
         //};
 
         protected override int GetStateValue(AccessState state)
@@ -87,8 +88,29 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => new[]
         {
-            EntityObjectALMCreator<Access>.New(AccessConverter.ConvertToCache, AccessConverter.ConvertToModel, new Version(1,0,0,0))
+            EntityObjectALMCreator<Access>.New<AccessPackage>(ToCache, ToEntity, new Version(1,0,0,0))
         };
+        private Access ToEntity(AccessPackage cache, Access entity)
+        {
+            entity.BoardId = cache.BoardId;
+            entity.Login = cache.Login;
+            entity.Password = cache.Password;
+            return entity;
+        }
+
+        internal static AccessPackage ToCache(Access obj)
+        {
+            var board = BCT.Context.BulletinDb.Boards.Find(obj.BoardId);
+            var result = new AccessPackage();
+            if (board != null)
+            {
+                result.BoardName = board.Name;
+            }
+            result.BoardId = obj.BoardId;
+            result.Login = obj.Login;
+            result.Password = obj.Password;
+            return result;
+        }
         #endregion
 
         #region DataService -- Methods
@@ -104,13 +126,13 @@ namespace BulletinEngine.Entity.Data
                 var id = c._SessionInfo.HashUID;
                 var id2 = c._SessionInfo.SessionUID;
                 if (id == "Engine")
-                    result = c.Db1.Accesses
+                    result = c.BulletinDb.Accesses
                     .Where(q => workStates.Contains(q.State)).ToArray();
                 else
                 {
-                    result = c.Db1.Accesses.Where(q => q.UserId == c.UserId).ToArray();
+                    result = c.BulletinDb.Accesses.Where(q => q.UserId == c.UserId).ToArray();
                 }
-                    
+
             });
             return result;
         }
@@ -120,10 +142,10 @@ namespace BulletinEngine.Entity.Data
             BCT.Execute(d =>
             {
                 var access = objs.FirstOrDefault() as Access;
-                var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == access.Login && q.Password == access.Password);
+                var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Login == access.Login && q.Password == access.Password);
                 if (dbAccess == null)
                 {
-                    access.BoardId = d.Db1.Boards.FirstOrDefault().Id;
+                    access.BoardId = d.BulletinDb.Boards.FirstOrDefault().Id;
                     access.UserId = d.UserId;
                     access.StateEnum = AccessState.Unchecked;
                     d.SaveChanges();
@@ -137,13 +159,43 @@ namespace BulletinEngine.Entity.Data
                 }
                 result = new TDataModel[] { access as TDataModel };
             });
-              
+
             return result;
         }
 
 
 
         #endregion
+
+        #region Custom query
+        public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
+        {
+            var result = Enumerable.Empty<EntityObject>();
+            BCT.Execute(c =>
+            {
+                //Пока не заморачивался - передаётся базовый объект и требуется привести к типу
+                var entities = Enumerable.Empty<Access>();
+                if (obj.Any())
+                    entities = obj.Select(q => (Access)q).ToArray();
+                switch (code)
+                {
+                    case "All":
+                        result = AccessHelper.All();
+                        break;
+                    case "AddAvito":
+                        result = new[] { AccessHelper.AddAvito() };
+                        break;
+                    case "Remove":
+                        AccessHelper.Remove(entities);                        
+                        break;
+                    default:
+                        break;
+                }
+            });
+            return result;
+        }
+        #endregion
+
     }
 
     public enum AccessState

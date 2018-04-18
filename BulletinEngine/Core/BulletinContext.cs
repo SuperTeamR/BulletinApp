@@ -27,7 +27,7 @@ namespace BulletinEngine.Core
             }
         }
 
-        public BulletinDb Db1 => _Store.Context<BulletinDb>();
+        public BulletinDb BulletinDb => _Store.Context<BulletinDb>();
         public MainDB MainDb => _Store.Context<MainDB>();
         public BulletinContext()
         {

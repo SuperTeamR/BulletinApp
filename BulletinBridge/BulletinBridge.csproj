@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="Data\AccessPackage.cs" />
     <Compile Include="Data\AggregateBulletinPackage.cs" />
+    <Compile Include="Data\BulletinCache.cs" />
     <Compile Include="Data\BulletinInstanceCache.cs" />
     <Compile Include="Data\BulletinPackage.cs" />
     <Compile Include="Data\CategoryTree.cs" />

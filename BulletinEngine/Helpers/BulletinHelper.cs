@@ -8,11 +8,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FessooFramework.Objects.Data;
 
 namespace BulletinHub.Helpers
 {
     public static class BulletinHelper
     {
+        public static IEnumerable<Bulletin> All()
+        {
+            var result = Enumerable.Empty<Bulletin>();
+            BCT.Execute(c =>
+            {
+                result = c.BulletinDb.Bulletins.Where(q => q.UserId == c.UserId).ToArray();
+            });
+            return result;
+        }
+        internal static Bulletin AddAvito()
+        {
+            var result = new Bulletin();
+            BCT.Execute(c =>
+            {
+                var board = c.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
+                result.UserId = c.UserId;
+                result.Title = "Empty";
+                result.StateEnum = BulletinEngine.Entity.Data.BulletinState.Created;
+                c.SaveChanges();
+            });
+            return result;
+        }
+
+        internal static void Remove(IEnumerable<Bulletin> entities)
+        {
+            BCT.Execute(c =>
+            {
+                foreach (var entity in entities)
+                    c.BulletinDb.Bulletins.Remove(entity);
+                c.SaveChanges();
+            });
+        }
+
+
         public static IEnumerable<BulletinPackage> CloneBulletins(IEnumerable<BulletinPackage> objs)
         {
             var result = objs;
@@ -20,17 +55,17 @@ namespace BulletinHub.Helpers
             {
                 foreach(var obj in objs)
                 {
-                    var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == obj.BulletinId);
+                    var dbBulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == obj.BulletinId);
                     dbBulletin.StateEnum = BulletinEngine.Entity.Data.BulletinState.Cloning;
 
-                    var allAccesses = d.Db1.Accesses.ToArray();
-                    var usedAccesses = d.Db1.BulletinInstances.Where(q => q.BulletinId == dbBulletin.Id).Select(q => q.AccessId).ToArray();
+                    var allAccesses = d.BulletinDb.Accesses.ToArray();
+                    var usedAccesses = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == dbBulletin.Id).Select(q => q.AccessId).ToArray();
 
                     var unusedAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id));
                     foreach (var a in unusedAccesses)
                         a.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
 
-                    d.Db1.SaveChanges();
+                    d.BulletinDb.SaveChanges();
                 }
             });
             return result;
@@ -44,8 +79,8 @@ namespace BulletinHub.Helpers
                 {
                     var state = obj.State;
                     var hash = obj.Signature.GetHash();
-                    var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
-                    var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == obj.Access.Login
+                    var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
+                    var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Login == obj.Access.Login
                           && q.Password == obj.Access.Password);
                     var dbUser = d.MainDb.UserAccesses.FirstOrDefault(q => q.Id == dbAccess.UserId);
                     var dbBulletin = new Bulletin
@@ -53,7 +88,7 @@ namespace BulletinHub.Helpers
                         UserId = dbUser.Id,
                     };
                     dbBulletin.StateEnum = BulletinEngine.Entity.Data.BulletinState.WaitPublication;
-                    var board = d.Db1.Boards.FirstOrDefault(q => q.Name == "Avito");
+                    var board = d.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
                     var model = new BulletinInstance
                     {
                         Url = obj.Url,
@@ -65,11 +100,11 @@ namespace BulletinHub.Helpers
                     };
 
                     var bulletinName = obj.ValueFields["Название объявления"];
-                    var sameBulletinNames = d.Db1.BulletinFields.Where(q => q.Value == bulletinName).ToArray();
+                    var sameBulletinNames = d.BulletinDb.BulletinFields.Where(q => q.Value == bulletinName).ToArray();
                     var hasDublicates = false;
                     foreach(var s in sameBulletinNames)
                     {
-                        var sameBulletin = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == s.BulletinInstanceId && q.AccessId == dbAccess.Id);
+                        var sameBulletin = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == s.BulletinInstanceId && q.AccessId == dbAccess.Id);
                         if(sameBulletin != null)
                         {
                             hasDublicates = true;
@@ -85,7 +120,7 @@ namespace BulletinHub.Helpers
                     model.StateEnum = BulletinEngine.Entity.Data.BulletinInstanceState.WaitPublication;
                     foreach (var field in obj.ValueFields)
                     {
-                        var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
+                        var dbField = d.BulletinDb.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
                         if (dbField != null)
                         {
                             var dbBulletinField = new BulletinField
@@ -109,16 +144,16 @@ namespace BulletinHub.Helpers
             {
                 foreach (var bulletin in bulletins)
                 {
-                    var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == bulletin.BulletinInstanceId);
+                    var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == bulletin.BulletinInstanceId);
                     if (dbInstance == null)
                     {
-                        dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url);
+                        dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Url == bulletin.Url);
                         if (dbInstance == null)
                         {
-                            var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == bulletin.Access.Login
+                            var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Login == bulletin.Access.Login
                                     && q.Password == bulletin.Access.Password);
                             var dbUser = d.MainDb.UserAccesses.FirstOrDefault(q => q.Id == dbAccess.UserId);
-                            var board = d.Db1.Boards.FirstOrDefault(q => q.Name == "Avito");
+                            var board = d.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
 
 
                             bool hasBulletin = false;
@@ -134,11 +169,11 @@ namespace BulletinHub.Helpers
                             else
                             {
                                 hasBulletin = true;
-                                dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == bulletin.BulletinId);
+                                dbBulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletin.BulletinId);
                                 dbBulletin.StateEnum = BulletinEngine.Entity.Data.BulletinState.Created;
                             }
                             var hash = bulletin.Signature.GetHash();
-                            var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+                            var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
                             dbInstance = new BulletinInstance
                             {
                                 Url = bulletin.Url,
@@ -161,15 +196,15 @@ namespace BulletinHub.Helpers
                     }
                     dbInstance.State = bulletin.State;
                     dbInstance.Url = bulletin.Url;
-                    d.Db1.SaveChanges();
+                    d.BulletinDb.SaveChanges();
 
                     if (bulletin.ValueFields == null) continue;
                     foreach (var field in bulletin.ValueFields)
                     {
-                        var dbField = d.Db1.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
+                        var dbField = d.BulletinDb.FieldTemplates.FirstOrDefault(q => q.Name == field.Key);
                         if (dbField != null)
                         {
-                            var dbBulletinField = d.Db1.BulletinFields.FirstOrDefault(q => q.BulletinInstanceId == dbInstance.Id
+                            var dbBulletinField = d.BulletinDb.BulletinFields.FirstOrDefault(q => q.BulletinInstanceId == dbInstance.Id
                                 && q.FieldId == dbField.Id);
                             if (dbBulletinField == null)
                             {
@@ -178,20 +213,22 @@ namespace BulletinHub.Helpers
                                     BulletinInstanceId = dbInstance.Id,
                                     FieldId = dbField.Id,
                                 };
-                                d.Db1.BulletinFields.Add(dbBulletinField);
-                                d.Db1.SaveChanges();
+                                d.BulletinDb.BulletinFields.Add(dbBulletinField);
+                                d.BulletinDb.SaveChanges();
                             }
                             dbBulletinField.Value = field.Value;
                             dbBulletinField.StateEnum = bulletin.State == (int)BulletinInstanceState.Edited
                             ? BulletinFieldState.Edited
                             : BulletinFieldState.Filled;
 
-                            d.Db1.SaveChanges();
+                            d.BulletinDb.SaveChanges();
                         }
                     }
                 }
             });
             return result;
         }
+
+     
     }
 }

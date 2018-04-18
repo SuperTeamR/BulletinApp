@@ -25,9 +25,9 @@ namespace BulletinEngine.Helpers
             GroupSignature result = null;
             BCT.Execute(d =>
             {
-                var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
+                var dbBulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
                 var groupId = dbBulletin.GroupId;
-                var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Id == groupId);
+                var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Id == groupId);
                 var groupHash = dbGroup.Hash;
                 result = GetGroupSignature(groupHash);
             });
@@ -40,9 +40,9 @@ namespace BulletinEngine.Helpers
             GroupSignature result = null;
             BCT.Execute(d =>
             {
-                var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
+                var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
                 var groupId = dbInstance.GroupId;
-                var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Id == groupId);
+                var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Id == groupId);
                 var groupHash = dbGroup.Hash;
                 result = GetGroupSignature(groupHash);
             });
@@ -66,12 +66,12 @@ namespace BulletinEngine.Helpers
             BCT.Execute(data =>
             {
 
-                var group = data.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+                var group = data.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
                 if (group != null)
                 {
                     var chosenCategories = new List<string>();
-                    var groupedCategories = data.Db1.GroupedCategories.Where(q => q.GroupId == group.Id).Select(q => q.CategoryId).ToArray();
-                    var categories = data.Db1.CategoryTemplates.Where(q => groupedCategories.Contains(q.Id)).ToArray();
+                    var groupedCategories = data.BulletinDb.GroupedCategories.Where(q => q.GroupId == group.Id).Select(q => q.CategoryId).ToArray();
+                    var categories = data.BulletinDb.CategoryTemplates.Where(q => groupedCategories.Contains(q.Id)).ToArray();
                     var topCategory = categories.FirstOrDefault(q => q.ParentId == Guid.Empty);
                     var nothandledCategories = categories.Where(q => q.Id != topCategory.Id).ToList();
                     var parentId = topCategory.Id;

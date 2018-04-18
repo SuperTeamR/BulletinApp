@@ -22,8 +22,8 @@ namespace BulletinHub.Entity.Converters
 
                 if (obj.TargetType == typeof(BulletinInstance).ToString())
                 {
-                    var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == obj.BulletinId);
-                    var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Id == obj.AccessId);
+                    var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == obj.BulletinId);
+                    var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Id == obj.AccessId);
                     var groupSignature = GroupHelper.GetGroupSignature2(dbInstance.BulletinId);
                     var valueFields = ValueFieldHelper.GetValueFields2(dbInstance.BulletinId);
                     var accessFields = AccessFieldHelper.GetAccessFields2(dbInstance.BulletinId);
@@ -32,7 +32,7 @@ namespace BulletinHub.Entity.Converters
                     bulletinPackage.Signature = groupSignature;
                     bulletinPackage.ValueFields = valueFields;
                     bulletinPackage.AccessFields = accessFields;
-                    bulletinPackage.Access = AccessConverter.ConvertToCache(dbAccess);
+                    bulletinPackage.Access = Access.ToCache(dbAccess);
 
                 }
                 else if(obj.TargetType == typeof(Access).ToString())
@@ -59,7 +59,7 @@ namespace BulletinHub.Entity.Converters
             {
                 if(obj.BulletinPackage != null)
                 {
-                    var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == obj.BulletinId);
+                    var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == obj.BulletinId);
                     dbInstance.State = obj.BulletinPackage.State;
                     dbInstance.Url = obj.BulletinPackage.Url;
                     d.SaveChanges();

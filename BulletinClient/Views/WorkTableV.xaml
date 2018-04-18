@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BulletinClient.Forms.MainView.View"
+﻿<UserControl x:Class="BulletinClient.Views.WorkTableV"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,46 +6,7 @@
              xmlns:local="clr-namespace:BulletinClient.Forms.MainView"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="1000">
-    <Grid >
-        <Grid Grid.RowSpan="2" Visibility="{Binding NotAuth, Converter={StaticResource BoolToVis}}" Grid.IsSharedSizeScope="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition SharedSizeGroup="A" Width="Auto" />
-                <ColumnDefinition SharedSizeGroup="B"  Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Авторизация"  FontSize="24"/>
-
-            <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Логин"  FontSize="14" MinWidth="100"/>
-            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding UserLogin}" BorderThickness="0,0,0,1"/>
-
-            <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
-            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding UserPassword}" BorderThickness="0,0,0,1" />
-
-
-            <TextBlock Margin="5" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Основная учетка"  FontSize="20" MinWidth="100"/>
-            
-            <TextBlock Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Email"  FontSize="14" MinWidth="100"/>
-            <TextBox Margin="5" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
-
-            <TextBlock Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
-            <TextBox  Margin="5" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
-
-            <Button Margin="5" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Войти" Command="{Binding CommandBoardAuth}" BorderThickness="0" FontSize="14" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
-        </Grid>
-
-        <Grid HorizontalAlignment="Stretch" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}">
+<Grid HorizontalAlignment="Stretch" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
@@ -67,11 +28,14 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <TextBlock Margin="3" Text="{Binding BoardLogin}"  FontSize="12" FontWeight="Medium" Background="White"/>
+            <TextBlock Margin="3" Text="{Binding Login}"  FontSize="12" FontWeight="Medium" Background="White"/>
                 <Button Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Выйти" Command="{Binding CommandLogout}" BorderThickness="0" FontSize="12" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
             </StackPanel>
-            <TabControl SelectedIndex="{Binding SelectedIndexTab}"  Grid.Row="1" TabStripPlacement="Top" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}" BorderThickness="0,1,0,0" >
-                <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue">
+        <TabControl SelectedIndex="{Binding SelectedIndexTab}"  Grid.Row="1" BorderThickness="0,1,0,0" TabStripPlacement="Left" Background="Transparent" >
+            <TabItem Header="Access" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding AccessCollectionView}" />
+            <TabItem Header="Bulltins" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding BulletinCollectionView}" />
+
+            <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
                     <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -319,86 +283,7 @@
 
                 </TabItem>
 
-                <TabItem Header="Аккаунты" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
-                    <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"  Text="Новый аккаунт"  FontSize="22" FontWeight="Medium"  />
-                        <StackPanel HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="1"  VerticalAlignment="Center" Orientation="Horizontal" >
-                            <Button HorizontalAlignment="Right" Width="150" Height="30" Content="Добавить" Command="{Binding CommandAddAccess}" 
-                                    Background="Black" Foreground="White" FontWeight="Medium" />
-                        </StackPanel>
-                        <ScrollViewer  Grid.Row="1" Grid.ColumnSpan="2" >
-                            <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
-                                    <ColumnDefinition Width="Auto" SharedSizeGroup="B"  />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock  Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"  Text="Логин"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" Text="{Binding NewAccessLogin}" BorderThickness="0,0,0,1"/>
-
-                                <TextBlock  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
-                                <TextBox Margin="5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding NewAccessPassword}" BorderThickness="0,0,0,1"/>
-
-                                <DataGrid  
-                                    Margin="0,10,0,0"
-                                    Grid.Row="2"
-                                    Grid.ColumnSpan="2"
-                                    ItemsSource="{Binding Accesses}" 
-                                    BorderThickness="0" 
-                                    Background="White" 
-                                    AutoGenerateColumns="False">
-                                    <DataGrid.Columns>
-                                        <DataGridTemplateColumn Width="150" Header="Логин">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Login}"  HorizontalAlignment="Center"  />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Width="150" Header="Пароль">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel>
-                                                        <TextBlock Text="{Binding Password}" HorizontalAlignment="Center"  />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                        <DataGridTemplateColumn Width="150" Header="Состояние">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel>
-                                                        <TextBlock  Text="{Binding State}" HorizontalAlignment="Center"  />
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>
-                                    </DataGrid.Columns>
-                                </DataGrid>
-                            </Grid>
-                        </ScrollViewer>
-                    </Grid>
-
-                </TabItem>
+              
             </TabControl>
         </Grid>
-
-    </Grid>
 </UserControl>

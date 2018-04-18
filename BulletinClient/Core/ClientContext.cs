@@ -1,5 +1,4 @@
-﻿using BulletinClient.Tools;
-using FessooFramework.Components;
+﻿using FessooFramework.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +9,7 @@ namespace BulletinClient.Core
 {
     internal class ClientContext : DCTContext
     {
-        public IOC<object> ContainerViewModel => _ContainerViewModel;
-        private static IOC<object> _ContainerViewModel = new IOC<object>();
-
-        public ServiceClient ServiceClient => _Store.ServiceContext<ServiceClient>();
+        public ServiceClient HubClient => _Store.ServiceContext<ServiceClient>();
 
         public ClientContext()
         {

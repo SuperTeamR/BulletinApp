@@ -18,7 +18,7 @@ namespace BulletinHub.Entity.Converters
             BCT.Execute(d =>
             {
                 var hash = obj.Signature.GetHash();
-                var dbGroup = d.Db1.Groups.FirstOrDefault(q => q.Hash == hash);
+                var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
                 var bulletinTitle = obj.ValueFields["Название объявления"];
                 var bulletinDesc = obj.ValueFields["Описание объявления"];
                 var bulletinPrice = obj.ValueFields["Цена"];

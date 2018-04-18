@@ -11,6 +11,41 @@ namespace BulletinEngine.Helpers
 {
     public static class AccessHelper
     {
+        public static IEnumerable<Access> All()
+        {
+            var result = Enumerable.Empty<Access>();
+            BCT.Execute(c=> 
+            {
+                result = c.BulletinDb.Accesses.Where(q => q.UserId == c.UserId).ToArray();
+            });
+            return result;
+        }
+        internal static Access AddAvito()
+        {
+            var result = new Access();
+            BCT.Execute(c =>
+            {
+                var board = c.BulletinDb.Boards.FirstOrDefault(q=>q.Name == "Avito");
+                result.Login = "Новый логин";
+                result.BoardId = board.Id;
+                result.UserId = c.UserId;
+                result.StateEnum = Entity.Data.AccessState.Created;
+                c.SaveChanges();
+            });
+            return result;
+        }
+
+        internal static void Remove(IEnumerable<Access> entities)
+        {
+            BCT.Execute(c =>
+            {
+                foreach (var entity in entities)
+                    c.BulletinDb.Accesses.Remove(entity);
+                c.SaveChanges();
+            });
+        }
+
+
 
         public static Guid? GetActiveAccessId(Guid bulletinId)
         {
@@ -18,8 +53,8 @@ namespace BulletinEngine.Helpers
 
             BCT.Execute(d =>
             {
-                var allAccesses = d.Db1.Accesses.Where(q => q.UserId == d.UserId).ToArray();
-                var bulletins = d.Db1.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
+                var allAccesses = d.BulletinDb.Accesses.Where(q => q.UserId == d.UserId).ToArray();
+                var bulletins = d.BulletinDb.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
                 if(bulletins.Any())
                 {
                     var usedAccesses = bulletins.Select(q => q.AccessId).Distinct().ToArray();
@@ -62,24 +97,24 @@ namespace BulletinEngine.Helpers
             AccessPackage result = null;
             BCT.Execute(d =>
             {
-                var dbInstance = d.Db1.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
+                var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
 
-                var dbBoard = d.Db1.Boards.FirstOrDefault(q => q.Id == dbInstance.BoardId);
+                var dbBoard = d.BulletinDb.Boards.FirstOrDefault(q => q.Id == dbInstance.BoardId);
                 var boardId = dbBoard.Id;
 
-                var dbBulletin = d.Db1.Bulletins.FirstOrDefault(q => q.Id == dbInstance.BulletinId);
+                var dbBulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == dbInstance.BulletinId);
                 var userId = dbBulletin.UserId;
                 var accessId = dbInstance.AccessId;
 
                 Access access;
                 if (accessId == Guid.Empty)
                 {
-                    access = d.Db1.Accesses.FirstOrDefault(q => q.UserId == userId && q.BoardId == boardId);
+                    access = d.BulletinDb.Accesses.FirstOrDefault(q => q.UserId == userId && q.BoardId == boardId);
                     accessId = access.Id;
                 }
                 else
                 {
-                    access = d.Db1.Accesses.FirstOrDefault(q => q.Id == accessId);
+                    access = d.BulletinDb.Accesses.FirstOrDefault(q => q.Id == accessId);
                 }
                 result = new AccessPackage
                 {
@@ -103,8 +138,8 @@ namespace BulletinEngine.Helpers
 
             BCT.Execute(d =>
             {
-                var allAccesses = d.Db1.Accesses.ToArray();
-                var usedAccesses = d.Db1.BulletinInstances.Where(q => q.BulletinId == bulletinId).Select(q => q.AccessId).ToArray();
+                var allAccesses = d.BulletinDb.Accesses.ToArray();
+                var usedAccesses = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == bulletinId).Select(q => q.AccessId).ToArray();
 
 
                 var unusedAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id));
@@ -126,11 +161,11 @@ namespace BulletinEngine.Helpers
             {
                 foreach (var p in packages)
                 {
-                    var dbAccess = d.Db1.Accesses.FirstOrDefault(q => q.Login == p.Login && q.Password == p.Password);
+                    var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Login == p.Login && q.Password == p.Password);
                     if (dbAccess != null)
                     {
                         dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Activated;
-                        d.Db1.SaveChanges();
+                        d.BulletinDb.SaveChanges();
                     }
                 }
             });
@@ -149,12 +184,12 @@ namespace BulletinEngine.Helpers
                     {
                         Login = p.Login,
                         Password = p.Password,
-                        BoardId = d.Db1.Boards.FirstOrDefault().Id,
+                        BoardId = d.BulletinDb.Boards.FirstOrDefault().Id,
                         UserId = d.MainDb.UserAccesses.FirstOrDefault().Id
                     };
                     dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
 
-                    var dbBulletins = d.Db1.Bulletins.Where(q => q.UserId == dbAccess.UserId).ToArray();
+                    var dbBulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == dbAccess.UserId).ToArray();
                     foreach(var b in dbBulletins)
                     {
                         b.StateEnum = Entity.Data.BulletinState.Cloning;
@@ -164,5 +199,7 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
+
+      
     }
 }

@@ -1,6 +1,7 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinHub.Entity.Converters;
+using BulletinHub.Helpers;
 using BulletinHub.Tools;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.DCT;
@@ -67,37 +68,28 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Bulletin>> CreatorsService => new[]
         {
-             EntityObjectALMCreator<Bulletin>.New(BulletinContainerConverter.Convert, BulletinContainerConverter.Convert, new Version(1,0,0,0))
+             EntityObjectALMCreator<Bulletin>.New(BulletinContainerConverter.Convert, BulletinContainerConverter.Convert, new Version(1,0,0,0)),
+              EntityObjectALMCreator<Bulletin>.New<BulletinCache>(ToCache,ToEntity, new Version(1,0,0,0))
         };
+
+        private Bulletin ToEntity(BulletinCache cache, Bulletin entity)
+        {
+            return entity;
+        }
+
+        private BulletinCache ToCache(Bulletin entity)
+        {
+            var cache = new BulletinCache();
+            cache.Title = entity.Title;
+            cache.Name = entity.Title;
+            cache.Description = entity.Description;
+            cache.Images = entity.Images;
+            cache.Price = entity.Price;
+            return cache;
+        }
         #endregion
 
         #region DataService -- Methods
-
-        public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
-        {
-            TaskGenerator.Initialize();
-
-
-            var result = Enumerable.Empty<EntityObject>();
-            DCT.Execute(d =>
-            {
-                var bulletinModels = Enumerable.Empty<Bulletin>();
-                if(obj != null && obj.Any())
-                {
-                    bulletinModels = obj.Cast<Bulletin>().ToArray();
-
-                    switch(code)
-                    {
-                        case "Create":
-                            result = BulletinGenerator.Create(bulletinModels);
-                            break;
-                    }
-                }
-
-            });
-            return result;
-        }
-
 
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
@@ -112,12 +104,12 @@ namespace BulletinEngine.Entity.Data
                 var id2 = c._SessionInfo.SessionUID;
                 if (id == "Engine")
                 {
-                    result = c.Db1.Bulletins
+                    result = c.BulletinDb.Bulletins
                     .Where(q => workStates.Contains(q.State)).Take(1).ToArray();
                 }
                 else
                 {
-                    result = c.Db1.Bulletins.Where(q => q.UserId == c.UserId).ToArray();
+                    result = c.BulletinDb.Bulletins.Where(q => q.UserId == c.UserId).ToArray();
                 }
                    
             });
@@ -142,6 +134,38 @@ namespace BulletinEngine.Entity.Data
 
 
 
+        #endregion
+
+        #region Custom query
+        public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
+        {
+            var result = Enumerable.Empty<EntityObject>();
+            BCT.Execute(c =>
+            {
+                //Пока не заморачивался - передаётся базовый объект и требуется привести к типу
+                var entities = Enumerable.Empty<Bulletin>();
+                if (obj.Any())
+                    entities = obj.Select(q => (Bulletin)q).ToArray();
+                switch (code)
+                {
+                    case "Create":
+                        result = BulletinGenerator.Create(entities);
+                        break;
+                    case "All":
+                        result = BulletinHelper.All();
+                        break;
+                    case "AddAvito":
+                        result = new[] { BulletinHelper.AddAvito() };
+                        break;
+                    case "Remove":
+                        BulletinHelper.Remove(entities);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            return result;
+        }
         #endregion
     }
 

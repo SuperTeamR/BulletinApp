@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BulletinClient.Forms.MainView
+namespace BulletinClient.Views
 {
     /// <summary>
-    /// Логика взаимодействия для View.xaml
+    /// Логика взаимодействия для AccessCollectionV.xaml
     /// </summary>
-    public partial class View : UserControl
+    public partial class AccessCollectionV : UserControl
     {
-        public View()
+        public AccessCollectionV()
         {
             InitializeComponent();
         }

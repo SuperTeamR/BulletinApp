@@ -143,7 +143,7 @@ namespace BulletinEngine.Entity.Data
                 var id = c._SessionInfo.HashUID;
                 var id2 = c._SessionInfo.SessionUID;
                 if (id == "Engine")
-                    result = c.Db1.BulletinInstances
+                    result = c.BulletinDb.BulletinInstances
                     .Where(q => workStates.Contains(q.State)).Take(1).ToArray();
                 else
                     result = base._CollectionObjectLoad();

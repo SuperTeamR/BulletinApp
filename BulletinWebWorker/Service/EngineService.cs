@@ -1,5 +1,4 @@
-﻿using BulletinBridge.Messages.InternalApi;
-using BulletinWebWorker.Containers;
+﻿using BulletinWebWorker.Containers;
 using BulletinWebWorker.Properties;
 using FessooFramework.Tools.Web;
 using FessooFramework.Tools.Web.DataService;
@@ -17,14 +16,5 @@ namespace BulletinWebWorker.Service
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
         public override string HashUID => "Engine";
         public override string SessionUID => "Engine";
-
-        //protected override IEnumerable<ServiceResponseConfigBase> Configurations => new ServiceResponseConfigBase[] {
-        //    ServiceResponseConfig<ResponseGetBulletinWorkModel>.New(a =>
-        //        {
-        //            WorkRouter.AssignBulletinWork(a.Objects);
-        //        }
-        //    ),
-        //    ServiceResponseConfig<ResponseGetProfileWorkModel>.New(a => { WorkRouter.AssignProfileWork(a.Objects); })
-        //};
     }
 }

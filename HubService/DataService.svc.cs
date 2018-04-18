@@ -1,6 +1,4 @@
 ﻿using BulletinBridge.Data;
-using BulletinBridge.Messages.BoardApi;
-using BulletinBridge.Messages.InternalApi;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using FessooFramework.Objects.Message;
@@ -60,6 +58,7 @@ namespace HubService
         {
             new DataServiceConfiguration<Access, AccessPackage>(),
             new DataServiceConfiguration<Bulletin, BulletinPackage>(),
+            new DataServiceConfiguration<Bulletin, BulletinCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache>(),
         };
 

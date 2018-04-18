@@ -10,6 +10,8 @@ namespace BulletinBridge.Data
         [DataMember]
         public Guid BoardId { get; set; }
         [DataMember]
+        public string BoardName { get; set; }
+        [DataMember]
         public string Login {get;set;}
         [DataMember]
         public string Password { get; set; }

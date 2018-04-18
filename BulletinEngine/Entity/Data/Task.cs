@@ -68,7 +68,7 @@ namespace BulletinHub.Entity.Data
                         d.SaveChanges();
                         break;
                     case "Load":
-                        result = d.Db1.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).ToArray();
+                        result = d.BulletinDb.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).ToArray();
                         break;
                 }
             });
@@ -85,7 +85,7 @@ namespace BulletinHub.Entity.Data
                 var id2 = c._SessionInfo.SessionUID;
                 if (id == "Engine")
                 {
-                    result = c.Db1.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).ToArray();
+                    result = c.BulletinDb.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).ToArray();
                 }
                 else
                     result = base._CollectionObjectLoad();

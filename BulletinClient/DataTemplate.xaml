@@ -1,0 +1,27 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+                     xmlns:V="clr-namespace:BulletinClient.Views"
+                    xmlns:VM="clr-namespace:BulletinClient.ViewModels">
+    <!--Convertors-->
+    <BooleanToVisibilityConverter x:Key="BoolToVis" />
+    
+    <!--Templates-->
+    <DataTemplate DataType="{x:Type VM:WorkTableVM}">
+        <V:WorkTableV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:LoginVM}">
+        <V:LoginV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:AccessCardVM}">
+        <V:AccessCardV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:AccessCollectionVM}">
+        <V:AccessCollectionV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:BulletinCollectionVM}">
+        <V:BulletinCollectionV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:BulletinCardVM}">
+        <V:BulletinCardV />
+    </DataTemplate>
+</ResourceDictionary>

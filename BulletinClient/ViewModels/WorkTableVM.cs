@@ -1,5 +1,4 @@
 ﻿using BulletinBridge.Data;
-using BulletinBridge.Messages.BoardApi;
 using BulletinBridge.Services.ServiceModels;
 using BulletinClient.Core;
 using BulletinClient.Data;
@@ -19,29 +18,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace BulletinClient.Forms.MainView
+namespace BulletinClient.ViewModels
 {
-    class ViewModel : VM
+    class WorkTableVM : VM
     {
         #region Property
-        public string UserLogin { get; set; }
-        public string UserPassword { get; set; }
+        public string Login => DataHelper.UserLogin.Value;
 
-        public string NewAccessLogin { get; set; }
-        public string NewAccessPassword { get; set; }
+        public AccessCollectionVM AccessCollectionView => accessCollectionView = accessCollectionView ?? new AccessCollectionVM();
+        public AccessCollectionVM accessCollectionView { get; set; }
+        public BulletinCollectionVM BulletinCollectionView => bulletinCollectionView = bulletinCollectionView ?? new BulletinCollectionVM();
+        public BulletinCollectionVM bulletinCollectionView { get; set; }
 
-        public bool Auth => !string.IsNullOrEmpty(Settings.Default.BoardLogin);
-        public bool NotAuth => !Auth;
+
 
         public bool Bulletin => Bulletins != null && Bulletins.Any();
         public bool NotBulletin => Bulletins == null || !Bulletins.Any();
 
-        public string Login { get; set; }
-        public string Password { get; set; }
-        public string BoardLogin
-        {
-            get { return Settings.Default.BoardLogin; }
-        }
 
         public string CardCategory1 { get; set; }
         public string CardCategory2 { get; set; }
@@ -54,7 +47,6 @@ namespace BulletinClient.Forms.MainView
         public ObservableCollection<NewBulletin> AddBulletins { get; set; }
 
         public IEnumerable<BulletinView> Bulletins { get; set; }
-        public ObservableCollection<AccessView> Accesses { get; set; }
 
         public Brush ConnectionColor { get; set; }
 
@@ -64,7 +56,6 @@ namespace BulletinClient.Forms.MainView
         #endregion
         #region Commands
         public ICommand CommandGetXls { get; set; }
-        public ICommand CommandBoardAuth { get; set; }
         public ICommand CommandAddBulletin { get; set; }
         public ICommand CommandAddBulletins { get; set; }
         public ICommand CommandLogout { get; set; }
@@ -77,33 +68,24 @@ namespace BulletinClient.Forms.MainView
 
         #endregion
         #region Constructor
-        public ViewModel()
+        public WorkTableVM()
         {
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
             CardCategory3 = "iPhone";
             AddBulletins = new ObservableCollection<NewBulletin>();
-            Accesses = new ObservableCollection<AccessView>();
 
-            CommandGetXls = new DelegateCommand(GetXls);
-            CommandBoardAuth = new DelegateCommand(BoardAuth);
+            //CommandGetXls = new DelegateCommand(GetXls);
+          
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
-            CommandAddAccess = new DelegateCommand(AddAccess);
             CommandCheckConnection = new DelegateCommand(CheckConnection);
             CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
             CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
             CommandAddImage = new DelegateCommand(AddImage);
 
 
-            if(!string.IsNullOrEmpty(Settings.Default.UserLogin)
-                && !string.IsNullOrEmpty(Settings.Default.UserPassword))
-            {
-                UserLogin = Settings.Default.UserLogin;
-                UserPassword = Settings.Default.UserPassword;
-
-                SignIn(SignInCallback);
-            }
+          
 
           
             CheckConnection();
@@ -114,69 +96,6 @@ namespace BulletinClient.Forms.MainView
 
         #endregion
         #region Methods
-
-        void SignIn(Action<bool> callback)
-        {
-            DCT.Execute(d =>
-            {
-                SignIn(UserLogin, UserPassword, callback);
-            });
-        }
-        void SignIn(string email, string password, Action<bool> callback)
-        {
-            DCT.Execute(c =>
-            {
-                using (var main = new MainService())
-                {
-                    var ping = main.Ping();
-                    Console.WriteLine($"Ping = {ping}");
-                    //main.Registration(RegCallback, email, "12345", password, "arthur", "borat", "penzin");
-                    main.SignIn(callback, email, password);
-                }
-                   
-            });
-        }
-        void RegCallback(bool result)
-        {
-            DCT.Execute(c =>
-            {
-                if (result)
-                {
-
-                }
-                else
-                {
-
-                }
-
-            });
-        }
-
-        void SignInCallback(bool result)
-        {
-            DCT.Execute(c =>
-            {
-             if (result)
-                {
-                    Console.WriteLine($"Signin succesfull");
-
-                    Settings.Default.UserLogin = UserLogin;
-                    Settings.Default.UserPassword = UserPassword;
-
-                    Settings.Default.HashUID = c._SessionInfo.HashUID;
-                    Settings.Default.SessionUID = c._SessionInfo.SessionUID;
-                    Settings.Default.Save();
-
-                    GetAccesses();
-                }
-                else
-                    Console.WriteLine($"Signin not sucessfull");
-
-                Console.WriteLine($"SessionUID Request = {c._SessionInfo.SessionUID}");
-                Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
-            });
-        }
-
         
 
         private void Logout()
@@ -184,6 +103,7 @@ namespace BulletinClient.Forms.MainView
             Settings.Default.BoardLogin = "";
             Settings.Default.BoardPassword = "";
             Settings.Default.Save();
+            DataHelper.IsAuth.Value = false;
             Bulletins = Enumerable.Empty<BulletinView>();
             RaiseDone();
         }
@@ -256,18 +176,18 @@ namespace BulletinClient.Forms.MainView
             });
         }
 
-        void GetXls()
-        {
-            DCT.Execute(d =>
-            {
-                var group = new GroupSignature();
-                var request = new RequestBoardAPI_GetXlsForGroup
-                {
-                    GroupSignature = group
-                };
-                //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
-            });
-        }
+        //void GetXls()
+        //{
+        //    DCT.Execute(d =>
+        //    {
+        //        var group = new GroupSignature();
+        //        var request = new RequestBoardAPI_GetXlsForGroup
+        //        {
+        //            GroupSignature = group
+        //        };
+        //        //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
+        //    });
+        //}
 
         void GetBulletins()
         {
@@ -297,60 +217,6 @@ namespace BulletinClient.Forms.MainView
             });
         }
 
-        void GetAccesses()
-        {
-            DCT.Execute(d =>
-            {
-                var hash = d._SessionInfo.HashUID;
-                using (var client = new ServiceClient())
-                {
-                    client.CollectionLoad<AccessPackage>(GetAccessesCallback);
-                }
-
-            });
-           
-        }
-
-        void GetAccessesCallback(IEnumerable<AccessPackage> objs)
-        {
-            Accesses = new ObservableCollection<AccessView>(objs.Select(q => new AccessView(q)).ToArray());
-            RaisePropertyChanged(() => Accesses);
-        }
-
-        void AddAccess()
-        {
-            DCT.Execute(d => 
-            {
-                var access = new AccessPackage
-                {
-                    Login = NewAccessLogin,
-                    Password = NewAccessPassword,
-                };
-
-                using (var client = new ServiceClient())
-                {
-                    var r = client.Ping();
-                    Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection(NewAccessAdded, "CreateAccesses", objects: new[] { access });
-                }
-            });
-        }
-
-        void NewAccessAdded(IEnumerable<AccessPackage> a)
-        {
-            DCT.Execute(d =>
-            {
-                MessageBox.Show("Учетная запись была добавлена");
-
-                NewAccessLogin = string.Empty;
-                NewAccessPassword = string.Empty;
-                RaisePropertyChanged(() => NewAccessLogin);
-                RaisePropertyChanged(() => NewAccessPassword);
-
-                GetAccesses();
-            });
-        }
-
         void CloneBulletin(BulletinView bulletin)
         {
             var package = new BulletinPackage
@@ -375,66 +241,7 @@ namespace BulletinClient.Forms.MainView
             b.CanRepublicate = false;
         }
 
-        void BoardAuth()
-        {
-            DCT.Execute(d =>
-            {
-                SignIn(SignInCallback2);
-
-            });
-        }
-
-        void SignInCallback2(bool result)
-        {
-            DCT.Execute(c =>
-            {
-                if (result)
-                {
-                    Console.WriteLine($"Signin succesfull");
-
-                    Settings.Default.UserLogin = UserLogin;
-                    Settings.Default.UserPassword = UserPassword;
-
-                    Settings.Default.HashUID = c._SessionInfo.HashUID;
-                    Settings.Default.SessionUID = c._SessionInfo.SessionUID;
-                    Settings.Default.Save();
-
-                    var access = new AccessPackage
-                    {
-                        Login = Login,
-                        Password = Password,
-                    };
-                    using (var client = new ServiceClient())
-                    {
-                        client.Save<AccessPackage>((a) => BoardAuthCallback(a), access);
-                    }
-
-                }
-                else
-                    Console.WriteLine($"Signin not sucessfull");
-
-                Console.WriteLine($"SessionUID Request = {c._SessionInfo.SessionUID}");
-                Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
-            });
-        }
-
-        private void BoardAuthCallback(AccessPackage access)
-        {
-            DCT.Execute(c => {
-                Settings.Default.SessionUID = c._SessionInfo.SessionUID;
-                Settings.Default.HashUID = c._SessionInfo.HashUID;
-
-                Settings.Default.BoardLogin = access.Login;
-                Settings.Default.BoardPassword = access.Password;
-                Settings.Default.Save();
-
-                RaisePropertyChanged(() => Auth);
-                RaisePropertyChanged(() => NotAuth);
-                RaisePropertyChanged(() => BoardLogin);
-
-                GetBulletins();
-            });
-        }
+       
 
         void AddBulletin(string cardName, string cardDescription, string cardPrice, string cardImageLinks)
         {
