@@ -42,13 +42,18 @@ namespace BulletinHub.Tools
         {
             BCT.Execute(d =>
             {
+                var bulletinIds = d.BulletinDb.Bulletins.Select(q => q.Id).ToArray();
+                var usedBulletinIds = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).Select(q => q.BulletinId).ToArray();
+                var unusedBulletinsIds = bulletinIds.Where(q => usedBulletinIds.Contains(q)).ToArray();
+
+
                 var targetType = typeof(BulletinInstance).ToString();
                 var tasks = d.BulletinDb.Tasks.Where(q => q.TargetType == targetType).Select(q => q.BulletinId).ToArray();
 
-                var bulletins = d.BulletinDb.BulletinInstances.Where(q => !tasks.Contains(q.Id) && q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
+                var bulletins = d.BulletinDb.BulletinInstances.Where(q => unusedBulletinsIds.Contains(q.Id)).ToArray();
                 if (bulletins.Length == 0) return;
 
-                var accesses = d.BulletinDb.Accesses/*.Where(q => q.State == (int)AccessState.Activated)*/.ToArray();
+                var accesses = d.BulletinDb.Accesses.Where(q => q.State == (int)AccessState.Activated).ToArray();
                 var cycles = bulletins.Length >= accesses.Length ? bulletins.Length / accesses.Length : 1;
                 for (int i = 0; i < bulletins.Length; i++)
                 {
@@ -65,7 +70,6 @@ namespace BulletinHub.Tools
                     };
                     task.StateEnum = Entity.Data.TaskState.Created;
                 }
-
                 d.BulletinDb.SaveChanges();
             });
         }

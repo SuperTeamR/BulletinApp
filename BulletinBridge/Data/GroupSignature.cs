@@ -46,14 +46,14 @@ namespace BulletinBridge.Data
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string StringToSha256String(params string[] str)
+        string StringToSha256String(params string[] str)
         {
             var temp = string.Empty;
             foreach (var s in str)
             {
                 temp += s ?? string.Empty;
             }
-            return StringToSha256String(temp);
+            return CryptographyHelper.StringToSha256String(temp);
         }
     }
 }
