@@ -12,43 +12,54 @@ namespace BulletinHub.Tools
 {
     public static class TaskGenerator
     {
-        static bool IsInitialized;
-
-        public static void Initialize()
+        public static void GenerateTasks(Guid userId)
         {
-            if (IsInitialized) return;
-            IsInitialized = true;
-            BCT.ExecuteAsync(d =>
+            BCT.Execute(d =>
             {
-                while(true)
+                if(CheckIfTime(userId))
                 {
-                    GenerateTasks();
-                    Thread.Sleep(30000);
+                    ClearOldTasks(userId);
+                    AddNewBulletinTasks(userId);
+                    SetTime(userId);
                 }
+               
             });
         }
+        static bool CheckIfTime(Guid userId)
+        {
+            var result = false;
+            BCT.Execute(d =>
+            {
+                var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
+                if (!userSettings.NextTaskGeneration.HasValue
+                || userSettings.NextTaskGeneration.Value.Ticks >= DateTime.Now.Ticks)
+                    result = true;
 
-        static readonly int TimeoutMinutes = 30;
-        static void GenerateTasks()
+            });
+            return result;
+        }
+        static void ClearOldTasks(Guid userId)
         {
             BCT.Execute(d =>
             {
-                CreatePublicationTasks();
-                CreateAccessUnloading();
+                var tasks = d.BulletinDb.Tasks.Where(q => q.UserId == userId).ToArray();
+                d.BulletinDb.Tasks.RemoveRange(tasks);
+                d.BulletinDb.SaveChanges();
             });
         }
 
-        static void CreatePublicationTasks()
+        static int timeoutBetweenTaskGroup = 30;
+        static void AddNewBulletinTasks(Guid userId)
         {
             BCT.Execute(d =>
             {
+                var board = d.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
+
                 var bulletinIds = d.BulletinDb.Bulletins.Select(q => q.Id).ToArray();
                 var usedBulletinIds = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).Select(q => q.BulletinId).ToArray();
                 var unusedBulletinsIds = bulletinIds.Where(q => usedBulletinIds.Contains(q)).ToArray();
 
-
                 var targetType = typeof(BulletinInstance).ToString();
-                var tasks = d.BulletinDb.Tasks.Where(q => q.TargetType == targetType).Select(q => q.BulletinId).ToArray();
 
                 var bulletins = d.BulletinDb.BulletinInstances.Where(q => unusedBulletinsIds.Contains(q.Id)).ToArray();
                 if (bulletins.Length == 0) return;
@@ -58,13 +69,21 @@ namespace BulletinHub.Tools
                 for (int i = 0; i < bulletins.Length; i++)
                 {
                     var currentBulletin = bulletins[i];
-                    var access = accesses[i % cycles];
+                    var access = accesses[i % accesses.Length];
+
+                    var instance = new BulletinInstance
+                    {
+                        AccessId = access.Id,
+                        BoardId = board.Id,
+                        BulletinId = currentBulletin.Id,
+                    };
+                    instance.StateEnum = BulletinInstanceState.WaitPublication;
 
                     var task = new Entity.Data.Task
                     {
                         BulletinId = currentBulletin.Id,
                         AccessId = access.Id,
-                        TargetDate = DateTime.Now.Add(TimeSpan.FromMinutes(TimeoutMinutes * (i / cycles))),
+                        TargetDate = DateTime.Now.Add(TimeSpan.FromMinutes(timeoutBetweenTaskGroup * (i / cycles))),
                         TargetType = targetType,
                         Command = (int)Entity.Data.TaskCommand.Creation,
                     };
@@ -74,26 +93,13 @@ namespace BulletinHub.Tools
             });
         }
 
-        static void CreateAccessUnloading()
+        static void SetTime(Guid userId)
         {
             BCT.Execute(d =>
             {
-                var targetType = typeof(Access).ToString();
-                var tasks = d.BulletinDb.Tasks.Where(q => q.TargetType == targetType).Select(q => q.AccessId).ToArray();
-
-                var accesses = d.BulletinDb.Accesses.Where(q => !tasks.Contains(q.Id) && q.State == (int)BulletinInstanceState.Created).ToArray();
-                if (accesses.Length == 0) return;
-
-                for (int i = 0; i < accesses.Length; i++)
-                {
-                    var task = new Entity.Data.Task
-                    {
-                        AccessId = accesses[i].Id,
-                        TargetType = targetType,
-                        Command = (int)Entity.Data.TaskCommand.Checking,
-                    };
-                    task.StateEnum = Entity.Data.TaskState.Created;
-                }
+                var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
+                userSettings.LastTimeGeneration = DateTime.Now;
+                userSettings.NextTaskGeneration = userSettings.LastTimeGeneration.Value.AddHours(userSettings.TaskGenerationPeriod);
 
                 d.BulletinDb.SaveChanges();
             });

@@ -92,6 +92,7 @@
     <Compile Include="Entity\Data\Task.cs" />
     <Compile Include="Entity\Data\User.cs" />
     <Compile Include="Entity\Data\UserGroup.cs" />
+    <Compile Include="Entity\Data\UserSettings.cs" />
     <Compile Include="Helpers\AccessFieldHelper.cs" />
     <Compile Include="Helpers\AccessHelper.cs" />
     <Compile Include="Helpers\BulletinHelper.cs" />

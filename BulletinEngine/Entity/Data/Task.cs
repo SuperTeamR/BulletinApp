@@ -13,6 +13,7 @@ namespace BulletinHub.Entity.Data
     public class Task : EntityObjectALM<Task, TaskState>
     {
         #region Entity properties
+        public Guid UserId { get; set; }
         public Guid? BulletinId { get; set; }
         public Guid? AccessId { get; set; }
         public string TargetType { get; set; }
@@ -37,6 +38,7 @@ namespace BulletinHub.Entity.Data
         #region ALM -- Methods
         protected override Task SetValueDefault(Task arg1, Task arg2)
         {
+            arg1.UserId = arg2.UserId;
             arg1.BulletinId = arg2.BulletinId;
             arg1.AccessId = arg2.AccessId;
             arg1.TargetType = arg2.TargetType;
