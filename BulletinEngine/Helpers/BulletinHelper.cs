@@ -9,11 +9,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FessooFramework.Objects.Data;
+using BulletinHub.Tools;
 
 namespace BulletinHub.Helpers
 {
     public static class BulletinHelper
     {
+        public static void GenerateTask()
+        {
+            BCT.Execute(c =>
+            {
+                TaskGenerator.GenerateTasks(c.UserId);
+            });
+        }
         public static IEnumerable<Bulletin> All()
         {
             var result = Enumerable.Empty<Bulletin>();

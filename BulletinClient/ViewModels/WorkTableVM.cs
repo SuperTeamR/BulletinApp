@@ -3,6 +3,7 @@ using BulletinBridge.Services.ServiceModels;
 using BulletinClient.Core;
 using BulletinClient.Data;
 using BulletinClient.Helpers;
+using BulletinClient.HelperService;
 using BulletinClient.Properties;
 using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
@@ -64,6 +65,7 @@ namespace BulletinClient.ViewModels
         public ICommand CommandCheckConnection { get; set; }
         public ICommand CommandAddImage { get; set; }
         public ICommand CommandSignIn { get; set; }
+        public ICommand CommandGenerate { get; set; }
 
 
         #endregion
@@ -80,14 +82,15 @@ namespace BulletinClient.ViewModels
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
             CommandCheckConnection = new DelegateCommand(CheckConnection);
-            CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
+            CommandGenerate = new DelegateCommand(BulletinHelper.Generate);
             CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
             CommandAddImage = new DelegateCommand(AddImage);
 
+            
 
-          
 
-          
+
+
             CheckConnection();
            
             GetBulletins();

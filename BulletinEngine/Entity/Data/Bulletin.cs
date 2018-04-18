@@ -176,6 +176,9 @@ namespace BulletinEngine.Entity.Data
                     case "Remove":
                         BulletinHelper.Remove(entities);
                         break;
+                    case "Generate":
+                        BulletinHelper.GenerateTask();
+                        break;
                     default:
                         break;
                 }

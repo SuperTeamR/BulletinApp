@@ -12,7 +12,8 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Width="10"
+            <Button Content="Generate" Command="{Binding CommandGenerate}" />
+            <Button Width="10"
                      Height="10"
                      Command="{Binding CommandCheckConnection}" >
                     <Button.Template>

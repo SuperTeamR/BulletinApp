@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace BulletinClient.HelperService
 {
@@ -23,6 +24,15 @@ namespace BulletinClient.HelperService
             set => dataCollection = value;
         }
         private static IEnumerable<BulletinCache> dataCollection { get; set; }
+
+        public static void Generate()
+        {
+            HubServiceHelper.SendQueryCollection<BulletinCache>((a) =>
+            {
+                MessageBox.Show("Generate started!");
+            }, "Generate");
+        }
+
 
         public static void All(Action<IEnumerable<BulletinCache>> callback)
         {
