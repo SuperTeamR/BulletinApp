@@ -32,9 +32,9 @@ namespace BulletinClient.HelperService
             }, "All");
         }
 
-        internal static void AddAvito(Action<IEnumerable<AccessPackage>> callback)
+        internal static void AddAvito(Action<IEnumerable<AccessPackage>> callback, AccessPackage cache)
         {
-            HubServiceHelper.SendQueryCollection<AccessPackage>(callback, "AddAvito");
+            HubServiceHelper.SendQueryCollection<AccessPackage>(callback, "AddAvito", cache);
         }
 
         public static void Save(Action callback, AccessPackage model)

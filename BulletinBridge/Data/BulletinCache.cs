@@ -21,5 +21,8 @@ namespace BulletinBridge.Data
         public string Images { get; set; }
         [DataMember]
         public string Price { get; set; }
+        [DataMember]
+        public string GroupSignature { get; set; }
+
     }
 }

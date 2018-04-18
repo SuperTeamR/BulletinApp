@@ -17,17 +17,16 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <!--<TextBlock Text="Доступы" Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />-->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
-            <Button Content="Refresh" Command="{Binding CommandRefresh}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
-            <Button Content="Clear" Command="{Binding CommandClear}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
-            <Button Content="Add" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
-            <Button Content="Remove" Command="{Binding CommandRemove}" Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <Button Content="Refresh" Command="{Binding CommandRefresh}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+            <Button Content="Clear" Command="{Binding CommandClear}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+            <Button Content="Remove" Command="{Binding CommandRemove}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
         </StackPanel>
         <DataGrid IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedValue="{Binding SelectedObject}" ItemsSource="{Binding MyItems}" Grid.RowSpan="2">
             <DataGrid.Columns>
                 <DataGridTextColumn Width="150" Header="Login" Binding="{Binding Login}"  />
             </DataGrid.Columns>
         </DataGrid>
-        <ContentControl Content="{Binding Card}" Grid.Row="2" Grid.Column="1" />
+        <ContentControl Content="{Binding Card}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" />
     </Grid>
 </UserControl>

@@ -74,6 +74,16 @@ namespace BulletinEngine.Entity.Data
 
         private Bulletin ToEntity(BulletinCache cache, Bulletin entity)
         {
+            entity.Title = cache.Title;
+            entity.Description = cache.Description;
+            entity.Images = cache.Images;
+            entity.Price = cache.Price;
+            var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q=>q.Hash == cache.GroupSignature);
+            if (group != null)
+            {
+                entity.GroupId = group.Id;
+            }
+           
             return entity;
         }
 
@@ -155,7 +165,7 @@ namespace BulletinEngine.Entity.Data
                         result = BulletinHelper.All();
                         break;
                     case "AddAvito":
-                        result = new[] { BulletinHelper.AddAvito() };
+                        result = new[] { BulletinHelper.AddAvito(entities.FirstOrDefault()) };
                         break;
                     case "Remove":
                         BulletinHelper.Remove(entities);
