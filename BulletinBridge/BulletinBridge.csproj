@@ -90,12 +90,6 @@
     <Compile Include="Services\ServiceModels\Request_AddImage.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BulletinTools\BulletinTools.csproj">
-      <Project>{CB84E637-97C1-425B-B543-50F9FA2F1E11}</Project>
-      <Name>BulletinTools</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
