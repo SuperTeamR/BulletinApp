@@ -56,16 +56,6 @@ namespace HubService
             });
             return result;
         }
-
-        //protected override IEnumerable<ServiceRequestConfigBase> Configurations => new ServiceRequestConfigBase[]
-        //{
-        //    ServiceRequestConfig<RequestGetBulletinWorkModel, ResponseGetBulletinWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
-        //    ServiceRequestConfig<RequestGetProfileWorkModel, ResponseGetProfileWorkModel>.New((a) => GetWorkApiHelper.GetWork(a)),
-        //    ServiceRequestConfig<RequestAddBulletinListWorkModel, ResponseAddBulletinListWorkModel>.New(a => AddWorkResultApiHelper.AddWorkResult(a)),
-        //    ServiceRequestConfig<RequestAddBulletinsModel, ResponseAddBulletinsModel>.New((a) => ClientApiHelper.AddBulletins(a)),
-        //    ServiceRequestConfig<RequestAddAccessModel, ResponseAddAccessModel>.New((a) => ClientApiHelper.AddAccess(a)),
-        //};
-
         public override IEnumerable<DataServiceConfigurationBase> Convertors => new DataServiceConfigurationBase[]
         {
             new DataServiceConfiguration<Access, AccessPackage>(),

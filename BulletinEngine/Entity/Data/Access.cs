@@ -52,17 +52,18 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region ALM -- Definition
-        protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => new[]
-        {
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
-            new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
-        };
+        protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => Enumerable.Empty<EntityObjectALMConfiguration<Access, AccessState>>();
+            //new[]
+        //{
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
+            //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
+        //};
 
         protected override int GetStateValue(AccessState state)
         {

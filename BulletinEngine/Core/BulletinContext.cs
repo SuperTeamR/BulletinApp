@@ -38,12 +38,13 @@ namespace BulletinEngine.Core
             }
             else
             {
+                var r = ConfigurationManager.AppSettings["BulletinDbName"];
                 _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"],
                ConfigurationManager.AppSettings["BulletinDbIp"],
                ConfigurationManager.AppSettings["BulletinDbLogin"],
                ConfigurationManager.AppSettings["BulletinDbPassword"]);
 
-                _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["MainDbName"],
+                _Store.Add<MainDB>(ConfigurationManager.AppSettings["MainDbName"],
                ConfigurationManager.AppSettings["MainDbIp"],
                ConfigurationManager.AppSettings["MainDbLogin"],
                ConfigurationManager.AppSettings["MainDbPassword"]);
