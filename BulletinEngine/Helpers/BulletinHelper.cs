@@ -23,18 +23,15 @@ namespace BulletinHub.Helpers
             });
             return result;
         }
-        internal static Bulletin AddAvito()
+        internal static Bulletin AddAvito(Bulletin model)
         {
-            var result = new Bulletin();
             BCT.Execute(c =>
             {
-                var board = c.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
-                result.UserId = c.UserId;
-                result.Title = "Empty";
-                result.StateEnum = BulletinEngine.Entity.Data.BulletinState.Created;
+                model.UserId = c.UserId;
+                model.StateEnum = BulletinEngine.Entity.Data.BulletinState.Created;
                 c.SaveChanges();
             });
-            return result;
+            return model;
         }
 
         internal static void Remove(IEnumerable<Bulletin> entities)

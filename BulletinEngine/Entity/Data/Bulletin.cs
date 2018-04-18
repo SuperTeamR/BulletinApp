@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
+using BulletinEngine.Helpers;
 using BulletinHub.Entity.Converters;
 using BulletinHub.Helpers;
 using BulletinHub.Tools;
@@ -74,6 +75,16 @@ namespace BulletinEngine.Entity.Data
 
         private Bulletin ToEntity(BulletinCache cache, Bulletin entity)
         {
+            entity.Title = cache.Title;
+            entity.Description = cache.Description;
+            entity.Images = cache.Images;
+            entity.Price = cache.Price;
+            var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q=>q.Hash == cache.GroupSignature);
+            if (group != null)
+            {
+                entity.GroupId = group.Id;
+            }
+           
             return entity;
         }
 
@@ -85,6 +96,11 @@ namespace BulletinEngine.Entity.Data
             cache.Description = entity.Description;
             cache.Images = entity.Images;
             cache.Price = entity.Price;
+            var group = GroupHelper.GetGroupSignature2(entity.Id);
+            if (group != null)
+            {
+                cache.CurrentGroup = group.ToString();
+            }
             return cache;
         }
         #endregion
@@ -155,7 +171,7 @@ namespace BulletinEngine.Entity.Data
                         result = BulletinHelper.All();
                         break;
                     case "AddAvito":
-                        result = new[] { BulletinHelper.AddAvito() };
+                        result = new[] { BulletinHelper.AddAvito(entities.FirstOrDefault()) };
                         break;
                     case "Remove":
                         BulletinHelper.Remove(entities);

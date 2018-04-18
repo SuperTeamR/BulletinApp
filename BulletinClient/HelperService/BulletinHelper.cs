@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinClient.Core;
+using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +33,9 @@ namespace BulletinClient.HelperService
             }, "All");
         }
 
-        internal static void AddAvito(Action<IEnumerable<BulletinCache>> callback)
+        internal static void AddAvito(Action<IEnumerable<BulletinCache>> callback, BulletinCache cache)
         {
-            HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "AddAvito");
+            HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "AddAvito", cache);
         }
 
         public static void Save(Action callback, BulletinCache model)
@@ -51,6 +52,21 @@ namespace BulletinClient.HelperService
             {
                 data.HubClient.SendQueryObject<BulletinCache>((a) => callback?.Invoke(), "Remove", selectedObject);
             });
+        }
+
+        /// <summary>
+        /// Конвертирую строку в Hash строку шифрованную с помощью 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string StringToSha256String(params string[] str)
+        {
+            var temp = string.Empty;
+            foreach (var s in str)
+            {
+                temp += s ?? string.Empty;
+            }
+            return CryptographyHelper.StringToSha256String(temp);
         }
     }
 }

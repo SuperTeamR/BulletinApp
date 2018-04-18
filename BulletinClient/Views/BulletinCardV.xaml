@@ -22,21 +22,55 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Bulletin card" Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="2" >
+            <Button Content="Add" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
+
+        </StackPanel>
+
+        <TextBlock Text="Bulletin card" Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
 
 
-        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Категория"  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsEnabled="False" Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.CurrentGroup, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+        <StackPanel  Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
 
-        <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+            <TextBox IsEnabled="False" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory1}" BorderThickness="0,0,0,1"/>
 
-        <TextBlock   Text="Цена"  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+            <TextBox  IsEnabled="False"  Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory2}" BorderThickness="0,0,0,1"/>
+
+            <ComboBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" IsEditable="True" Text="{Binding CardCategory3}">
+                <ComboBoxItem IsSelected="True">iPhone</ComboBoxItem>
+                <ComboBoxItem>Samsung</ComboBoxItem>
+
+            </ComboBox>
+
+            <!--<TextBox Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory3}" BorderThickness="0,0,0,1"/>-->
+
+            <!--<ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14" Margin="5" SelectedValue="{Binding CardCategory1}">
+                                        <ComboBoxItem Content="Хобби и отдых"  Background="White" FontSize="14"  />
+                                    </ComboBox>
+                                    <ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14" Margin="5" SelectedValue="{Binding CardCategory2}">
+                                        <ComboBoxItem Content="Спорт и отдых"  Background="White" FontSize="14" />
+                                    </ComboBox>
+                                    <ComboBox SelectedIndex="0" BorderThickness="0,0,0,1" Background="White" FontSize="14"  Margin="5" SelectedValue="{Binding CardCategory3}">
+                                        <ComboBoxItem Content="Другое"  Background="White" FontSize="14" />
+                                    </ComboBox>-->
+        </StackPanel>
+
+        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+                 TextChanged="TextBox_TextChanged"/>
+
+        <TextBlock  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+
+        <TextBlock  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+
+        <TextBlock   Text="Цена"  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
     </Grid>
 </UserControl>

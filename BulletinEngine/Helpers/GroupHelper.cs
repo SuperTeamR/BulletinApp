@@ -28,8 +28,11 @@ namespace BulletinEngine.Helpers
                 var dbBulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
                 var groupId = dbBulletin.GroupId;
                 var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Id == groupId);
-                var groupHash = dbGroup.Hash;
-                result = GetGroupSignature(groupHash);
+                if (dbGroup != null)
+                {
+                    var groupHash = dbGroup.Hash;
+                    result = GetGroupSignature(groupHash);
+                }
             });
             return result;
         }

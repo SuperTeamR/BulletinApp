@@ -10,12 +10,12 @@ namespace BulletinClient.HelperService
 {
     public static class HubServiceHelper
     {
-        public static void SendQueryCollection<T>(Action<IEnumerable<T>> callback, string code)
+        public static void SendQueryCollection<T>(Action<IEnumerable<T>> callback, string code, T obj = null)
             where T : CacheObject
         {
             DCT.Execute(c =>
             {
-                c.HubClient.SendQueryCollection<T>(callback, code, c._SessionInfo.SessionUID, c._SessionInfo.HashUID);
+                c.HubClient.SendQueryCollection<T>(callback, code, c._SessionInfo.SessionUID, c._SessionInfo.HashUID, obj == null ? null : new[] { obj });
             });
         }
     }

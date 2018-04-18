@@ -20,19 +20,17 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-        internal static Access AddAvito()
+        internal static Access AddAvito(Access access)
         {
-            var result = new Access();
             BCT.Execute(c =>
             {
                 var board = c.BulletinDb.Boards.FirstOrDefault(q=>q.Name == "Avito");
-                result.Login = "Новый логин";
-                result.BoardId = board.Id;
-                result.UserId = c.UserId;
-                result.StateEnum = Entity.Data.AccessState.Created;
+                access.BoardId = board.Id;
+                access.UserId = c.UserId;
+                access.StateEnum = Entity.Data.AccessState.Created;
                 c.SaveChanges();
             });
-            return result;
+            return access;
         }
 
         internal static void Remove(IEnumerable<Access> entities)

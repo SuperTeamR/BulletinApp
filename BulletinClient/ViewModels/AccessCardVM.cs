@@ -1,5 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinClient.HelperService;
+using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.Controllers;
 using System;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace BulletinClient.ViewModels
 {
@@ -15,13 +17,21 @@ namespace BulletinClient.ViewModels
         #region Propety
         public AccessPackage Item
         {
-            get => item.Value;
+            get => item.Value == null ? CreateItem : item.Value;
             set => item.Value = value;
         }
-
+        private AccessPackage CreateItem = new AccessPackage();
         public ObjectController<AccessPackage> item = new ObjectController<AccessPackage>(null);
-        #endregion
+        public ICommand CommandAdd { get; private set; }
 
+        #endregion
+        #region Constructor
+        public AccessCardVM()
+        {
+            CommandAdd = new DelegateCommand(AddAvito);
+        }
+        #endregion
+        #region Methods
         public void Update(AccessPackage selectedObject)
         {
             Item = selectedObject;
@@ -38,15 +48,25 @@ namespace BulletinClient.ViewModels
                 AccessHelper.Save(() => { }, Item);
             RaisePropertyChanged(() => Item);
         }
-
         private bool Check()
         {
-            if (Item == null)
+            if (item.Value == null)
             {
                 //MessageBox.Show("Необходимо выбрать объект в списке источников");
                 return false;
             }
             return true;
         }
+        private void AddAvito()
+        {
+            AccessHelper.AddAvito((a) =>
+            {
+                item.Value = a.FirstOrDefault();
+                CreateItem = new AccessPackage();
+                RaisePropertyChanged(() => Item);
+            }, Item);
+        }
+
+        #endregion
     }
 }

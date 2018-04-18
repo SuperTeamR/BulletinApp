@@ -31,7 +31,6 @@ namespace BulletinClient.ViewModels
         #endregion
         #region Property
         public ICommand CommandClear { get; private set; }
-        public ICommand CommandAdd { get; private set; }
         public ICommand CommandRefresh { get; private set; }
         public ICommand CommandRemove { get; private set; }
         public AccessPackage SelectedObject
@@ -48,7 +47,6 @@ namespace BulletinClient.ViewModels
         public AccessCollectionVM()
         {
             CommandClear = new DelegateCommand(Clear);
-            CommandAdd = new DelegateCommand(AddAvito);
             CommandRefresh = new DelegateCommand(Refresh);
             CommandRemove = new DelegateCommand(Remove);
             Refresh();
@@ -73,12 +71,6 @@ namespace BulletinClient.ViewModels
                 });
             });
         }
-
-        private void AddAvito()
-        {
-            AccessHelper.AddAvito((a)=> Refresh());
-        }
-
         private void Clear()
         {
             SelectedObject = null;

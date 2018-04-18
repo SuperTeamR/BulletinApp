@@ -183,7 +183,7 @@ namespace BulletinEngine.Entity.Data
                         result = AccessHelper.All();
                         break;
                     case "AddAvito":
-                        result = new[] { AccessHelper.AddAvito() };
+                        result = new[] { AccessHelper.AddAvito(entities.FirstOrDefault()) };
                         break;
                     case "Remove":
                         AccessHelper.Remove(entities);                        
