@@ -44,7 +44,7 @@ namespace BulletinHub.Tools
             {
                 var tasks = d.BulletinDb.Tasks.Where(q => q.UserId == userId).ToArray();
                 d.BulletinDb.Tasks.RemoveRange(tasks);
-
+                d.BulletinDb.SaveChanges();
             });
         }
 
@@ -101,6 +101,7 @@ namespace BulletinHub.Tools
                 userSettings.LastTimeGeneration = DateTime.Now;
                 userSettings.NextTaskGeneration = userSettings.LastTimeGeneration.Value.AddHours(userSettings.TaskGenerationPeriod);
 
+                d.BulletinDb.SaveChanges();
             });
         }
     }
