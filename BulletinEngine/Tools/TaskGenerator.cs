@@ -58,7 +58,7 @@ namespace BulletinHub.Tools
 
                 var bulletinIds = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).Select(q => q.Id).ToArray();
                 var usedBulletinIds = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).Select(q => q.BulletinId).ToArray();
-                var unusedBulletinsIds = bulletinIds.Where(q => usedBulletinIds.Contains(q)).ToArray();
+                var unusedBulletinsIds = bulletinIds.Where(q => !usedBulletinIds.Contains(q)).ToArray();
 
                 var targetType = typeof(BulletinInstance).ToString();
 
