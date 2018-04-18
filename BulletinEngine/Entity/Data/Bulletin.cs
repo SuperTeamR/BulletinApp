@@ -116,7 +116,10 @@ namespace BulletinEngine.Entity.Data
                     .Where(q => workStates.Contains(q.State)).Take(1).ToArray();
                 }
                 else
-                    result = base._CollectionObjectLoad();
+                {
+                    result = c.Db1.Bulletins.Where(q => q.UserId == c.UserId).ToArray();
+                }
+                   
             });
             return result;
         }

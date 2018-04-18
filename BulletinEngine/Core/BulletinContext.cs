@@ -17,6 +17,7 @@ namespace BulletinEngine.Core
                 var result = Guid.Empty;
                 BCT.Execute(d =>
                 {
+                    var users = d.MainDb.UserAccesses.ToArray();
                     var user = d.MainDb.UserAccesses.FirstOrDefault(q => q.LoginHash == d._SessionInfo.HashUID);
                     if (user != null)
                         result = user.Id;

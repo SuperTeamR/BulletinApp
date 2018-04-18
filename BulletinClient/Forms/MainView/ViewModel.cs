@@ -94,9 +94,18 @@ namespace BulletinClient.Forms.MainView
             CommandAddBulletins = new DelegateCommand(AddBulletinsCollections);
             CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
             CommandAddImage = new DelegateCommand(AddImage);
-            CommandSignIn = new DelegateCommand(SignIn);
 
-            SignIn("penzin", "megaprogger");
+
+            if(!string.IsNullOrEmpty(Settings.Default.UserLogin)
+                && !string.IsNullOrEmpty(Settings.Default.UserPassword))
+            {
+                UserLogin = Settings.Default.UserLogin;
+                UserPassword = Settings.Default.UserPassword;
+
+                SignIn(SignInCallback);
+            }
+
+          
             CheckConnection();
            
             GetBulletins();
@@ -106,14 +115,14 @@ namespace BulletinClient.Forms.MainView
         #endregion
         #region Methods
 
-        void SignIn()
+        void SignIn(Action<bool> callback)
         {
             DCT.Execute(d =>
             {
-                SignIn(UserLogin, UserPassword);
+                SignIn(UserLogin, UserPassword, callback);
             });
         }
-        void SignIn(string email, string password)
+        void SignIn(string email, string password, Action<bool> callback)
         {
             DCT.Execute(c =>
             {
@@ -122,7 +131,7 @@ namespace BulletinClient.Forms.MainView
                     var ping = main.Ping();
                     Console.WriteLine($"Ping = {ping}");
                     //main.Registration(RegCallback, email, "12345", password, "arthur", "borat", "penzin");
-                    main.SignIn(SignInCallback, email, password);
+                    main.SignIn(callback, email, password);
                 }
                    
             });
@@ -150,6 +159,10 @@ namespace BulletinClient.Forms.MainView
              if (result)
                 {
                     Console.WriteLine($"Signin succesfull");
+
+                    Settings.Default.UserLogin = UserLogin;
+                    Settings.Default.UserPassword = UserPassword;
+
                     Settings.Default.HashUID = c._SessionInfo.HashUID;
                     Settings.Default.SessionUID = c._SessionInfo.SessionUID;
                     Settings.Default.Save();
@@ -163,6 +176,8 @@ namespace BulletinClient.Forms.MainView
                 Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
             });
         }
+
+        
 
         private void Logout()
         {
@@ -364,15 +379,42 @@ namespace BulletinClient.Forms.MainView
         {
             DCT.Execute(d =>
             {
-                var access = new AccessPackage
+                SignIn(SignInCallback2);
+
+            });
+        }
+
+        void SignInCallback2(bool result)
+        {
+            DCT.Execute(c =>
+            {
+                if (result)
                 {
-                    Login = Login,
-                    Password = Password,
-                };
-                using (var client = new ServiceClient())
-                {
-                    client.Save<AccessPackage>((a)=>BoardAuthCallback(a), access);
+                    Console.WriteLine($"Signin succesfull");
+
+                    Settings.Default.UserLogin = UserLogin;
+                    Settings.Default.UserPassword = UserPassword;
+
+                    Settings.Default.HashUID = c._SessionInfo.HashUID;
+                    Settings.Default.SessionUID = c._SessionInfo.SessionUID;
+                    Settings.Default.Save();
+
+                    var access = new AccessPackage
+                    {
+                        Login = Login,
+                        Password = Password,
+                    };
+                    using (var client = new ServiceClient())
+                    {
+                        client.Save<AccessPackage>((a) => BoardAuthCallback(a), access);
+                    }
+
                 }
+                else
+                    Console.WriteLine($"Signin not sucessfull");
+
+                Console.WriteLine($"SessionUID Request = {c._SessionInfo.SessionUID}");
+                Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
             });
         }
 

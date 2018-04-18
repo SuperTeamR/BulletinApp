@@ -14,6 +14,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -26,12 +28,21 @@
             <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Авторизация"  FontSize="24"/>
 
             <TextBlock Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Логин"  FontSize="14" MinWidth="100"/>
-            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
+            <TextBox Margin="5" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding UserLogin}" BorderThickness="0,0,0,1"/>
 
             <TextBlock Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
-            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
+            <TextBox  Margin="5" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding UserPassword}" BorderThickness="0,0,0,1" />
 
-            <Button Margin="5" Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Войти" Command="{Binding CommandBoardAuth}" BorderThickness="0" FontSize="14" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
+
+            <TextBlock Margin="5" Grid.Row="4" Grid.Column="1"  Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center"  Text="Основная учетка"  FontSize="20" MinWidth="100"/>
+            
+            <TextBlock Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Email"  FontSize="14" MinWidth="100"/>
+            <TextBox Margin="5" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Login}" BorderThickness="0,0,0,1"/>
+
+            <TextBlock Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left"  Text="Пароль"  FontSize="14" MinWidth="100"/>
+            <TextBox  Margin="5" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="150" Text="{Binding Password}" BorderThickness="0,0,0,1" />
+
+            <Button Margin="5" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Войти" Command="{Binding CommandBoardAuth}" BorderThickness="0" FontSize="14" FontWeight="Medium" Background="White" Foreground="DarkBlue" />
         </Grid>
 
         <Grid HorizontalAlignment="Stretch" Visibility="{Binding Auth, Converter={StaticResource BoolToVis}}">
