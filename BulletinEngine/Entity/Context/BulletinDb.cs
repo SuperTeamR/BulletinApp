@@ -1,4 +1,5 @@
 ﻿using BulletinEngine.Entity.Data;
+using BulletinHub.Entity.Data;
 using FessooFramework.Tools.Helpers;
 using System.Configuration;
 using System.Data.Entity;
@@ -22,6 +23,7 @@ namespace BulletinEngine.Entity.Context
         public DbSet<GroupedCategory> GroupedCategories { get; set; }
         public DbSet<BulletinField> BulletinFields { get; set; }
         public DbSet<BulletinHub.Entity.Data.Task> Tasks { get; set; }
+        public DbSet<UserSettings> UserSettings { get; set; }
 
         public BulletinDb()
         {
@@ -41,10 +43,11 @@ namespace BulletinEngine.Entity.Context
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<BulletinDb>());
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<BulletinDb, BulletinHub.Migrations.Configuration>());
         }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<BulletinHub.Entity.Data.Task>().Property(x => x.TargetDate).HasColumnType("datetime2");
+            modelBuilder.Entity<UserSettings>().Property(x => x.LastTimeGeneration).HasColumnType("datetime2");
+            modelBuilder.Entity<UserSettings>().Property(x => x.NextTaskGeneration).HasColumnType("datetime2");
         }
 
         protected override void Dispose(bool disposing)
