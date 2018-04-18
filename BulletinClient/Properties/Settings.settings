@@ -12,7 +12,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="DataServiceAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://176.111.73.51/BulletinHub/DataService.svc</Value>
+      <Value Profile="(Default)">http://localhost:59888/DataService.svc</Value>
     </Setting>
     <Setting Name="MainServiceAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://176.111.73.51/MainService/MainService.svc</Value>
@@ -25,6 +25,12 @@
     </Setting>
     <Setting Name="ImageServiceAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)">http://176.111.73.51/ImageHub/ImageService.svc</Value>
+    </Setting>
+    <Setting Name="UserLogin" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="UserPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>

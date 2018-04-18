@@ -61,7 +61,7 @@ namespace BulletinClient.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://176.111.73.51/BulletinHub/DataService.svc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:59888/DataService.svc")]
         public string DataServiceAddress {
             get {
                 return ((string)(this["DataServiceAddress"]));
@@ -116,6 +116,30 @@ namespace BulletinClient.Properties {
             }
             set {
                 this["ImageServiceAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserLogin {
+            get {
+                return ((string)(this["UserLogin"]));
+            }
+            set {
+                this["UserLogin"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string UserPassword {
+            get {
+                return ((string)(this["UserPassword"]));
+            }
+            set {
+                this["UserPassword"] = value;
             }
         }
     }

@@ -106,7 +106,10 @@ namespace BulletinEngine.Entity.Data
                     result = c.Db1.Accesses
                     .Where(q => workStates.Contains(q.State)).ToArray();
                 else
-                    result = base._CollectionObjectLoad();
+                {
+                    result = c.Db1.Accesses.Where(q => q.UserId == c.UserId).ToArray();
+                }
+                    
             });
             return result;
         }
@@ -120,7 +123,7 @@ namespace BulletinEngine.Entity.Data
                 if (dbAccess == null)
                 {
                     access.BoardId = d.Db1.Boards.FirstOrDefault().Id;
-                    access.UserId = d.MainDb.UserAccesses.FirstOrDefault().Id;
+                    access.UserId = d.UserId;
                     access.StateEnum = AccessState.Unchecked;
                     d.SaveChanges();
                 }
