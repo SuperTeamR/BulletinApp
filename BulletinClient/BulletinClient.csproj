@@ -97,6 +97,7 @@
     <Compile Include="HelperService\BulletinHelper.cs" />
     <Compile Include="HelperService\HubServiceHelper.cs" />
     <Compile Include="HelperService\MainServiceHelper.cs" />
+    <Compile Include="HelperService\SettingsHelper.cs" />
     <Compile Include="Helpers\ClipboardHelper.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\CustomDataGrid.cs" />

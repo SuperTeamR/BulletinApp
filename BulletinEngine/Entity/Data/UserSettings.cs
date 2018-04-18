@@ -1,4 +1,6 @@
-﻿using FessooFramework.Objects.Data;
+﻿using BulletinBridge.Data;
+using BulletinHub.Entity.Converters;
+using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +50,11 @@ namespace BulletinHub.Entity.Data
         #endregion
 
         #region ALM -- Creators
-        protected override IEnumerable<EntityObjectALMCreator<UserSettings>> CreatorsService => new EntityObjectALMCreator<UserSettings>[] { };
+
+        protected override IEnumerable<EntityObjectALMCreator<UserSettings>> CreatorsService => new[]
+        {
+            EntityObjectALMCreator<UserSettings>.New(UserSettingsConverter.Convert, UserSettingsConverter.Convert, new Version(1, 0, 0, 0))
+        };
         #endregion
 
         #region DataService -- Methods

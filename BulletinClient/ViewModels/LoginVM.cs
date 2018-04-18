@@ -16,11 +16,14 @@ namespace BulletinClient.ViewModels
 {
     public class LoginVM : VM
     {
+        public string UserLogin { get; set; }
+        public string UserPassword { get; set; }
+
         public ICommand CommandLogin { get; set; }
         public ICommand CommandRegistration { get; set; }
         public LoginVM()
         {
-            CommandLogin = new DelegateCommand(SignIn);
+            CommandLogin = new DelegateCommand(() => SignIn(UserLogin, UserPassword));
             CommandRegistration = new DelegateCommand(Registration);
             if (!string.IsNullOrEmpty(DataHelper.UserLogin.Value)
               && !string.IsNullOrEmpty(DataHelper.UserPassword.Value))
@@ -31,9 +34,18 @@ namespace BulletinClient.ViewModels
 
         private void Registration()
         {
+            DataHelper.UserLogin.Value = UserLogin;
+            DataHelper.UserPassword.Value = UserPassword;
             MainServiceHelper.Registration(DataHelper.UserLogin.Value, DataHelper.UserPassword.Value, "", "", "", SignInCallback);
         }
 
+
+        void SignIn(string userLogin, string userPassword)
+        {
+            DataHelper.UserLogin.Value = UserLogin;
+            DataHelper.UserPassword.Value = UserPassword;
+            SignIn();
+        }
         void SignIn()
         {
             MainServiceHelper.SignIn(DataHelper.UserLogin.Value, DataHelper.UserPassword.Value, SignInCallback);
@@ -46,6 +58,12 @@ namespace BulletinClient.ViewModels
                 {
                     Console.WriteLine($"Signin succesfull");
 
+                    if (Settings.Default.UserLogin != DataHelper.UserLogin.Value
+                             && Settings.Default.UserLogin != DataHelper.UserPassword.Value)
+                    {
+                        SettingsHelper.Save();
+                    }
+
                     Settings.Default.UserLogin = DataHelper.UserLogin.Value;
                     Settings.Default.UserPassword = DataHelper.UserPassword.Value;
 
@@ -53,6 +71,7 @@ namespace BulletinClient.ViewModels
                     Settings.Default.SessionUID = c._SessionInfo.SessionUID;
                     Settings.Default.Save();
                     DataHelper.IsAuth.Value = true;
+
                 }
                 else
                     MessageBox.Show($"Signin not sucessfull");

@@ -78,6 +78,7 @@
     <Compile Include="Data\OptionTag.cs" />
     <Compile Include="Data\TabState.cs" />
     <Compile Include="Data\TaskCache.cs" />
+    <Compile Include="Data\UserSettingsCache.cs" />
     <Compile Include="Data\XlsPackage.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardApi_AddBulletins.cs" />
     <Compile Include="Messages\BoardApi\Obsolete\BoardAPI_EditBulletins.cs" />
