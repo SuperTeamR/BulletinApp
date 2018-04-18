@@ -43,7 +43,7 @@ namespace BulletinHub.Entity.Data
             oldObj.TaskGenerationPeriod = newObj.TaskGenerationPeriod;
             oldObj.LastTimeGeneration = newObj.LastTimeGeneration;
             oldObj.NextTaskGeneration = newObj.NextTaskGeneration;
-
+            oldObj.UserId = newObj.UserId;
             return oldObj;
         }
 
