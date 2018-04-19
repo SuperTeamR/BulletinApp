@@ -70,7 +70,8 @@ namespace BulletinHub.Entity.Data
                         d.SaveChanges();
                         break;
                     case "Load":
-                        result = d.BulletinDb.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).ToArray();
+                        result = new[] {
+                            d.BulletinDb.Tasks.Where(q => q.State == (int)TaskState.Created && (q.TargetDate == null || q.TargetDate.Value < DateTime.Now)).FirstOrDefault() };
                         break;
                 }
             });
