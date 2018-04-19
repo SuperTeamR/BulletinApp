@@ -66,7 +66,6 @@ namespace BulletinHub.Tools
                if (bulletins.Length == 0) return;
 
                 var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId).ToArray();
-                var cycles = bulletins.Length >= accesses.Length ? bulletins.Length / accesses.Length : 1;
                 for (int i = 0; i < bulletins.Length; i++)
                 {
                     var currentBulletin = bulletins[i];
@@ -85,7 +84,7 @@ namespace BulletinHub.Tools
                         BulletinId = instance.Id,
                         AccessId = access.Id,
                         UserId = userId,
-                        TargetDate = DateTime.Now.Add(TimeSpan.FromMinutes(timeoutBetweenTaskGroup * (i / cycles))),
+                        TargetDate = DateTime.Now.Add(TimeSpan.FromMinutes(timeoutBetweenTaskGroup * (i / accesses.Length))),
                         TargetType = targetType,
                         Command = (int)Entity.Data.TaskCommand.Creation,
                     };

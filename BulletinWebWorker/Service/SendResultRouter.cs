@@ -18,7 +18,6 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    //client.Save((a) => { }, bulletins);
                     client.SendQueryCollection((a) => { }, "Save", objects: bulletins, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
                 }
             });
@@ -33,7 +32,32 @@ namespace BulletinWebWorker.Service
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
                     client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
-                    //client.Save((a) => { }, tasks);
+                }
+            });
+        }
+
+        public static void AccessBulletinListWorkDone(IEnumerable<TaskCache> tasks)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new EngineService())
+                {
+                    var r = client.Ping();
+                    Console.WriteLine($"Ping = {r}");
+                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                }
+            });
+        }
+
+        public static void AccessBulletinDetailsWorkDone(IEnumerable<TaskCache> tasks)
+        {
+            DCT.ExecuteAsync(d2 =>
+            {
+                using (var client = new EngineService())
+                {
+                    var r = client.Ping();
+                    Console.WriteLine($"Ping = {r}");
+                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
                 }
             });
         }

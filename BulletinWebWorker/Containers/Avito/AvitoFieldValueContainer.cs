@@ -18,7 +18,6 @@ namespace BulletinWebWorker.Containers.Avito
     {
         public override Guid Uid => BoardIds.Avito;
 
-
         public override string GetFieldValue(Dictionary<string, FieldPackage> fields, string name)
         {
             var result = string.Empty;
@@ -69,8 +68,6 @@ namespace BulletinWebWorker.Containers.Avito
             });
             return result;
         }
-
-
         public override void SetFieldValue(Dictionary<string, FieldPackage> fields, string name, string value)
         {
             DCT.Execute(d =>
@@ -103,7 +100,6 @@ namespace BulletinWebWorker.Containers.Avito
                     return;
                 }
 
-
                 if(!string.IsNullOrEmpty(name) && name.Contains("Фотографии"))
                 {
                     var values = value.Split(new[] { "\r\n" }, StringSplitOptions.None);
@@ -112,7 +108,7 @@ namespace BulletinWebWorker.Containers.Avito
                         form = WebWorker.WebDocument.GetElementsByTagName(fieldPackage.Tag).Cast<HtmlElement>()
                                 .FirstOrDefault(q => q.GetAttribute(attribute) == fieldPackage.HtmlId);
                         SetImage(form, v);
-                        Thread.Sleep(10000);
+                        Thread.Sleep(20000);
                     }
                 }
                 else
@@ -151,7 +147,6 @@ namespace BulletinWebWorker.Containers.Avito
                 form.SetAttribute("value", value);
             });
         }
-
         void SetSelect(HtmlElement form, string value, FieldPackage package)
         {
             DCT.Execute(data =>
@@ -176,6 +171,5 @@ namespace BulletinWebWorker.Containers.Avito
                 }
             });
         }
-
     }
 }

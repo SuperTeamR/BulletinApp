@@ -91,7 +91,7 @@ namespace BulletinWebWorker.Containers.Avito
                     Thread.Sleep(2000);
                 }
                 UiHelper.UpdateActionState("Ожидание авторизации...");
-                Thread.Sleep(10000);
+                Thread.Sleep(15000);
                 result = true;
             });
             return result;

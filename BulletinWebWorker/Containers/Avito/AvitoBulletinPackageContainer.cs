@@ -29,6 +29,7 @@ namespace BulletinWebWorker.Containers.Avito
         public override void AddBulletins2(IEnumerable<TaskCache> tasks)
         {
             UiHelper.UpdateWorkState("Добавление списка буллетинов");
+
             DCT.Execute(d =>
             {
                 Tools.WebWorker.Execute(() =>
@@ -61,7 +62,7 @@ namespace BulletinWebWorker.Containers.Avito
                             Thread.Sleep(1000);
 
                             Publicate(bulletin);
-                            //
+
                             Thread.Sleep(10000);
 
                             GetUrl(bulletin);
@@ -96,12 +97,12 @@ namespace BulletinWebWorker.Containers.Avito
                         }
                         UiHelper.UpdateActionState("Отправка коллбека");
 
-
                         SendResultRouter.TaskWorkDone(tasks);
                     });
                 });
             });
         }
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Добавить буллетины </summary>
         ///
@@ -174,7 +175,6 @@ namespace BulletinWebWorker.Containers.Avito
                             Thread.Sleep(1000);
                         }
                         UiHelper.UpdateActionState("Отправка коллбека");
-
 
                         SendResultRouter.BulletinWorkResult(packages);
                     });
@@ -272,7 +272,6 @@ namespace BulletinWebWorker.Containers.Avito
                 });
             });
         }
-
 
         string ChangeField(BulletinPackage bulletin, string fieldKey, string newValue)
         {
@@ -426,8 +425,6 @@ namespace BulletinWebWorker.Containers.Avito
                 });
             });
         }
-
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает коллекцию буллетинов для заданного доступа </summary>
         ///
@@ -467,7 +464,6 @@ namespace BulletinWebWorker.Containers.Avito
 
             });
         }
-
         IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
         {
             var result = Enumerable.Empty<BulletinPackage>();
@@ -1082,7 +1078,6 @@ namespace BulletinWebWorker.Containers.Avito
             return result;
         }
 
-
         #region Tests
 
         public void TestImage()
@@ -1125,16 +1120,88 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
+        #endregion
+
         public override void GetBulletinList2(IEnumerable<TaskCache> tasks)
         {
-            throw new NotImplementedException();
+            UiHelper.UpdateWorkState("Выгрузка списка буллетинов");
+
+            var result = Enumerable.Empty<BulletinPackage>();
+            DCT.Execute(d =>
+            {
+                var bulletins = new List<BulletinPackage>();
+
+                Tools.WebWorker.Execute(() =>
+                {
+                    foreach (var task in tasks)
+                    {
+                        var access = task.AccessPackage;
+                        UiHelper.UpdateObjectState($"Access {access.Login}");
+                        var r = GetBulletinList(access);
+                        bulletins.AddRange(r);
+                    }
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    UiHelper.UpdateActionState("Отправка коллбека");
+                    SendResultRouter.AccessBulletinListWorkDone(tasks);
+                });
+
+            });
         }
 
         public override void GetBulletinDetails2(IEnumerable<TaskCache> tasks)
         {
-            throw new NotImplementedException();
+            UiHelper.UpdateWorkState("Выгрузка полей для списка буллетинов");
+
+            DCT.Execute(d =>
+            {
+                Tools.WebWorker.Execute(() =>
+                {
+                    var fieldValueContainer = FieldValueContainerList.Get(Uid);
+                    var accessContainer = AccessContainerList.Get(Uid);
+
+                    var packages = tasks.Select(q => q.BulletinPackage);
+
+                    var accessCollection = packages.Cast<BulletinPackage>().Where(q => q.Access != null).GroupBy(q => q.Access.Login).Select(q => new { Access = q.Key, Collection = q.ToList() }).ToList();
+                    foreach (var a in accessCollection)
+                    {
+                        UiHelper.UpdateObjectState($"Access {a.Access}");
+
+                        var bulletins = a.Collection;
+                        foreach (var bulletin in bulletins)
+                        {
+                            UiHelper.UpdateActionState("Попытка авторизоваться");
+                            Thread.Sleep(2000);
+
+                            if (accessContainer.TryAuth(bulletin.Access))
+                            {
+                                Thread.Sleep(2000);
+
+                                var url = Path.Combine(bulletin.Url, "edit");
+                                UiHelper.UpdateActionState($"Переход на страницу {url}");
+                                Tools.WebWorker.NavigatePage(url);
+                                Thread.Sleep(1500);
+                                var values = new Dictionary<string, string>();
+                                foreach (var pair in bulletin.AccessFields)
+                                {
+                                    var v = fieldValueContainer.GetFieldValue(bulletin.AccessFields, pair.Key);
+                                    values.Add(pair.Key, v);
+                                }
+                                bulletin.ValueFields = values;
+                                bulletin.State = (int)CheckBulletinState(bulletin.Url);
+                            }
+                        }
+                    }
+                });
+                Tools.WebWorker.Execute(() =>
+                {
+                    UiHelper.UpdateActionState("Отправка коллбека");
+
+                    SendResultRouter.AccessBulletinDetailsWorkDone(tasks);
+                });
+            });
         }
-        #endregion
 
     }
 }
