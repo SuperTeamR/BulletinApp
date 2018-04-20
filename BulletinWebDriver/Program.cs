@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace BulletinWebDriver
@@ -28,6 +29,11 @@ namespace BulletinWebDriver
         {
             try
             {
+                WebDriver.NavigatePage("http://yandex.ru");
+
+                Thread.Sleep(2000);
+
+
                 WebDriver.NavigatePage("https://www.avito.ru/profile/login?next=%2Fprofile");
 
                 WebDriver.DoAction(By.Name("login"), e => e.SendKeys("Slava.Shleif@gmail.com"));

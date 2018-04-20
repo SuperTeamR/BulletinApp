@@ -1,4 +1,5 @@
-﻿using FessooFramework.Tools.DCT;
+﻿using CollectorModels;
+using FessooFramework.Tools.DCT;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,26 +39,62 @@ namespace BulletinWebDriver.Tools
             DCT.Execute(d =>
             {
                 var foundedProxy = false;
-                //while(!foundedProxy)
-                //{
-                //    var validProxy = CollectorModels.Service.ProxyClientHelper.NextWithCheck();
-                //    if (validProxy == null) continue;
-                //    foundedProxy = true;
+                while(!foundedProxy)
+                {
+                    var validProxy = CollectorModels.Service.ProxyClientHelper.Next();
+                    if (validProxy == null) continue;
+                    foundedProxy = true;
 
-                    var validProxy = ProxyManager.UseProxy();
+                    var isValid = CheckProxy(validProxy);
+                    Console.WriteLine($"PROXY {validProxy.Address}:{validProxy.Port} --- PING:{validProxy.Ping} --- IS_VALID: {isValid}");
+
+                    //var validProxy = ProxyManager.UseProxy();
                     var options = new FirefoxOptions();
                     var proxy = new Proxy();
-                    proxy.HttpProxy = $"{validProxy.Address}";
-                    proxy.FtpProxy = $"{validProxy.Address}";
-                    proxy.SslProxy = $"{validProxy.Address}";
+                    proxy.HttpProxy = $"{validProxy.Address}:{validProxy.Port}";
+                    proxy.FtpProxy = $"{validProxy.Address}:{validProxy.Port}";
+                    proxy.SslProxy = $"{validProxy.Address}:{validProxy.Port}";
                     options.Proxy = proxy;
                     options.SetPreference("permissions.default.image", 2);
                     options.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
                     result = new FirefoxDriver(options);
                     UpdateActions(result);
-                //}
+                }
                
             }); 
+            return result;
+        }
+
+        public static bool CheckProxy(ProxyCache proxy)
+        {
+            var result = false;
+            HttpWebResponse response = null;
+            DCT.Execute(d =>
+            {
+                WebRequest.DefaultWebProxy = new WebProxy
+                {
+                    Address = new Uri("http://" + proxy.Address + ":" + proxy.Port)
+                };
+                var request = WebRequest.Create("https://avito.ru");
+                request.Timeout = 5000;
+                try
+                {
+                    response = (HttpWebResponse)request.GetResponse();
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        result = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+                finally
+                {
+                    if (response != null) response.Close();
+                }
+
+            });
             return result;
         }
 
