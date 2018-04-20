@@ -33,6 +33,7 @@ namespace BulletinHub.Entity.Converters
                     bulletinPackage.ValueFields = valueFields;
                     bulletinPackage.AccessFields = accessFields;
                     bulletinPackage.Access = Access.ToCache(dbAccess);
+                    bulletinPackage.State = dbInstance.State;
 
                 }
                 else if(obj.TargetType == typeof(Access).ToString())

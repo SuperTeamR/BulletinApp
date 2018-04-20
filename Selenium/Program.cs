@@ -26,11 +26,11 @@ namespace Selenium
 
             //var validProxy = ProxyManager.UseProxy();
 
-            ChromeOptions options = new ChromeOptions();
-            options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
+            ////ChromeOptions options = new ChromeOptions();
+            //options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
             //options.AddArgument($"--proxy-server=http://{validProxy.Address}");
 
-            using (IWebDriver driver = new ChromeDriver(options))
+            using (IWebDriver driver = new FirefoxDriver())
             {
                 //driver.Navigate().GoToUrl("http://whatismyipaddress.com");
 
@@ -55,7 +55,12 @@ namespace Selenium
                    (e) =>
                    {
                        e.SendKeys("OnlineHelp59");
-                       e.Submit();
+                   });
+
+                Do(driver, By.ClassName("login-form-submit"),
+                   (e) =>
+                   {
+                       e.Click();
                    });
 
 
@@ -69,10 +74,11 @@ namespace Selenium
         {
             try
             {
-                var actions = new Actions(driver);
+              
 
                 driver.Navigate().GoToUrl("https://www.avito.ru/additem");
 
+                var actions = new Actions(driver);
                 //Categories
                 var category1 = "Бытовая электроника";
                 var category2 = "Телефоны";
@@ -112,11 +118,12 @@ namespace Selenium
 
                 };
 
-                Do(driver, By.CssSelector($"input[name='{bulletinTypeName}']"),
-                   (e) =>
-                   {
-                       actions.MoveToElement(e).Click().Build().Perform();
-                   });
+                Do(driver, By.CssSelector($"input[name='{bulletinTypeName}']"), e =>
+                {
+                    var actions2 = new Actions(driver);
+                    actions2.MoveToElement(e).Click().Build().Perform();
+
+                });
                 Do(driver, By.CssSelector($"input[id='{bulletinTitleId}']"),
                   (e) =>
                   {
@@ -140,10 +147,11 @@ namespace Selenium
                        .Until(NoAttribute(driver, By.CssSelector($"input[name='{bulletinImageName}']"), "disabled"));
                     //WaitUntilElementVisible(driver, By.CssSelector($"input[name='{bulletinImageName}']"), 20);
 
-                    Do(driver, By.CssSelector($"input[name='{bulletinImageName}']"),
+                    DoClick(driver, By.CssSelector($"input[name='{bulletinImageName}']"),
                      (e) =>
                      {
-                         e.Click();
+                         var actions2 = new Actions(driver);
+                         actions2.Click(e).Build().Perform();
 
                          Thread.Sleep(1000);
                          SendKeys.SendWait(image);
@@ -154,7 +162,7 @@ namespace Selenium
                     //new WebDriverWait(driver, TimeSpan.FromSeconds(10))
                     //   .Until(AttributeEquals(driver, By.ClassName("form-uploader-item"), "data-state", "progress"));
 
-                    Thread.Sleep(5000);
+                    Thread.Sleep(10000);
 
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20))
                         .Until(ElementExists(driver, By.CssSelector($"input[name='{bulletinImageName}']")));
@@ -190,6 +198,17 @@ namespace Selenium
         {
             var element = driver.FindElement(query);
             if(element != null && after != null)
+            {
+                after(element);
+            }
+            return element;
+        }
+
+        static IWebElement DoClick(IWebDriver driver, By query, Action<IWebElement> after = null)
+        {
+            var element = driver.FindElement(query);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+            if (element != null && after != null)
             {
                 after(element);
             }

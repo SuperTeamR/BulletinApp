@@ -21,6 +21,7 @@ namespace BulletinHub.Tools
                 {
                     ClearOldTasks(userId);
                     AddNewBulletinTasks(userId);
+                    //AddCurrentBulletinTasks(userId);
                     SetTime(userId);
                 }
                
@@ -65,7 +66,7 @@ namespace BulletinHub.Tools
                var bulletins = d.BulletinDb.Bulletins.Where(q => unusedBulletinsIds.Contains(q.Id)).ToArray();
                if (bulletins.Length == 0) return;
 
-                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId).ToArray();
+                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.State != (int)AccessState.Blocked).ToArray();
                 for (int i = 0; i < bulletins.Length; i++)
                 {
                     var currentBulletin = bulletins[i];
@@ -93,6 +94,49 @@ namespace BulletinHub.Tools
                 d.BulletinDb.SaveChanges();
             });
         }
+
+        static void AddCurrentBulletinTasks(Guid userId)
+        {
+            BCT.Execute(d =>
+            {
+                var targetType = typeof(BulletinInstance).ToString();
+
+                var bulletinIds = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).Select(q => q.Id).ToArray();
+                var instances = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).ToArray();
+                
+                foreach(var instance in instances)
+                {
+                    if(instance.State == (int)BulletinInstanceState.OnModeration)
+                    {
+                        var task = new Entity.Data.Task
+                        {
+                            BulletinId = instance.Id,
+                            AccessId = instance.AccessId,
+                            UserId = userId,
+                            TargetDate = DateTime.Now,
+                            TargetType = targetType,
+                            Command = (int)Entity.Data.TaskCommand.Checking,
+                        };
+                        task.StateEnum = Entity.Data.TaskState.Created;
+                    }
+
+                    if(instance.State == (int)BulletinInstanceState.Edited)
+                    {
+                        var task = new Entity.Data.Task
+                        {
+                            BulletinId = instance.Id,
+                            AccessId = instance.AccessId,
+                            UserId = userId,
+                            TargetDate = DateTime.Now,
+                            TargetType = targetType,
+                            Command = (int)Entity.Data.TaskCommand.Editing,
+                        };
+                        task.StateEnum = Entity.Data.TaskState.Created;
+                    }
+                }
+            });
+        }
+
 
         static void SetTime(Guid userId)
         {

@@ -4,6 +4,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -23,20 +24,48 @@ namespace BulletinWebDriver.Tools
         static Actions _actions;
         public static Actions Actions => _actions;
 
+
+        public static void RestartDriver()
+        {
+            CloseDriver();
+            CreateDriver();
+        }
+
         static FirefoxDriver CreateDriver()
         {
             var result = default(FirefoxDriver);
             DCT.Execute(d =>
             {
+                var foundedProxy = false;
+                //while(!foundedProxy)
+                //{
+                //    var validProxy = CollectorModels.Service.ProxyClientHelper.NextWithCheck();
+                //    if (validProxy == null) continue;
+                //    foundedProxy = true;
 
-                //var validProxy = ProxyManager.UseProxy();
-                //ChromeOptions options = new ChromeOptions();
-                //options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
-                //options.AddArgument($"--proxy-server=http://{validProxy.Address}");
-                result = new FirefoxDriver();
-                UpdateActions(result);
-            });
+                    var validProxy = ProxyManager.UseProxy();
+                    var options = new FirefoxOptions();
+                    var proxy = new Proxy();
+                    proxy.HttpProxy = $"{validProxy.Address}";
+                    proxy.FtpProxy = $"{validProxy.Address}";
+                    proxy.SslProxy = $"{validProxy.Address}";
+                    options.Proxy = proxy;
+                    options.SetPreference("permissions.default.image", 2);
+                    options.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
+                    result = new FirefoxDriver(options);
+                    UpdateActions(result);
+                //}
+               
+            }); 
             return result;
+        }
+
+        static void CloseDriver()
+        {
+            if (driver != null)
+            {
+                driver.Close();
+            }
         }
         static void UpdateActions(IWebDriver driver)
         {
@@ -46,9 +75,6 @@ namespace BulletinWebDriver.Tools
         {
             UpdateActions(driver);
         }
-
-
-
         public static IWebElement Find(By query)
         {
             var result = default(IWebElement);
@@ -89,20 +115,26 @@ namespace BulletinWebDriver.Tools
             });
             return result;
         }
-        public static void JsClick(IWebElement element)
+        public static void JsClick(IWebElement element, Action<IWebElement> after = null)
         {
             DCT.Execute(d =>
             {
-                Actions.MoveToElement(element).Click().Build().Perform();
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
 
+                var internalActions = new Actions(driver);
+                internalActions.MoveToElement(element).Click().Build().Perform();
+                if(after != null)
+                {
+                    after(element);
+                }
             });
         }
 
-        public static void JsClick(By query)
+        public static void JsClick(By query, Action<IWebElement> after = null)
         {
             DCT.Execute(d =>
             {
-                DoAction(query, JsClick);
+                DoAction(query, e => JsClick(e, after));
             });
         }
         public static IWebElement DoAction(By query, Action<IWebElement> after = null)
@@ -119,6 +151,19 @@ namespace BulletinWebDriver.Tools
 
             });
             return result;
+        }
+
+        public static void DoClick(By query)
+        {
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElement(query);
+
+                ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+                element = driver.FindElement(query);
+                var internalActions = new Actions(driver);
+                internalActions.Click(element).Build().Perform();
+            });
         }
 
         public static Func<IWebDriver, bool> NoAttribute(By query, string attribute)

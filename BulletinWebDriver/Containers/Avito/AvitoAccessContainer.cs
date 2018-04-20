@@ -66,9 +66,9 @@ namespace BulletinWebWorker.Containers.Avito
                 WebDriver.NavigatePage(LoginUrl);
 
                 WebDriver.DoAction(By.Name("login"), e =>  e.SendKeys(currentAccess.Login));
-                WebDriver.DoAction(By.Name("password"), e => { e.SendKeys(currentAccess.Password); });
+                WebDriver.DoAction(By.Name("password"), e => e.SendKeys(currentAccess.Password));
 
-                WebDriver.JsClick(By.ClassName("login-form-submit"));
+                WebDriver.DoAction(By.ClassName("login-form-submit"), e => e.Click());
                 result = true;
             }, continueExceptionMethod: (d, e) => Auth());
             return result;

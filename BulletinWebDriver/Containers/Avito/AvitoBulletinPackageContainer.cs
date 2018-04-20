@@ -7,6 +7,7 @@ using BulletinWebWorker.Containers.Base.Access;
 using FessooFramework.Tools.DCT;
 using FessooFramework.Tools.Helpers;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,10 @@ namespace BulletinWebWorker.Containers.Avito
                     var bulletin = task.BulletinPackage;
                     if (accessContainer.TryAuth(bulletin.Access))
                     {
-                        AddBulletin(bulletin);
+                        PrepareBulletin(bulletin);
+                        ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
+                        Publicate(bulletin);
+                        GetUrl(bulletin);
                     }
                 }
                 DCT.ExecuteAsync(d2 =>
@@ -63,7 +67,7 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
-        void AddBulletin(BulletinPackage bulletin)
+        void PrepareBulletin(BulletinPackage bulletin)
         {
             DCT.Execute(d =>
             {
@@ -74,16 +78,11 @@ namespace BulletinWebWorker.Containers.Avito
 
                 if (!SetValueFields(bulletin))
                 {
-                    AddBulletin(bulletin);
+                    PrepareBulletin(bulletin);
                 }
-
-                ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
-                Publicate(bulletin);
-                GetUrl(bulletin);
-
             }, continueExceptionMethod: (d, e) => 
             {
-                AddBulletin(bulletin);
+                PrepareBulletin(bulletin);
             });
         }
 
@@ -125,7 +124,7 @@ namespace BulletinWebWorker.Containers.Avito
                 var bulletinPriceText = valueFields["Цена"];
                 var bulletinImageText = valueFields.ContainsKey("Фотографии") ? valueFields["Фотографии"] : string.Empty;
 
-                WebDriver.DoAction(By.CssSelector($"input[value='{bulletinTypeCode}']"), WebDriver.JsClick);
+                WebDriver.JsClick(By.CssSelector($"input[value='{bulletinTypeCode}']"));
                 WebDriver.DoAction(By.CssSelector($"input[id='{bulletinTitleCode}']"), e => e.SendKeys(bulletinTitleText));
                 WebDriver.DoAction(By.CssSelector($"textarea[id='{bulletinDescCode}']"), e => e.SendKeys(bulletinDescText));
                 WebDriver.DoAction(By.CssSelector($"input[id='{bulletinPriceCode}']"), e => e.SendKeys(bulletinPriceText));
@@ -139,10 +138,9 @@ namespace BulletinWebWorker.Containers.Avito
                         if (!WebDriver.Wait(WebDriver.NoAttribute(By.CssSelector($"input[name='{bulletinImageCode}']"), "disabled"), 20))
                             return;
 
-                        WebDriver.DoAction(By.CssSelector($"input[name='{bulletinImageCode}']"),
+                        WebDriver.JsClick(By.CssSelector($"input[name='{bulletinImageCode}']"),
                          (e) =>
                          {
-                             e.Click();
                              Thread.Sleep(1000);
                              SendKeys.SendWait(image);
                          });
@@ -177,10 +175,11 @@ namespace BulletinWebWorker.Containers.Avito
                 {
                  
                 }
-                else if (state == BulletinState.WaitPublication || state == BulletinState.WaitRepublication)
+                else if (state == BulletinState.WaitPublication || state == BulletinState.WaitRepublication || state == BulletinState.Created)
                 {
-                    WebDriver.JsClick(By.Id("pack1"));
-                    WebDriver.JsClick(By.CssSelector("button[value='Продолжить с пакетом «Обычная продажа»']"));
+                    //WebDriver.DoClick(By.Id("pack1"));
+                    var button = WebDriver.FindMany(By.ClassName("button-origin")).FirstOrDefault(q => q.Text == "Продолжить с пакетом «Обычная продажа»");
+                    WebDriver.JsClick(button);
                 }
                 else
                 {
@@ -195,7 +194,7 @@ namespace BulletinWebWorker.Containers.Avito
         {
             DCT.Execute(d =>
             {
-                if(bulletin.State == (int)BulletinState.WaitPublication)
+                if(bulletin.State == (int)BulletinState.WaitPublication || bulletin.State == 0)
                 {
                     WebDriver.NavigatePage("https://www.avito.ru/additem/confirm");
                 }
@@ -223,6 +222,50 @@ namespace BulletinWebWorker.Containers.Avito
                 var href = a.GetAttribute("href");
                 bulletin.Url = href;
             });
+        }
+
+
+        public void CheckModerationState(IEnumerable<TaskCache> tasks)
+        {
+            DCT.Execute(d =>
+            {
+
+
+            });
+        }
+        BulletinState CheckBulletinState(string url)
+        {
+            var result = BulletinState.Error;
+
+            DCT.Execute(d =>
+            {
+                WebDriver.NavigatePage(ProfileUrl);
+
+                var tabStates = new List<TabState>();
+                var tabs = WebDriver.FindMany(By.ClassName("tabs-item"));
+                tabStates.Add(new TabState
+                {
+                    Title = "Активные",
+                    Href = ProfileUrl,
+                });
+
+                foreach(var tab in tabs)
+                {
+                    var a = tab.FindElement(By.XPath("/a"));
+                    var tabUrl = a.GetAttribute("href");
+                    var tabState = a.Text;
+
+                    if (tabState == "Удаленные") continue;
+
+                    tabStates.Add(new TabState
+                    {
+                        Title = tabState,
+                        Href = tabUrl,
+                    });
+                }
+
+            });
+            return result;
         }
     }
 }
