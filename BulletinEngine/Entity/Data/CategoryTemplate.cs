@@ -19,36 +19,30 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the board. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BoardId { get; set; }
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор родителя категории </summary>
         ///
         /// <value> The identifier of the parent. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid ParentId { get; set; }
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Название категории </summary>
         ///
         /// <value> The name. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Name { get; set; }
         #endregion
-
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>> Configurations => new[]
         {
             new EntityObjectALMConfiguration<CategoryTemplate, CategoryTemplateState>(CategoryTemplateState.Created, CategoryTemplateState.Handled, SetValueDefault)
         };
-
         protected override int GetStateValue(CategoryTemplateState state)
         {
             return (int)state;
         }
         #endregion
-
         #region ALM -- Methods
         protected override CategoryTemplate SetValueDefault(CategoryTemplate arg1, CategoryTemplate arg2)
         {
@@ -59,12 +53,10 @@ namespace BulletinEngine.Entity.Data
             return arg1;
         }
         #endregion
-
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<CategoryTemplate>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<CategoryTemplate>>();
         #endregion
     }
-
     public enum CategoryTemplateState
     {
         Created = 0,

@@ -1,7 +1,6 @@
 ﻿using BulletinEngine.Entity.Data;
 using BulletinHub.Entity.Data;
 using FessooFramework.Tools.Helpers;
-using System.Configuration;
 using System.Data.Entity;
 
 namespace BulletinEngine.Entity.Context
@@ -9,7 +8,6 @@ namespace BulletinEngine.Entity.Context
     public class BulletinDb : DbContext
     {
         public DbSet<Application> Applications { get; set; }
-        //public DbSet<User> Users { get; set; }
         public DbSet<Access> Accesses { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<Bulletin> Bulletins { get; set; }
@@ -49,7 +47,6 @@ namespace BulletinEngine.Entity.Context
             modelBuilder.Entity<UserSettings>().Property(x => x.LastTimeGeneration).HasColumnType("datetime2");
             modelBuilder.Entity<UserSettings>().Property(x => x.NextTaskGeneration).HasColumnType("datetime2");
         }
-
         protected override void Dispose(bool disposing)
         {
             Configuration.LazyLoadingEnabled = false;

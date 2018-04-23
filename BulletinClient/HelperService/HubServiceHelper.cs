@@ -2,9 +2,6 @@
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinClient.HelperService
 {
@@ -15,7 +12,7 @@ namespace BulletinClient.HelperService
         {
             DCT.Execute(c =>
             {
-                c.HubClient.SendQueryCollection<T>(callback, code, c._SessionInfo.SessionUID, c._SessionInfo.HashUID, obj == null ? null : new[] { obj });
+                c.HubClient.SendQueryCollection<T>(code, callback, obj == null ? null : new[] { obj });
             });
         }
     }

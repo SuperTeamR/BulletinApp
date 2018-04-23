@@ -1,5 +1,4 @@
-﻿using BulletinClient.Core;
-using BulletinClient.Helpers;
+﻿using BulletinClient.Helpers;
 using BulletinClient.ViewModels;
 using FessooFramework.Objects.ViewModel;
 

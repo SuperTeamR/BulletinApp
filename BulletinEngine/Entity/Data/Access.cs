@@ -1,7 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinEngine.Helpers;
-using BulletinHub.Entity.Converters;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
@@ -23,48 +22,30 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the board. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BoardId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор пользователя. </summary>
         ///
         /// <value> The identifier of the user. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid UserId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Логин для доступа. </summary>
         ///
         /// <value> The login. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Login { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Пароль для доступа. </summary>
         ///
         /// <value> The password. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Password { get; set; }
 
         #endregion
 
         #region ALM -- Definition
         protected override IEnumerable<EntityObjectALMConfiguration<Access, AccessState>> Configurations => Enumerable.Empty<EntityObjectALMConfiguration<Access, AccessState>>();
-        //new[]
-        //{
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Unchecked, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Activated, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Blocked, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.Banned, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Activated, AccessState.DemandPay, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Banned, AccessState.Activated, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Created, SetValueDefault),
-        //new EntityObjectALMConfiguration<Access, AccessState>(AccessState.Created, AccessState.Cloning, SetValueDefault),
-        //};
 
         protected override int GetStateValue(AccessState state)
         {
@@ -97,7 +78,6 @@ namespace BulletinEngine.Entity.Data
             entity.Password = cache.Password;
             return entity;
         }
-
         internal static AccessPackage ToCache(Access obj)
         {
             var board = BCT.Context.BulletinDb.Boards.Find(obj.BoardId);
@@ -132,7 +112,6 @@ namespace BulletinEngine.Entity.Data
                 {
                     result = c.BulletinDb.Accesses.Where(q => q.UserId == c.UserId).ToArray();
                 }
-
             });
             return result;
         }
@@ -159,12 +138,8 @@ namespace BulletinEngine.Entity.Data
                 }
                 result = new TDataModel[] { access as TDataModel };
             });
-
             return result;
         }
-
-
-
         #endregion
 
         #region Custom query
@@ -195,9 +170,7 @@ namespace BulletinEngine.Entity.Data
             return result;
         }
         #endregion
-
     }
-
     public enum AccessState
     {
         Created = 0,

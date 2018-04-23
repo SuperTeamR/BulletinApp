@@ -1,14 +1,8 @@
 ﻿using BulletinBridge.Data;
 using FessooFramework.Tools.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinClient.Data
 {
-
     public class AccessView
     {
         string Id { get; set; }

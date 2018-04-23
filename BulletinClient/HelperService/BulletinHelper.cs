@@ -4,8 +4,6 @@ using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace BulletinClient.HelperService
@@ -60,7 +58,7 @@ namespace BulletinClient.HelperService
         {
             DCT.Execute(data =>
             {
-                data.HubClient.SendQueryObject<BulletinCache>((a) => callback?.Invoke(), "Remove", selectedObject);
+                data.HubClient.SendQueryObject<BulletinCache>( "Remove", (a) => callback?.Invoke(),selectedObject);
             });
         }
 

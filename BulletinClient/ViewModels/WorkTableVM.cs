@@ -5,11 +5,8 @@ using BulletinClient.Data;
 using BulletinClient.Helpers;
 using BulletinClient.HelperService;
 using BulletinClient.Properties;
-using FessooFramework.Objects.Data;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
-using FessooFramework.Tools.Helpers;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,18 +22,12 @@ namespace BulletinClient.ViewModels
     {
         #region Property
         public string Login => DataHelper.UserLogin.Value;
-
         public AccessCollectionVM AccessCollectionView => accessCollectionView = accessCollectionView ?? new AccessCollectionVM();
         public AccessCollectionVM accessCollectionView { get; set; }
         public BulletinCollectionVM BulletinCollectionView => bulletinCollectionView = bulletinCollectionView ?? new BulletinCollectionVM();
         public BulletinCollectionVM bulletinCollectionView { get; set; }
-
-
-
         public bool Bulletin => Bulletins != null && Bulletins.Any();
         public bool NotBulletin => Bulletins == null || !Bulletins.Any();
-
-
         public string CardCategory1 { get; set; }
         public string CardCategory2 { get; set; }
         public string CardCategory3  { get; set; }
@@ -76,8 +67,6 @@ namespace BulletinClient.ViewModels
             CardCategory2 = "Телефоны";
             CardCategory3 = "iPhone";
             AddBulletins = new ObservableCollection<NewBulletin>();
-
-            //CommandGetXls = new DelegateCommand(GetXls);
           
             CommandAddBulletin = new DelegateCommand(()=>AddBulletin(CardName, CardDescription, CardPrice, CardImageLinks));
             CommandLogout = new DelegateCommand(Logout);
@@ -85,22 +74,11 @@ namespace BulletinClient.ViewModels
             CommandGenerate = new DelegateCommand(BulletinHelper.Generate);
             CommandCloneBulletin = new DelegateCommand<BulletinView>(CloneBulletin);
             CommandAddImage = new DelegateCommand(AddImage);
-
-            
-
-
-
-
             CheckConnection();
-           
             GetBulletins();
         }
-
-
         #endregion
         #region Methods
-        
-
         private void Logout()
         {
             Settings.Default.BoardLogin = "";
@@ -122,9 +100,6 @@ namespace BulletinClient.ViewModels
             }
         }
         #endregion
-
-
-
         void AddImage()
         {
             DCT.ExecuteMainThread(d =>
@@ -145,14 +120,8 @@ namespace BulletinClient.ViewModels
                         var bytes = ImageHelper.ConvertImageToByte(bitmap);
                         client.AddImage(AddImageCallback, System.IO.Path.GetFileNameWithoutExtension(openFile.SafeFileName), bytes);
                     }
-
-
-                    //data.Property.Profile.Value.Avatar = ImageHelper.ConvertImageToByte(new BitmapImage(new Uri(ОткрытьФайл.FileName)));
-                    //CacheData.UserProfiles._Update(data.Property.Profile.Value);
                 }
-
             });
-           
         }
 
         void AddImageCallback(Response_AddImage result)
@@ -178,20 +147,6 @@ namespace BulletinClient.ViewModels
                 }
             });
         }
-
-        //void GetXls()
-        //{
-        //    DCT.Execute(d =>
-        //    {
-        //        var group = new GroupSignature();
-        //        var request = new RequestBoardAPI_GetXlsForGroup
-        //        {
-        //            GroupSignature = group
-        //        };
-        //        //ClientService.ExecuteQuery<RequestBoardAPI_GetXlsForGroup, ResponseBoardAPI_GetXlsForGroup>(request, BulletinBridge.Commands.CommandApi.Board_GetXlsForGroup);
-        //    });
-        //}
-
         void GetBulletins()
         {
             using (var client = new ServiceClient())
@@ -205,13 +160,6 @@ namespace BulletinClient.ViewModels
             DCT.Execute(d =>
             {
                 if (objs.Count() == 0) return;
-                //var grouped = objs.Select(q => new BulletinView(q));
-                //var temp = new List<BulletinView>();
-                //foreach(var g in grouped)
-                //{
-                //    //bulletin.CanRepublicate = g.Count() < Accesses.Count;
-                //    temp.Add(bulletin);
-                //} 
                 Bulletins = objs.Select(q => new BulletinView(q));
                 RaisePropertyChanged(() => Bulletins);
                 RaisePropertyChanged(() => Bulletin);
@@ -243,8 +191,6 @@ namespace BulletinClient.ViewModels
             var b = Bulletins.FirstOrDefault(q => q.BulletinId == bulletin.BulletinId);
             b.CanRepublicate = false;
         }
-
-       
 
         void AddBulletin(string cardName, string cardDescription, string cardPrice, string cardImageLinks)
         {
@@ -280,9 +226,6 @@ namespace BulletinClient.ViewModels
                     ValueFields = fields,
                     Access = access,
                 };
-
-
-
                 ServiceClient._CreateBulletin(package, AddBulletinCallback);
             });
         }
@@ -300,8 +243,6 @@ namespace BulletinClient.ViewModels
             GetBulletins();
         }
     }
-
-
     public class NewBulletin
     {
         public string Заголовок { get; set; }
@@ -309,5 +250,4 @@ namespace BulletinClient.ViewModels
         public string Цена { get; set; }
         public string Ссылка { get; set; }
     }
-
 }

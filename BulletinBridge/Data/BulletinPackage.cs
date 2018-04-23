@@ -1,7 +1,6 @@
 ﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 
 namespace BulletinBridge.Data
 {

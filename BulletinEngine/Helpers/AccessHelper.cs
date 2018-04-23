@@ -4,8 +4,6 @@ using BulletinEngine.Entity.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Helpers
 {
@@ -32,7 +30,6 @@ namespace BulletinEngine.Helpers
             });
             return access;
         }
-
         internal static void Remove(IEnumerable<Access> entities)
         {
             BCT.Execute(c =>
@@ -42,13 +39,9 @@ namespace BulletinEngine.Helpers
                 c.SaveChanges();
             });
         }
-
-
-
         public static Guid? GetActiveAccessId(Guid bulletinId)
         {
             Guid? result = null;
-
             BCT.Execute(d =>
             {
                 var allAccesses = d.BulletinDb.Accesses.Where(q => q.UserId == d.UserId).ToArray();
@@ -71,14 +64,9 @@ namespace BulletinEngine.Helpers
                     }
                 }
                 var grouped = bulletins.GroupBy(q => q.AccessId);
-
             });
-
             return result;
         }
-
-
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает свободный доступ к борде для пользователя из инстанции буллетина </summary>
         ///
@@ -89,7 +77,6 @@ namespace BulletinEngine.Helpers
         ///
         /// <returns>   The free access. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         public static AccessPackage GetFreeAccess(Guid instanceId)
         {
             AccessPackage result = null;
@@ -121,7 +108,6 @@ namespace BulletinEngine.Helpers
                     Password = access.Password,
                     BoardId = boardId
                 };
-
             });
             return result;
         }
@@ -151,7 +137,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
         public static IEnumerable<AccessPackage> MarkAccessAsChecked(IEnumerable<AccessPackage> packages)
         {
             var result = Enumerable.Empty<AccessPackage>();
@@ -169,8 +154,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
-
         public static IEnumerable<AccessPackage> AddAccesses(IEnumerable<AccessPackage> packages)
         {
             var result = Enumerable.Empty<AccessPackage>();
@@ -197,7 +180,5 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
-      
     }
 }

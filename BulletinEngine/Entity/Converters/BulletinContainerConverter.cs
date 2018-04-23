@@ -1,12 +1,8 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
-using FessooFramework.Tools.DCT;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinHub.Entity.Converters
 {
@@ -24,7 +20,6 @@ namespace BulletinHub.Entity.Converters
                 var bulletinPrice = obj.ValueFields["Цена"];
                 var bulletinImages = obj.ValueFields.ContainsKey("Фотографии") ? obj.ValueFields["Фотографии"] : null;
 
-
                 entity.UserId = d.UserId;
                 entity.GroupId = dbGroup.Id;
                 entity.Title = bulletinTitle;
@@ -36,7 +31,6 @@ namespace BulletinHub.Entity.Converters
             });
             return result;
         }
-
         public static BulletinPackage Convert(Bulletin obj)
         {
             var result = default(BulletinPackage);
@@ -54,7 +48,6 @@ namespace BulletinHub.Entity.Converters
                 package.Title = obj.Title;
 
                 result = package;
-
             });
             return result;
         }

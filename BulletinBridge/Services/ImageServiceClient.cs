@@ -3,9 +3,6 @@ using FessooFramework.Tools.DCT;
 using FessooFramework.Tools.Web;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Services
 {
@@ -17,7 +14,6 @@ namespace BulletinBridge.Services
             Response_AddImage response = null;
             DCT.ExecuteAsync(c =>
             {
-                var result = false;
                 var request = new Request_AddImage()
                 {
                     Image = image,

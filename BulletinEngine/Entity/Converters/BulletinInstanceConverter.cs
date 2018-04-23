@@ -2,11 +2,6 @@
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using BulletinEngine.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Entity.Converters
 {
@@ -15,7 +10,6 @@ namespace BulletinEngine.Entity.Converters
     ///
     /// <remarks>   SV Milovanov, 13.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
-
     static class BulletinInstanceConverter
     {
         public static BulletinPackage Convert(BulletinInstance obj)

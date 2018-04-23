@@ -19,23 +19,18 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The name. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Name { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Код значения </summary>
         ///
         /// <value> The code. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Code { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор поля </summary>
         ///
         /// <value> The identifier of the field. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid GroupedFieldId { get; set; }
         #endregion
 
@@ -65,7 +60,6 @@ namespace BulletinEngine.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<SelectOption>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<SelectOption>>();
         #endregion
     }
-
     public enum SelectOptionState
     {
         Created = 0,

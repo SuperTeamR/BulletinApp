@@ -3,15 +3,12 @@ using BulletinWebDriver.Service;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace BulletinWebDriver.ServiceHelper
 {
     static class ServerHelper
     {
-
         public static void SendDoneTasks(IEnumerable<TaskCache> tasks)
         {
             DCT.ExecuteAsync(d2 =>
@@ -20,11 +17,10 @@ namespace BulletinWebDriver.ServiceHelper
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                    client.SendQueryCollection("Save", objects: tasks);
                 }
             });
         }
-
         public static void GetNewTasks(Action<IEnumerable<TaskCache>> callback)
         {
             DCT.Execute(d =>
@@ -33,11 +29,9 @@ namespace BulletinWebDriver.ServiceHelper
                 {
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
-
-                    client.SendQueryCollection<TaskCache>(callback, "Load", objects: Enumerable.Empty<TaskCache>(), sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+                    client.SendQueryCollection("Load", callback);
                 }
             });
-          
         }
     }
 }

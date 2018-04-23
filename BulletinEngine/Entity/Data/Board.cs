@@ -18,10 +18,7 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The name. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Name { get; set; }
-
-
         #endregion
 
         #region ALM -- Definition

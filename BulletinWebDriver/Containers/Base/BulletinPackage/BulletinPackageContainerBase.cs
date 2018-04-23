@@ -13,8 +13,10 @@ namespace BulletinWebWorker.Containers.Base
     abstract class BulletinPackageContainerBase
     {
         public abstract Guid Uid { get; }
-
-
-        public abstract void AddBulletins(IEnumerable<BulletinBridge.Data.TaskCache> packages);
+        public abstract void AddBulletins(IEnumerable<BulletinBridge.Data.TaskCache> tasks);
+        public abstract void CheckModerationState(IEnumerable<TaskCache> tasks);
+        public abstract void GetBulletinList(IEnumerable<TaskCache> tasks);
+        public abstract void GetBulletinDetails(IEnumerable<TaskCache> tasks);
+        public abstract void EditBulletins(IEnumerable<TaskCache> tasks);
     }
 }

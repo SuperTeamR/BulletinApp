@@ -18,15 +18,12 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the group. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid GroupId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор пользователя </summary>
         ///
         /// <value> The identifier of the user. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid UserId { get; set; }
         #endregion
 
@@ -52,7 +49,6 @@ namespace BulletinEngine.Entity.Data
             return arg1;
         }
         #endregion
-
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<UserGroup>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<UserGroup>>();
         #endregion

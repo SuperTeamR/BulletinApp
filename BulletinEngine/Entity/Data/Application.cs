@@ -1,10 +1,7 @@
-﻿
-using FessooFramework.Objects.Data;
+﻿using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -22,15 +19,12 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The token. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Token { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор пользователя </summary>
         ///
         /// <value> The identifier of the user. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid UserId { get; set; }
         #endregion
 
@@ -39,7 +33,6 @@ namespace BulletinEngine.Entity.Data
         {
             new EntityObjectALMConfiguration<Application, ApplicationState>(ApplicationState.Created, ApplicationState.Closed, SetValueDefault)
         };
-
         protected override int GetStateValue(ApplicationState state)
         {
             return (int)state;

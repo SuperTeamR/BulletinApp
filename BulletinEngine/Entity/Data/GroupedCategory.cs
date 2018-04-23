@@ -19,15 +19,12 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the category. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid CategoryId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор шаблона группы </summary>
         ///
         /// <value> The identifier of the group. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid GroupId { get; set; }
         #endregion
 
@@ -36,7 +33,6 @@ namespace BulletinEngine.Entity.Data
         {
             new EntityObjectALMConfiguration<GroupedCategory, GroupedCategoryState>(GroupedCategoryState.Created, GroupedCategoryState.Handled, SetValueDefault)
         };
-
         protected override int GetStateValue(GroupedCategoryState state)
         {
             return (int)state;

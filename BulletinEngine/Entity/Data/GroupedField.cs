@@ -19,17 +19,13 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the guild. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid FieldId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор группы </summary>
         ///
         /// <value> The identifier of the group. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid GroupId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор поля в DOM </summary>
         ///
@@ -43,7 +39,6 @@ namespace BulletinEngine.Entity.Data
         {
             new EntityObjectALMConfiguration<GroupedField, GroupedFieldState>(GroupedFieldState.Created, GroupedFieldState.Handled, SetValueDefault),
         };
-
         protected override int GetStateValue(GroupedFieldState state)
         {
             return (int)state;
@@ -65,12 +60,10 @@ namespace BulletinEngine.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<GroupedField>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<GroupedField>>();
         #endregion
     }
-
     public enum GroupedFieldState
     {
         Created = 0,
         Handled = 1,
         Error = 99
-
     }
 }

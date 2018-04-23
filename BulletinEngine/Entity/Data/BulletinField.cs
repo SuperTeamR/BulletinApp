@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -21,7 +19,6 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the bulletin instance. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BulletinInstanceId { get; set; }
 
         ///-------------------------------------------------------------------------------------------------
@@ -29,7 +26,6 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the field. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid FieldId { get; set; }
 
         ///-------------------------------------------------------------------------------------------------
@@ -37,7 +33,6 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The value. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Value { get; set; }
         #endregion
 
@@ -69,7 +64,6 @@ namespace BulletinEngine.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<BulletinField>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<BulletinField>>();
         #endregion
     }
-
     public enum BulletinFieldState
     {
         Created = 0,

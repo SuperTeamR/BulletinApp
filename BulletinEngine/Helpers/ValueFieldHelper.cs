@@ -2,15 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Helpers
 {
     static class ValueFieldHelper
     {
-
-
         public static Dictionary<string, string> GetValueFields2(Guid bulletinId)
         {
             Dictionary<string, string> result = new Dictionary<string, string>();
@@ -26,9 +22,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
-
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает словарь полей со значениями для инстанции буллетина </summary>
         ///
@@ -38,7 +31,6 @@ namespace BulletinEngine.Helpers
         ///
         /// <returns>   The value fields. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         [Obsolete]
         public static Dictionary<string, string> GetValueFields(Guid instanceId)
         {
@@ -59,6 +51,5 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
     }
 }

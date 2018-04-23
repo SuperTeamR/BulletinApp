@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Windows;
 
 namespace BulletinClient.Forms.MainView
 {
-
     public static class ClipboardHelper2
     {
         public delegate string[] ParseFormat(string value);
@@ -52,7 +46,6 @@ namespace BulletinClient.Forms.MainView
                     clipboardData = CsvHelper.ParseText(clipboardString);
                 }
             }
-
             return clipboardData;
         }
     }

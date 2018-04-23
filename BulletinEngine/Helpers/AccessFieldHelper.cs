@@ -3,15 +3,11 @@ using BulletinEngine.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Helpers
 {
     static class AccessFieldHelper
     {
-
-
         public static Dictionary<string, FieldPackage> GetAccessFields2(Guid bulletinId)
         {
             Dictionary<string, FieldPackage> result = new Dictionary<string, FieldPackage>();

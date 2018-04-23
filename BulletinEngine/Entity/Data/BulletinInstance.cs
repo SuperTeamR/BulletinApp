@@ -1,5 +1,4 @@
-﻿using BulletinBridge.Data;
-using BulletinEngine.Core;
+﻿using BulletinEngine.Core;
 using BulletinEngine.Entity.Converters;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.DCT;
@@ -23,39 +22,30 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the bulletin. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BulletinId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор борды </summary>
         ///
         /// <value> The identifier of the board. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BoardId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор доступа </summary>
         ///
         /// <value> The identifier of the access. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid AccessId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор группы </summary>
         ///
         /// <value> The identifier of the group. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid GroupId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Ссылка на буллетин </summary>
         ///
         /// <value> The URL. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Url { get; set; }
         #endregion
 
@@ -77,7 +67,6 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.Created, SetValueDefault),
              new EntityObjectALMConfiguration<BulletinInstance, BulletinInstanceState>(BulletinInstanceState.Created, BulletinInstanceState.Unchecked, SetValueDefault),
         };
-
         protected override int GetStateValue(BulletinInstanceState state)
         {
             return (int)state;
@@ -123,11 +112,9 @@ namespace BulletinEngine.Entity.Data
                             break;
                     }
                 }
-
             });
             return result;
         }
-
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             var workStates = new[]
@@ -166,7 +153,6 @@ namespace BulletinEngine.Entity.Data
         }
         #endregion
     }
-
     public enum BulletinInstanceState
     {
         Created = 0,
@@ -183,5 +169,4 @@ namespace BulletinEngine.Entity.Data
         Unchecked = 100,
         Checking = 101,
     }
-
 }

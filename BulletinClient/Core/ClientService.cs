@@ -10,13 +10,9 @@ namespace BulletinClient
     public class ServiceClient : FessooFramework.Tools.Web.DataService.DataServiceClient
     {
         public override string Address => Settings.Default.DataServiceAddress;
-
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
-
         public override string HashUID => "Example";
         public override string SessionUID => "Example";
-
-
 
         #region Create
         public static void _CreateBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
@@ -33,7 +29,7 @@ namespace BulletinClient
             {
                 var act = action == null ? (a) => { } : action;
                 
-                SendQueryCollection((a) => act(a), "Create", objects: objs, sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+                SendQueryCollection("Create", (a) => act(a), objects: objs);
             });
           
         }
@@ -43,7 +39,7 @@ namespace BulletinClient
             {
                 var act = action == null ? (a) => { } : action;
 
-                SendQueryObject((a) => act(a), "Create", obj: obj, sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+            SendQueryObject("Create", (a) => act(a), obj: obj);
                 //CreateBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
             });
         }
@@ -69,7 +65,7 @@ namespace BulletinClient
         public void PrepareInstances(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
         {
             var act = action == null ? (a) => { } : action;
-            SendQueryCollection((a) => act(a), "PrepareInstances", objects: objs);
+            SendQueryCollection("PrepareInstances",(a) => act(a), objects: objs);
         }
         public void PrepareInstance(BulletinPackage obj, Action<BulletinPackage> action = null)
         {
@@ -78,22 +74,17 @@ namespace BulletinClient
         }
         #endregion
 
-
-
-
-
-
         public void CloneBulletins(IEnumerable<BulletinPackage> objs, Action<IEnumerable<BulletinPackage>> action = null)
         {
             var act = action == null ? (a) => { } : action;
-            SendQueryCollection((a) => act(a), "CloneBulletins", objects: objs);
+            SendQueryCollection("CloneBulletins", (a) => act(a), objects: objs);
         }
+
         public void CloneBulletins(BulletinPackage obj, Action<BulletinPackage> action = null)
         {
             var act = action == null ? (a) => { } : action;
             CloneBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
         }
-
 
         public void CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
         {
@@ -104,7 +95,8 @@ namespace BulletinClient
         public void CreateAccesses(IEnumerable<AccessPackage> objs, Action<IEnumerable<AccessPackage>> action = null)
         {
             var act = action == null ? (a) => { } : action;
-            SendQueryCollection((a) => act(a), "CreateAccesses", objects: objs);
+            SendQueryCollection("CreateAccesses", (a) => act(a), objects: objs);
+
         }
 
         public static void _CloneBulletin(BulletinPackage obj, Action<BulletinPackage> action = null)
@@ -115,7 +107,6 @@ namespace BulletinClient
                     client.CloneBulletins(obj, action);
             });
         }
-        
 
         public static void _CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
         {
@@ -125,7 +116,5 @@ namespace BulletinClient
                     client.CreateAccess(obj, action);
             });
         }
-
-
     }
 }

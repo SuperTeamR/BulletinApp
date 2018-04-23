@@ -19,15 +19,12 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the board. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid BoardId { get; set; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Хэш группы (генерируется на базе категорий) </summary>
         ///
         /// <value> The hash. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public string Hash { get; set; }
         #endregion
 
@@ -38,7 +35,6 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Loaded, GroupState.Changed, SetValueDefault),
             new EntityObjectALMConfiguration<Group, GroupState>(GroupState.Changed, GroupState.Loaded, SetValueDefault),
         };
-
         protected override int GetStateValue(GroupState state)
         {
             return (int)state;
@@ -53,14 +49,12 @@ namespace BulletinEngine.Entity.Data
 
             return arg1;
         }
-        
         #endregion
 
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Group>> CreatorsService => Enumerable.Empty<EntityObjectALMCreator<Group>>();
         #endregion
     }
-
     public enum GroupState
     {
         Created = 0,

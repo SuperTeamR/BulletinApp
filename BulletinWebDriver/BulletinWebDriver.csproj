@@ -44,8 +44,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.39, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.39\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.43, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.43\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -83,16 +83,18 @@
     <Compile Include="Boostrapper.cs" />
     <Compile Include="Containers\Avito\AvitoAccessContainer.cs" />
     <Compile Include="Containers\Avito\AvitoBulletinPackageContainer.cs" />
+    <Compile Include="Containers\Avito\AvitoFieldValueContainer.cs" />
     <Compile Include="Containers\Base\Access\AccessContainerBase.cs" />
     <Compile Include="Containers\Base\Access\AccessContainerList.cs" />
     <Compile Include="Containers\Base\BulletinPackage\BulletinPackageContainerBase.cs" />
     <Compile Include="Containers\Base\BulletinPackage\BulletinPackageContainerList.cs" />
+    <Compile Include="Containers\Base\FieldValue\FieldValueContainerBase.cs" />
+    <Compile Include="Containers\Base\FieldValue\FieldValueContainerList.cs" />
     <Compile Include="Data\ProxyData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceHelper\ServerHelper.cs" />
     <Compile Include="Service\EngineService.cs" />
-    <Compile Include="Tools\ProxyManager.cs" />
     <Compile Include="Tools\WebDriver.cs" />
     <Compile Include="WorkManager.cs" />
   </ItemGroup>

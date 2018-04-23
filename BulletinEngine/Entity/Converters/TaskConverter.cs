@@ -2,11 +2,7 @@
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using BulletinEngine.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinHub.Entity.Converters
 {
@@ -28,13 +24,11 @@ namespace BulletinHub.Entity.Converters
                     var valueFields = ValueFieldHelper.GetValueFields2(dbInstance.BulletinId);
                     var accessFields = AccessFieldHelper.GetAccessFields2(dbInstance.BulletinId);
 
-
                     bulletinPackage.Signature = groupSignature;
                     bulletinPackage.ValueFields = valueFields;
                     bulletinPackage.AccessFields = accessFields;
                     bulletinPackage.Access = Access.ToCache(dbAccess);
                     bulletinPackage.State = dbInstance.State;
-
                 }
                 else if(obj.TargetType == typeof(Access).ToString())
                 {

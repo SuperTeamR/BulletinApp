@@ -5,7 +5,6 @@ using BulletinHub.Entity.Converters;
 using BulletinHub.Helpers;
 using BulletinHub.Tools;
 using FessooFramework.Objects.Data;
-using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +16,6 @@ namespace BulletinEngine.Entity.Data
     ///
     /// <remarks>   SV Milovanov, 01.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
-
     public class Bulletin : EntityObjectALM<Bulletin, BulletinState>
     {
         #region Entity proeperties
@@ -26,7 +24,6 @@ namespace BulletinEngine.Entity.Data
         ///
         /// <value> The identifier of the user. </value>
         ///-------------------------------------------------------------------------------------------------
-
         public Guid UserId { get; set; }
         public Guid? GroupId { get; set; }
         public string Title { get; set; }
@@ -44,7 +41,6 @@ namespace BulletinEngine.Entity.Data
             new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Cloning, SetValueDefault),
             new EntityObjectALMConfiguration<Bulletin, BulletinState>(BulletinState.Created, BulletinState.Created, SetValueDefault)
         };
-
         protected override int GetStateValue(BulletinState state)
         {
             return (int)state;
@@ -60,7 +56,6 @@ namespace BulletinEngine.Entity.Data
             arg1.Price = arg2.Price;
             arg1.Images = arg2.Images;
             arg1.GroupId = arg2.GroupId;
-     
 
             return arg1;
         }
@@ -72,7 +67,6 @@ namespace BulletinEngine.Entity.Data
              EntityObjectALMCreator<Bulletin>.New(BulletinContainerConverter.Convert, BulletinContainerConverter.Convert, new Version(1,0,0,0)),
               EntityObjectALMCreator<Bulletin>.New<BulletinCache>(ToCache,ToEntity, new Version(1,0,0,0))
         };
-
         private Bulletin ToEntity(BulletinCache cache, Bulletin entity)
         {
             entity.Title = cache.Title;
@@ -84,7 +78,6 @@ namespace BulletinEngine.Entity.Data
             {
                 entity.GroupId = group.Id;
             }
-           
             return entity;
         }
 
@@ -106,7 +99,6 @@ namespace BulletinEngine.Entity.Data
         #endregion
 
         #region DataService -- Methods
-
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             var workStates = new[]
@@ -127,11 +119,9 @@ namespace BulletinEngine.Entity.Data
                 {
                     result = c.BulletinDb.Bulletins.Where(q => q.UserId == c.UserId).ToArray();
                 }
-                   
             });
             return result;
         }
-
         public override EntityObject _ObjectLoadById(Guid id)
         {
             return base._ObjectLoadById(id);
@@ -146,10 +136,6 @@ namespace BulletinEngine.Entity.Data
             });
             return result;
         }
-
-
-
-
         #endregion
 
         #region Custom query
@@ -187,7 +173,6 @@ namespace BulletinEngine.Entity.Data
         }
         #endregion
     }
-
     public enum BulletinState
     {
         Created = 0,

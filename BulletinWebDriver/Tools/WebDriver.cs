@@ -1,71 +1,95 @@
 ﻿using CollectorModels;
 using FessooFramework.Tools.DCT;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.IE;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace BulletinWebDriver.Tools
 {
     static class WebDriver
     {
-        static int pageLoadingTimeout = 20;
         static IWebDriver _driver;
         static IWebDriver driver => _driver = _driver ?? CreateDriver();
         static Actions _actions;
         public static Actions Actions => _actions;
-
-
+        public static ProxyCardCheckCache currentProxy;
         public static void RestartDriver()
         {
             CloseDriver();
             CreateDriver();
         }
-
         static FirefoxDriver CreateDriver()
         {
             var result = default(FirefoxDriver);
             DCT.Execute(d =>
             {
-                var foundedProxy = false;
-                while(!foundedProxy)
-                {
-                    var validProxy = CollectorModels.Service.ProxyClientHelper.Next();
-                    if (validProxy == null) continue;
-                    foundedProxy = true;
-
-                    var isValid = CheckProxy(validProxy);
-                    Console.WriteLine($"PROXY {validProxy.Address}:{validProxy.Port} --- PING:{validProxy.Ping} --- IS_VALID: {isValid}");
-
-                    //var validProxy = ProxyManager.UseProxy();
-                    var options = new FirefoxOptions();
-                    var proxy = new Proxy();
-                    proxy.HttpProxy = $"{validProxy.Address}:{validProxy.Port}";
-                    proxy.FtpProxy = $"{validProxy.Address}:{validProxy.Port}";
-                    proxy.SslProxy = $"{validProxy.Address}:{validProxy.Port}";
-                    options.Proxy = proxy;
-                    options.SetPreference("permissions.default.image", 2);
-                    options.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
-                    result = new FirefoxDriver(options);
-                    UpdateActions(result);
-                }
-               
+                result = TryCreateDriverWithProxy();
             }); 
             return result;
         }
+        static FirefoxDriver TryCreateDriverWithProxy()
+        {
+            var result = default(FirefoxDriver);
+            var proxyIsFounded = false;
+            DCT.Execute(d =>
+            {
+                if (currentProxy == null) CheckProxy();
+                if (currentProxy != null)
+                {
+                    Console.WriteLine($"PROXY {currentProxy.Address}:{currentProxy.Port} --- PING:{currentProxy.PingLast}");
+                    var options = new FirefoxOptions();
+                    var proxy = new Proxy();
+                    proxy.HttpProxy = $"{currentProxy.Address}:{currentProxy.Port}";
+                    proxy.FtpProxy = $"{currentProxy.Address}:{currentProxy.Port}";
+                    proxy.SslProxy = $"{currentProxy.Address}:{currentProxy.Port}";
+                    options.Proxy = proxy;
+                    options.SetPreference("permissions.default.image", 2);
+                    options.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
 
-        public static bool CheckProxy(ProxyCache proxy)
+                    var tempDriver = new FirefoxDriver(options);
+                    tempDriver.Navigate().GoToUrl("https://www.avito.ru");
+
+                    if (!tempDriver.Title.Contains("Доступ с вашего IP-адреса временно ограничен"))
+                    {
+                        proxyIsFounded = true;
+                        result = tempDriver;
+                        UpdateActions(result);
+                    }
+                }
+            });
+            if (!proxyIsFounded)
+            {
+                CloseDriver();
+                TryCreateDriverWithProxy();
+            }
+            return result;
+        }
+        public static bool CheckProxy()
+        {
+            var result = false;
+            DCT.Execute(d =>
+            {
+                var foundedProxy = false;
+                while (!foundedProxy)
+                {
+                    var nextProxy = CollectorModels.Service.ProxyClientHelper.Next();
+                    if (nextProxy == null) continue;
+
+                    if (!CheckResponse(nextProxy)) continue;
+
+                    currentProxy = nextProxy;
+                    foundedProxy = true;
+                    result = true;
+                }
+            });
+            return result;
+        }
+        public static bool CheckResponse(ProxyCardCheckCache proxy)
         {
             var result = false;
             HttpWebResponse response = null;
@@ -97,12 +121,14 @@ namespace BulletinWebDriver.Tools
             });
             return result;
         }
-
-        static void CloseDriver()
+        public static void CloseDriver()
         {
+            currentProxy = null;
             if (driver != null)
             {
                 driver.Close();
+                driver.Quit();
+                driver.Dispose();
             }
         }
         static void UpdateActions(IWebDriver driver)
@@ -112,6 +138,10 @@ namespace BulletinWebDriver.Tools
         public static void UpdateActions()
         {
             UpdateActions(driver);
+        }
+        public static string GetTitle()
+        {
+            return driver.Title;
         }
         public static IWebElement Find(By query)
         {
@@ -131,7 +161,6 @@ namespace BulletinWebDriver.Tools
             });
             return result;
         }
-
         public static void NavigatePage(string url)
         {
             DCT.Execute(d =>
@@ -141,7 +170,6 @@ namespace BulletinWebDriver.Tools
                 //Wait(q => ((IJavaScriptExecutor)q).ExecuteScript("return document.readyState").Equals("complete"), pageLoadingTimeout);
             });
         }
-
         public static bool Wait<TResult>(Func<IWebDriver, TResult> condition, int timeout = 20)
         {
             var result = false;
@@ -167,7 +195,6 @@ namespace BulletinWebDriver.Tools
                 }
             });
         }
-
         public static void JsClick(By query, Action<IWebElement> after = null)
         {
             DCT.Execute(d =>
@@ -190,7 +217,6 @@ namespace BulletinWebDriver.Tools
             });
             return result;
         }
-
         public static void DoClick(By query)
         {
             DCT.Execute(d =>
@@ -203,7 +229,6 @@ namespace BulletinWebDriver.Tools
                 internalActions.Click(element).Build().Perform();
             });
         }
-
         public static Func<IWebDriver, bool> NoAttribute(By query, string attribute)
         {
             return (d) =>
@@ -223,7 +248,6 @@ namespace BulletinWebDriver.Tools
                 }
             };
         }
-
         public static Func<IWebDriver, bool> NoAttributeEquals(By query, string attribute, string value)
         {
             return (d) => {
@@ -242,7 +266,6 @@ namespace BulletinWebDriver.Tools
                 }
             };
         }
-
         public static Func<IWebDriver, bool> AttributeEquals(By query, string attribute, string value)
         {
             return (d) => {
@@ -261,7 +284,6 @@ namespace BulletinWebDriver.Tools
                 }
             };
         }
-
         public static Func<IWebDriver, bool> ElementExists(By query)
         {
             return (d) => {

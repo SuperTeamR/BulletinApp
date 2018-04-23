@@ -1,12 +1,9 @@
 ﻿using BulletinEngine.Core;
 using BulletinHub.Entity.Converters;
 using FessooFramework.Objects.Data;
-using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinHub.Entity.Data
 {
@@ -28,7 +25,6 @@ namespace BulletinHub.Entity.Data
             new EntityObjectALMConfiguration<Task, TaskState>(TaskState.Created, TaskState.Doing, SetValueDefault),
             new EntityObjectALMConfiguration<Task, TaskState>(TaskState.Doing, TaskState.Completed, SetValueDefault),
         };
-
         protected override int GetStateValue(TaskState state)
         {
             return (int)state;
@@ -77,8 +73,6 @@ namespace BulletinHub.Entity.Data
             });
             return result;
         }
-
-
         public override IEnumerable<EntityObject> _CollectionObjectLoad()
         {
             var result = Enumerable.Empty<EntityObject>();
@@ -95,7 +89,6 @@ namespace BulletinHub.Entity.Data
             });
             return result;
         }
-
         public override IEnumerable<TDataModel> _CacheSave<TDataModel>(IEnumerable<TDataModel> objs)
         {
             var result = Enumerable.Empty<TDataModel>();
@@ -106,11 +99,8 @@ namespace BulletinHub.Entity.Data
             });
             return result;
         }
-
         #endregion
-
     }
-
     public enum TaskState
     {
         Created = 0,
@@ -118,7 +108,6 @@ namespace BulletinHub.Entity.Data
         Completed = 2,
         Error = 99,
     }
-
     public enum TaskCommand
     {
         Creation = 0,

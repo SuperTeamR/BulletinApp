@@ -1,45 +1,20 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Selenium
 {
     class Program
     {
-
-
-
-
-
         static void Main(string[] args)
         {
-
-            //var validProxy = ProxyManager.UseProxy();
-
-            ////ChromeOptions options = new ChromeOptions();
-            //options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
-            //options.AddArgument($"--proxy-server=http://{validProxy.Address}");
-
             using (IWebDriver driver = new FirefoxDriver())
             {
-                //driver.Navigate().GoToUrl("http://whatismyipaddress.com");
-
-                //var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(
-                //    d => ((IJavaScriptExecutor)d).ExecuteScript("return document.readyState").Equals("complete"));
-
-                //Console.ReadLine();
-
-
                 driver.Navigate().GoToUrl("https://www.avito.ru/profile/login?next=%2Fprofile");
 
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20)).Until(
@@ -74,8 +49,6 @@ namespace Selenium
         {
             try
             {
-              
-
                 driver.Navigate().GoToUrl("https://www.avito.ru/additem");
 
                 var actions = new Actions(driver);
@@ -159,29 +132,18 @@ namespace Selenium
                      });
 
                     SendKeys.SendWait("{ENTER}");
-                    //new WebDriverWait(driver, TimeSpan.FromSeconds(10))
-                    //   .Until(AttributeEquals(driver, By.ClassName("form-uploader-item"), "data-state", "progress"));
 
                     Thread.Sleep(10000);
 
                     new WebDriverWait(driver, TimeSpan.FromSeconds(20))
                         .Until(ElementExists(driver, By.CssSelector($"input[name='{bulletinImageName}']")));
 
-                    //new WebDriverWait(driver, TimeSpan.FromSeconds(20))
-                    //    .Until(AttributeEquals(driver, By.ClassName($"img[name='images[]']"), "data-state", "active"));
-                    //Thread.Sleep(5000);
-                    //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
                 }
 
                 var addedImagesCount = driver.FindElements(By.ClassName("form-uploader-item")).Where(q => q.GetAttribute("data-state") == "active").Count();
 
                 if(addedImagesCount != bulletinImages.Length)
                     throw new Exception("Ошибка загрузки картинок");
-
-                //var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-                //var noProgress = wait.Until(NoAttributeEquals(driver, By.ClassName("form-uploader-item"), "data-state", "progress"));
-                //if (!noProgress)
-                //    throw new Exception("Ошибка загрузки картинок");
 
                 Console.WriteLine("Успешная загрузка объявления");
             }

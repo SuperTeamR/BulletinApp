@@ -1,15 +1,10 @@
 ﻿using BulletinBridge.Services.ServiceModels;
-using FessooFramework.Components.LoggerComponent;
 using FessooFramework.Tools.DCT;
 using FessooFramework.Tools.Web;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinBridge.Services
 {
@@ -20,7 +15,6 @@ namespace BulletinBridge.Services
 
         static readonly string ExternallUrl = @"http://176.111.73.51:44444/Images";
         static readonly string Address = @"V:\Services\FotoService\Images";
-        //public static readonly string Address = @"E:\1";
 
         protected override IEnumerable<ServiceRequestConfigBase> Configurations =>
           new ServiceRequestConfigBase[] {

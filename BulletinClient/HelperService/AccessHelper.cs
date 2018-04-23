@@ -3,8 +3,6 @@ using BulletinClient.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinClient.HelperService
 {
@@ -22,7 +20,6 @@ namespace BulletinClient.HelperService
             set => dataCollection = value;
         }
         private static IEnumerable<AccessPackage> dataCollection { get; set; }
-
         public static void All(Action<IEnumerable<AccessPackage>> callback)
         {
             HubServiceHelper.SendQueryCollection<AccessPackage>((a) =>
@@ -31,12 +28,10 @@ namespace BulletinClient.HelperService
                 callback(DataCollection);
             }, "All");
         }
-
         internal static void AddAvito(Action<IEnumerable<AccessPackage>> callback, AccessPackage cache)
         {
             HubServiceHelper.SendQueryCollection<AccessPackage>(callback, "AddAvito", cache);
         }
-
         public static void Save(Action callback, AccessPackage model)
         {
             DCT.Execute(data =>
@@ -44,15 +39,12 @@ namespace BulletinClient.HelperService
                 data.HubClient.Save<AccessPackage>((a) => callback?.Invoke(), model);
             });
         }
-
         internal static void Remove(Action callback, AccessPackage selectedObject)
         {
             DCT.Execute(data =>
             {
-                data.HubClient.SendQueryObject<AccessPackage>((a) => callback?.Invoke(), "Remove", selectedObject);
+                data.HubClient.SendQueryObject("Remove", (a) => callback?.Invoke(), selectedObject);
             });
         }
-
-      
     }
 }

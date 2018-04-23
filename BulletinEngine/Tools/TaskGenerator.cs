@@ -1,13 +1,8 @@
 ﻿using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using BulletinHub.Helpers;
-using FessooFramework.Tools.DCT;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BulletinHub.Tools
 {
@@ -49,7 +44,6 @@ namespace BulletinHub.Tools
                 d.BulletinDb.SaveChanges();
             });
         }
-
         static int timeoutBetweenTaskGroup = 30;
         static void AddNewBulletinTasks(Guid userId)
         {
@@ -94,7 +88,6 @@ namespace BulletinHub.Tools
                 d.BulletinDb.SaveChanges();
             });
         }
-
         static void AddCurrentBulletinTasks(Guid userId)
         {
             BCT.Execute(d =>
@@ -136,8 +129,6 @@ namespace BulletinHub.Tools
                 }
             });
         }
-
-
         static void SetTime(Guid userId)
         {
             BCT.Execute(d =>

@@ -1,9 +1,5 @@
 ﻿using BulletinBridge.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinWebWorker.Containers.Base.Access
 {
@@ -12,11 +8,9 @@ namespace BulletinWebWorker.Containers.Base.Access
     ///
     /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
     ///-------------------------------------------------------------------------------------------------
-
     abstract class AccessContainerBase
     {
         public abstract Guid Uid { get; }
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Пытается авторизоваться </summary>
         ///
@@ -26,9 +20,7 @@ namespace BulletinWebWorker.Containers.Base.Access
         ///
         /// <returns>   True if it succeeds, false if it fails. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         public abstract bool TryAuth(AccessPackage access);
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Авторизация на борде </summary>
         ///
@@ -36,15 +28,12 @@ namespace BulletinWebWorker.Containers.Base.Access
         ///
         /// <returns>   True if it succeeds, false if it fails. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         protected abstract bool Auth();
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Выход из профиля на борде </summary>
         ///
         /// <remarks>   SV Milovanov, 14.02.2018. </remarks>
         ///-------------------------------------------------------------------------------------------------
-
         protected abstract void Exit();
     }
 }

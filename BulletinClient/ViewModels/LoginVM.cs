@@ -5,10 +5,6 @@ using BulletinClient.Properties;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -31,15 +27,12 @@ namespace BulletinClient.ViewModels
                 SignIn();
             }
         }
-
         private void Registration()
         {
             DataHelper.UserLogin.Value = UserLogin;
             DataHelper.UserPassword.Value = UserPassword;
             MainServiceHelper.Registration(DataHelper.UserLogin.Value, DataHelper.UserPassword.Value, "", "", "", SignInCallback);
         }
-
-
         void SignIn(string userLogin, string userPassword)
         {
             DataHelper.UserLogin.Value = UserLogin;
@@ -74,6 +67,5 @@ namespace BulletinClient.ViewModels
                 Console.WriteLine($"HashUID Request = {c._SessionInfo.HashUID}");
             });
         }
-
     }
 }

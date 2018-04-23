@@ -3,8 +3,6 @@ using BulletinEngine.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BulletinEngine.Helpers
 {
@@ -19,7 +17,6 @@ namespace BulletinEngine.Helpers
         ///
         /// <returns>   The group signature. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         public static GroupSignature GetGroupSignature2(Guid bulletinId)
         {
             GroupSignature result = null;
@@ -36,7 +33,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-
         [Obsolete]
         public static GroupSignature GetGroupSignature(Guid instanceId)
         {
@@ -51,8 +47,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
          }
-
-
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Создает сигнатуру группы из хэша </summary>
         ///
@@ -62,13 +56,11 @@ namespace BulletinEngine.Helpers
         ///
         /// <returns>   The group signature. </returns>
         ///-------------------------------------------------------------------------------------------------
-
         public static GroupSignature GetGroupSignature(string hash)
         {
             GroupSignature result = null;
             BCT.Execute(data =>
             {
-
                 var group = data.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
                 if (group != null)
                 {
