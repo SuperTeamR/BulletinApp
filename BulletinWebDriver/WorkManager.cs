@@ -47,6 +47,9 @@ namespace BulletinWebDriver
                     case TaskCacheCommand.Creation:
                         bulletinContainer.AddBulletins(c.Collection);
                         break;
+                    case TaskCacheCommand.Editing:
+                        bulletinContainer.EditBulletins(c.Collection);
+                        break;
                     case TaskCacheCommand.Checking:
                         bulletinContainer.CheckModerationState(c.Collection);
                         break;

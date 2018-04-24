@@ -73,10 +73,17 @@ namespace BulletinWebWorker.Containers.Avito
             DCT.Execute(d =>
             {
                 WebDriver.UpdateActions();
-                WebDriver.NavigatePage("https://www.avito.ru/additem");
-                Thread.Sleep(2000);
-                ChooseCategories(bulletin.Signature);
-
+                if(bulletin.State == (int)BulletinState.Edited)
+                {
+                    WebDriver.NavigatePage(Path.Combine(bulletin.Url, "edit"));
+                    Thread.Sleep(2000);
+                }
+                else
+                {
+                    WebDriver.NavigatePage("https://www.avito.ru/additem");
+                    Thread.Sleep(2000);
+                    ChooseCategories(bulletin.Signature);
+                }
                 if (!SetValueFields(bulletin))
                 {
                     PrepareBulletin(bulletin);
@@ -123,9 +130,24 @@ namespace BulletinWebWorker.Containers.Avito
                 var bulletinImageText = valueFields.ContainsKey("Фотографии") ? valueFields["Фотографии"] : string.Empty;
 
                 WebDriver.JsClick(By.CssSelector($"input[value='{bulletinTypeCode}']"));
+                if (bulletin.State == (int)BulletinState.Edited)
+                {
+                    WebDriver.DoAction(By.CssSelector($"input[id='{bulletinTitleCode}']"), e => e.Clear());
+                    WebDriver.DoAction(By.CssSelector($"textarea[id='{bulletinDescCode}']"), e => e.Clear());
+                    WebDriver.DoAction(By.CssSelector($"input[id='{bulletinPriceCode}']"), e => e.Clear());
+                }
                 WebDriver.DoAction(By.CssSelector($"input[id='{bulletinTitleCode}']"), e => e.SendKeys(bulletinTitleText));
                 WebDriver.DoAction(By.CssSelector($"textarea[id='{bulletinDescCode}']"), e => e.SendKeys(bulletinDescText));
                 WebDriver.DoAction(By.CssSelector($"input[id='{bulletinPriceCode}']"), e => e.SendKeys(bulletinPriceText));
+
+                var oldImages = WebDriver.FindMany(By.ClassName("form-uploader-item__delete")).ToArray();
+                if(oldImages.Length > 0)
+                {
+                    foreach(var image in oldImages)
+                    {
+                        WebDriver.JsClick(image);
+                    }
+                }
 
                 if(!string.IsNullOrEmpty(bulletinImageText))
                 {
@@ -164,12 +186,16 @@ namespace BulletinWebWorker.Containers.Avito
             return result;
             
         }
+
+
         void ContinueAddOrEdit(BulletinState state)
         {
             DCT.Execute(d =>
             {
                 if(state == BulletinState.Edited)
                 {
+                    var element = WebDriver.FindMany(By.ClassName("packages-tab-name")).FirstOrDefault(q => q.Text == "Без пакета");
+                    element.Click();
                     var button = WebDriver.FindMany(By.ClassName("button-origin")).FirstOrDefault(q => q.Text == "Продолжить без пакета");
                     WebDriver.JsClick(button);
                  
@@ -520,10 +546,10 @@ namespace BulletinWebWorker.Containers.Avito
                     var bulletin = task.BulletinPackage;
                     if (accessContainer.TryAuth(bulletin.Access))
                     {
+
                         PrepareBulletin(bulletin);
                         ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
                         Publicate(bulletin);
-                        GetUrl(bulletin);
                     }
                 }
                 DCT.ExecuteAsync(d2 =>

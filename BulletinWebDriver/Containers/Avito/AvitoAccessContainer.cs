@@ -5,6 +5,8 @@ using BulletinWebWorker.Containers.Base.Access;
 using FessooFramework.Tools.DCT;
 using OpenQA.Selenium;
 using System;
+using System.Linq;
+using System.Threading;
 
 namespace BulletinWebWorker.Containers.Avito
 {
@@ -50,17 +52,28 @@ namespace BulletinWebWorker.Containers.Avito
             DCT.Execute(d =>
             {
                 WebDriver.NavigatePage(LoginUrl);
-                if(WebDriver.GetTitle().Contains("Доступ с вашего IP-адреса временно ограничен"))
+                if (WebDriver.GetTitle().Contains("Доступ с вашего IP-адреса временно ограничен")
+                    || WebDriver.GetTitle().Contains("Доступ временно заблокирован"))
                 {
                     WebDriver.RestartDriver();
                     throw new Exception("Блокировка по IP - требуется смена прокси");
                 }
-                WebDriver.DoAction(By.Name("login"), e =>  e.SendKeys(currentAccess.Login));
-                WebDriver.DoAction(By.Name("password"), e => e.SendKeys(currentAccess.Password));
+                WebDriver.Find("input", "data-marker", "login-form/login", e => e.SendKeys(currentAccess.Login));
+                WebDriver.Find("input", "data-marker", "login-form/password", e => e.SendKeys(currentAccess.Password));
+                WebDriver.Find("button", "data-marker", "login-form/submit", e => WebDriver.JsClick(e));
+                Thread.Sleep(2000);
 
-                WebDriver.DoAction(By.ClassName("login-form-submit"), e => e.Click());
-                result = true;
-            }, continueExceptionMethod: (d, e) => Auth());
+                var a = WebDriver.FindMany(By.TagName("a")).FirstOrDefault(q => q.Text == "Мои объявления");
+                if (a != null)
+                    result = true;
+            }, continueExceptionMethod: (d, e) =>
+            {
+                result = Auth();
+            });
+            if(!result)
+            {
+                result = Auth();
+            }
             return result;
         }
         protected override void Exit()

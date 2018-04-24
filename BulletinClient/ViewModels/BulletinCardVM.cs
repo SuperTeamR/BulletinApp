@@ -50,7 +50,7 @@ namespace BulletinClient.ViewModels
             if (Check())
             {
                 SetSignature();
-                BulletinHelper.Save(() => { }, Item);
+                BulletinHelper.Edit((a) => { }, Item);
             }
             RaisePropertyChanged(() => Item);
         }

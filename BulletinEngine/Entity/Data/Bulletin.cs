@@ -159,6 +159,9 @@ namespace BulletinEngine.Entity.Data
                     case "AddAvito":
                         result = new[] { BulletinHelper.AddAvito(entities.FirstOrDefault()) };
                         break;
+                    case "Edit":
+                        result = new[] { BulletinHelper.Edit(entities.FirstOrDefault()) };
+                        break;
                     case "Remove":
                         BulletinHelper.Remove(entities);
                         break;

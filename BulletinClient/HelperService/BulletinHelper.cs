@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace BulletinClient.HelperService
 {
-    public static class BulletinHelper
+    static class BulletinHelper
     {
         public static IEnumerable<BulletinCache> DataCollection
         {
@@ -41,17 +41,14 @@ namespace BulletinClient.HelperService
             }, "All");
         }
 
-        internal static void AddAvito(Action<IEnumerable<BulletinCache>> callback, BulletinCache cache)
+        public static void AddAvito(Action<IEnumerable<BulletinCache>> callback, BulletinCache cache)
         {
             HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "AddAvito", cache);
         }
 
-        public static void Save(Action callback, BulletinCache model)
+        public static void Edit(Action<IEnumerable<BulletinCache>> callback, BulletinCache model)
         {
-            DCT.Execute(data =>
-            {
-                data.HubClient.Save<BulletinCache>((a) => callback?.Invoke(), model);
-            });
+            HubServiceHelper.SendQueryCollection(callback, "Edit", model);
         }
 
         internal static void Remove(Action callback, BulletinCache selectedObject)

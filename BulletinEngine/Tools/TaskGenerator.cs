@@ -16,7 +16,7 @@ namespace BulletinHub.Tools
                 {
                     ClearOldTasks(userId);
                     AddNewBulletinTasks(userId);
-                    //AddCurrentBulletinTasks(userId);
+                    AddCurrentBulletinTasks(userId);
                     SetTime(userId);
                 }
                
@@ -96,23 +96,9 @@ namespace BulletinHub.Tools
 
                 var bulletinIds = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).Select(q => q.Id).ToArray();
                 var instances = d.BulletinDb.BulletinInstances.Where(q => bulletinIds.Contains(q.BulletinId)).ToArray();
-                
+
                 foreach(var instance in instances)
                 {
-                    if(instance.State == (int)BulletinInstanceState.OnModeration)
-                    {
-                        var task = new Entity.Data.Task
-                        {
-                            BulletinId = instance.Id,
-                            AccessId = instance.AccessId,
-                            UserId = userId,
-                            TargetDate = DateTime.Now,
-                            TargetType = targetType,
-                            Command = (int)Entity.Data.TaskCommand.Checking,
-                        };
-                        task.StateEnum = Entity.Data.TaskState.Created;
-                    }
-
                     if(instance.State == (int)BulletinInstanceState.Edited)
                     {
                         var task = new Entity.Data.Task
@@ -127,6 +113,7 @@ namespace BulletinHub.Tools
                         task.StateEnum = Entity.Data.TaskState.Created;
                     }
                 }
+                d.BulletinDb.SaveChanges();
             });
         }
         static void SetTime(Guid userId)

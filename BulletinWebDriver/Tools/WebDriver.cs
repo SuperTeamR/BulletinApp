@@ -6,6 +6,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net;
 using System.Threading;
 
@@ -13,8 +14,9 @@ namespace BulletinWebDriver.Tools
 {
     static class WebDriver
     {
+        public static bool IsDisableProxy { get; set; }
         static IWebDriver _driver;
-        static IWebDriver driver => _driver = _driver ?? CreateDriver();
+        public static IWebDriver driver => _driver = _driver ?? CreateDriver();
         static Actions _actions;
         public static Actions Actions => _actions;
         public static ProxyCardCheckCache currentProxy;
@@ -28,9 +30,23 @@ namespace BulletinWebDriver.Tools
             var result = default(FirefoxDriver);
             DCT.Execute(d =>
             {
-                result = TryCreateDriverWithProxy();
+                result = IsDisableProxy ? TryCreateWithoutProxy() : TryCreateDriverWithProxy();
             }); 
             return result;
+        }
+        static FirefoxDriver TryCreateWithoutProxy()
+        {
+            var result = default(FirefoxDriver);
+            DCT.Execute(d =>
+            {
+                //var options = new FirefoxOptions();
+                //options.SetPreference("permissions.default.image", 2);
+                //options.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", false);
+
+                result = new FirefoxDriver();
+            });
+            return result;
+
         }
         static FirefoxDriver TryCreateDriverWithProxy()
         {
@@ -54,7 +70,8 @@ namespace BulletinWebDriver.Tools
                     var tempDriver = new FirefoxDriver(options);
                     tempDriver.Navigate().GoToUrl("https://www.avito.ru");
 
-                    if (!tempDriver.Title.Contains("Доступ с вашего IP-адреса временно ограничен"))
+                    if (!(tempDriver.Title.Contains("Доступ с вашего IP-адреса временно ограничен")
+                    && tempDriver.Title.Contains("Доступ временно заблокирован")))
                     {
                         proxyIsFounded = true;
                         result = tempDriver;
@@ -69,22 +86,41 @@ namespace BulletinWebDriver.Tools
             }
             return result;
         }
+
+        public static ITimeouts GetTimeouts()
+        {
+            var result = default(ITimeouts);
+            DCT.Execute(d =>
+            {
+
+                result = driver.Manage().Timeouts();
+            });
+            return result;
+        }
         public static bool CheckProxy()
         {
             var result = false;
             DCT.Execute(d =>
             {
                 var foundedProxy = false;
+                var count = 0;
                 while (!foundedProxy)
                 {
                     var nextProxy = CollectorModels.Service.ProxyClientHelper.Next();
-                    if (nextProxy == null) continue;
+                    if (nextProxy == null)
+                    {
+                        Console.WriteLine("Proxy is null");
+                        continue;
+
+                    }
+                    Console.WriteLine($"Proxy {count}|Avito:{nextProxy.Avito}|Https:{nextProxy.Https}|Http:{nextProxy.Http}|Google:{nextProxy.Google}|Ping:{nextProxy.PingLast}|={nextProxy.Address}:{nextProxy.Port}");
 
                     if (!CheckResponse(nextProxy)) continue;
 
                     currentProxy = nextProxy;
                     foundedProxy = true;
                     result = true;
+                    count++;
                 }
             });
             return result;
@@ -166,7 +202,6 @@ namespace BulletinWebDriver.Tools
             DCT.Execute(d =>
             {
                 driver.Navigate().GoToUrl(url);
-                Thread.Sleep(2000);
                 //Wait(q => ((IJavaScriptExecutor)q).ExecuteScript("return document.readyState").Equals("complete"), pageLoadingTimeout);
             });
         }
@@ -301,6 +336,18 @@ namespace BulletinWebDriver.Tools
                     return false;
                 }
             };
+        }
+        public static void Find(string tag, string attribute, string value, Action<IWebElement> action)
+        {
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElements(By.TagName(tag)).FirstOrDefault(q => q.GetAttribute(attribute) == value);
+                if(element != null && action != null)
+                {
+                    action(element);
+                }
+            });
+
         }
     }
 }

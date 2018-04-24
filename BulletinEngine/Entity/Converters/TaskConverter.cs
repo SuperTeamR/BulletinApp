@@ -29,6 +29,7 @@ namespace BulletinHub.Entity.Converters
                     bulletinPackage.AccessFields = accessFields;
                     bulletinPackage.Access = Access.ToCache(dbAccess);
                     bulletinPackage.State = dbInstance.State;
+                    bulletinPackage.Url = dbInstance.Url;
                 }
                 else if(obj.TargetType == typeof(Access).ToString())
                 {

@@ -6,7 +6,7 @@ using BulletinHub.Tools;
 
 namespace BulletinHub.Helpers
 {
-    public static class BulletinHelper
+    static class BulletinHelper
     {
         public static void GenerateTask()
         {
@@ -24,7 +24,18 @@ namespace BulletinHub.Helpers
             });
             return result;
         }
-        internal static Bulletin AddAvito(Bulletin model)
+
+        public static Bulletin Edit(Bulletin bulletin)
+        {
+            BCT.Execute(d =>
+            {
+                var instance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.BulletinId == bulletin.Id);
+                instance.StateEnum = BulletinInstanceState.Edited;
+                d.SaveChanges();
+            });
+            return bulletin;
+        }
+        public static Bulletin AddAvito(Bulletin model)
         {
             BCT.Execute(c =>
             {
@@ -34,7 +45,7 @@ namespace BulletinHub.Helpers
             });
             return model;
         }
-        internal static void Remove(IEnumerable<Bulletin> entities)
+        public static void Remove(IEnumerable<Bulletin> entities)
         {
             BCT.Execute(c =>
             {
