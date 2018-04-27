@@ -40,7 +40,6 @@ namespace BulletinCommand.Helpers
             Console.WriteLine($"GenerationClearData execute complete");
         }
 
-
         public static void GenerationFull()
         {
             Console.WriteLine($"GenerationFull execute start");
@@ -69,11 +68,15 @@ namespace BulletinCommand.Helpers
                     if (tasks != null)
                         CommandTaskHelper.Remove(tasks);
                     access.SetGenerationCheck();
-                    CommandTaskHelper.CreateAccessCheck(access.UserId, access.Id);
+                    CommandTaskHelper.CreateAccessCheck(access);
                 }
             });
         }
 
+        /// <summary>
+        /// Минуты
+        /// </summary>
+        public static int SprintPublicashionTimeout = 30;
         public static void GenerationBulletinsPublish()
         {
             BCT.Execute(c =>
@@ -118,7 +121,7 @@ namespace BulletinCommand.Helpers
                                     if (currentAccess >= accessCount)
                                     {
                                         currentAccess = 0;
-                                        datePublish = datePublish.AddMinutes(30);
+                                        datePublish = datePublish.AddMinutes(SprintPublicashionTimeout);
                                     }
                                 }
                             }

@@ -11,9 +11,10 @@ namespace BulletinCommand.Helpers
 {
     public static class CommandTaskHelper
     {
+        #region Back logic
         public static void Remove(IEnumerable<BulletinHub.Entity.Data.Task> entities)
         {
-            BCT.Execute(c => 
+            BCT.Execute(c =>
             {
                 foreach (var task in entities)
                     task.StateEnum = BulletinHub.Entity.Data.TaskState.Disabled;
@@ -33,12 +34,15 @@ namespace BulletinCommand.Helpers
             });
             return result;
         }
-        public static void CreateAccessCheck(Guid userId, Guid accessId)
+        public static void CreateAccessCheck(Access access)
         {
-            Create(TaskCommand.AccessCheck, a => 
+            Create(TaskCommand.AccessCheck, a =>
             {
-                a.AccessId = accessId;
-                a.UserId = userId;
+                //Обязательные
+                a.BoardId = access.BoardId;
+                a.UserId = access.UserId;
+
+                a.AccessId = access.Id;
             });
         }
 
@@ -46,12 +50,16 @@ namespace BulletinCommand.Helpers
         {
             Create(TaskCommand.InstancePublication, a =>
             {
+                //Обязательные
                 a.UserId = userId;
+                a.BoardId = instance.BoardId;
+
                 a.AccessId = instance.AccessId;
                 a.BulletinId = instance.BulletinId;
                 a.InstanceId = instance.Id;
                 a.TargetDate = publicationDate;
             });
         }
+        #endregion
     }
 }

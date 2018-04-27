@@ -1,4 +1,5 @@
 ﻿using BulletinBridge.Data;
+using BulletinBridge.Models;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using FessooFramework.Objects.Message;
@@ -54,7 +55,9 @@ namespace HubService
             new DataServiceConfiguration<Access, AccessPackage>(),
             new DataServiceConfiguration<Bulletin, BulletinPackage>(),
             new DataServiceConfiguration<Bulletin, BulletinCache>(),
+            new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache_old>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache>(),
+            new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskAccessCheckCache>(),
         };
 
         protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();

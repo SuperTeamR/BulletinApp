@@ -30,7 +30,7 @@ namespace BulletinWebWorker.Containers.Avito
     {
         public override Guid Uid => BoardIds.Avito;
         public string ProfileUrl => @"https://www.avito.ru/profile";
-        public override void AddBulletins(IEnumerable<TaskCache> tasks)
+        public override void AddBulletins(IEnumerable<TaskCache_old> tasks)
         {
 
             DCT.Execute(d =>
@@ -64,7 +64,7 @@ namespace BulletinWebWorker.Containers.Avito
                             task.State = (int)TaskCacheState.Completed;
                         }
                     }
-                    TaskHelper.Complete(tasks);
+                    //DriverTaskHelper.Complete(tasks);
                 });
             });
         }
@@ -245,7 +245,7 @@ namespace BulletinWebWorker.Containers.Avito
                 bulletin.Url = href;
             });
         }
-        public override void CheckModerationState(IEnumerable<TaskCache> tasks)
+        public override void CheckModerationState(IEnumerable<TaskCache_old> tasks)
         {
             DCT.Execute(d =>
             {
@@ -262,7 +262,7 @@ namespace BulletinWebWorker.Containers.Avito
                     t.State = (int)TaskCacheState.Completed;
                 }
 
-                TaskHelper.Complete(tasks);
+                //DriverTaskHelper.Complete(tasks);
             });
         }
         BulletinState CheckBulletinState(string url)
@@ -395,7 +395,7 @@ namespace BulletinWebWorker.Containers.Avito
             });
             return result;
         }
-        public override void GetBulletinList(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinList(IEnumerable<TaskCache_old> tasks)
         {
             DCT.Execute(d =>
             {
@@ -408,7 +408,7 @@ namespace BulletinWebWorker.Containers.Avito
                     bulletins.AddRange(r);
                     task.State = (int)TaskCacheState.Completed;
                 }
-                TaskHelper.Complete(tasks);
+                //DriverTaskHelper.Complete(tasks);
             });
         }
         IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
@@ -499,7 +499,7 @@ namespace BulletinWebWorker.Containers.Avito
             return result;
         }
 
-        public override void GetBulletinDetails(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinDetails(IEnumerable<TaskCache_old> tasks)
         {
             DCT.Execute(d =>
             {
@@ -535,12 +535,11 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
-        public override void EditBulletins(IEnumerable<TaskCache> tasks)
+        public override void EditBulletins(IEnumerable<TaskCache_old> tasks)
         {
             DCT.Execute(d =>
             {
                 var accessContainer = AccessContainerList.Get(Uid);
-
                 foreach (var task in tasks)
                 {
                     var bulletin = task.BulletinPackage;
@@ -568,7 +567,7 @@ namespace BulletinWebWorker.Containers.Avito
                             task.State = (int)TaskCacheState.Completed;
                         }
                     }
-                    TaskHelper.Complete(tasks);
+                    //DriverTaskHelper.Complete(tasks);
                 });
             });
         }

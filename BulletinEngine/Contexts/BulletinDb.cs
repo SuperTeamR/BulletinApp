@@ -7,7 +7,7 @@ using System.Data.Entity.Migrations;
 namespace BulletinEngine.Contexts
 {
     //Add-migration BulletinDb_1 -ConfigurationTypeName BulletinEngine.Contexts.ConfigurationBulletinDb
-    // Update-database
+    // Update-database -ConfigurationTypeName BulletinEngine.Contexts.ConfigurationBulletinDb
     internal sealed class ConfigurationBulletinDb : DbMigrationsConfiguration<BulletinEngine.Contexts.BulletinDb>
     {
         public ConfigurationBulletinDb()

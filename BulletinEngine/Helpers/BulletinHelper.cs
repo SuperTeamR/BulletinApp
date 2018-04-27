@@ -25,13 +25,6 @@ namespace BulletinHub.Helpers
             return result;
         }
 
-        public static void GenerateTask()
-        {
-            BCT.Execute(c =>
-            {
-                TaskHelper.GenerateTasks(c.UserId);
-            });
-        }
         public static IEnumerable<Bulletin> All()
         {
             var result = Enumerable.Empty<Bulletin>();

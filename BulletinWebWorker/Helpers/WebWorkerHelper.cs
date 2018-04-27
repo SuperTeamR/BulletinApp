@@ -41,14 +41,14 @@ namespace BulletinWebWorker.Managers
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
 
-                    client.SendQueryCollection<TaskCache>("Load", AskForWorkCallback,  objects: Enumerable.Empty<TaskCache>());
+                    client.SendQueryCollection<TaskCache_old>("Load", AskForWorkCallback,  objects: Enumerable.Empty<TaskCache_old>());
                     //client.CollectionLoad<TaskCache>(AskForWorkCallback);
                 }
 
             });
         }
 
-        static void AskForWorkCallback(IEnumerable<TaskCache> tasks)
+        static void AskForWorkCallback(IEnumerable<TaskCache_old> tasks)
         {
             var bulletinContainer = BulletinPackageContainerList.Get(BoardIds.Avito);
 

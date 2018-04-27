@@ -44,8 +44,8 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="FessooFramework, Version=1.0.0.43, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\FessooFramework.1.0.0.43\lib\net461\FessooFramework.dll</HintPath>
+    <Reference Include="FessooFramework, Version=1.0.0.45, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FessooFramework.1.0.0.45\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -79,6 +79,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Containers\BoardRealizations\Avito.cs" />
+    <Compile Include="Helpers\FirefoxDriverHelper.cs" />
+    <Compile Include="Helpers\ProxyHelper.cs" />
     <Compile Include="Tools\BoardIds.cs" />
     <Compile Include="Boostrapper.cs" />
     <Compile Include="Containers\Avito\AvitoAccessContainer.cs" />
@@ -94,7 +97,7 @@
     <Compile Include="Containers\BoardContainer.cs" />
     <Compile Include="Core\BWContext.cs" />
     <Compile Include="Core\DCT.cs" />
-    <Compile Include="Helpers\TaskHelper.cs" />
+    <Compile Include="ServiceHelper\DriverTaskHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\HubServiceClient.cs" />
@@ -108,12 +111,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Containers\BoardRealizations\" />
+    <EmbeddedResource Include="geckodriver.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BulletinBridge\BulletinBridge.csproj">
       <Project>{e797ca88-a5df-4ec7-9a22-6abe3e393f9a}</Project>
       <Name>BulletinBridge</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BulletinEngine\BulletinHub.csproj">
+      <Project>{061283DB-C550-4FB7-85AF-90FA11133C95}</Project>
+      <Name>BulletinHub</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

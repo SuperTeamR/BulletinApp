@@ -1,7 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinEngine.Core;
 using BulletinEngine.Helpers;
-using BulletinHub.Entity.Converters;
 using BulletinHub.Helpers;
 using BulletinHub.Tools;
 using FessooFramework.Objects.Data;
@@ -85,16 +84,17 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<Bulletin>> CreatorsService => new[]
         {
-             EntityObjectALMCreator<Bulletin>.New(BulletinContainerConverter.Convert, BulletinContainerConverter.Convert, new Version(1,0,0,0)),
-              EntityObjectALMCreator<Bulletin>.New<BulletinCache>(ToCache,ToEntity, new Version(1,0,0,0))
+             EntityObjectALMCreator<Bulletin>.New(ToPackageCache, ToEntity, new Version(1,0,0,0)),
+              EntityObjectALMCreator<Bulletin>.New<BulletinCache>(ToBulletinCache,ToEntity, new Version(1,0,0,0))
         };
+        #region BulletinCache
         private Bulletin ToEntity(BulletinCache cache, Bulletin entity)
         {
             entity.Title = cache.Title;
             entity.Description = cache.Description;
             entity.Images = cache.Images;
             entity.Price = cache.Price;
-            var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q=>q.Hash == cache.GroupSignature);
+            var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q => q.Hash == cache.GroupSignature);
             if (group != null)
             {
                 entity.GroupId = group.Id;
@@ -102,7 +102,7 @@ namespace BulletinEngine.Entity.Data
             return entity;
         }
 
-        private BulletinCache ToCache(Bulletin entity)
+        private BulletinCache ToBulletinCache(Bulletin entity)
         {
             var cache = new BulletinCache();
             cache.Title = entity.Title;
@@ -117,6 +117,53 @@ namespace BulletinEngine.Entity.Data
             }
             return cache;
         }
+        #endregion
+        #region BulletinPackage
+        public static Bulletin ToEntity(BulletinPackage obj, Bulletin entity)
+        {
+            var result = default(Bulletin);
+            BCT.Execute(d =>
+            {
+                var hash = obj.Signature.GetHash();
+                var dbGroup = d.BulletinDb.Groups.FirstOrDefault(q => q.Hash == hash);
+                var bulletinTitle = obj.ValueFields["Название объявления"];
+                var bulletinDesc = obj.ValueFields["Описание объявления"];
+                var bulletinPrice = obj.ValueFields["Цена"];
+                var bulletinImages = obj.ValueFields.ContainsKey("Фотографии") ? obj.ValueFields["Фотографии"] : null;
+
+                entity.UserId = d.UserId;
+                entity.GroupId = dbGroup.Id;
+                entity.Title = bulletinTitle;
+                entity.Description = bulletinDesc;
+                entity.Price = bulletinPrice;
+                entity.Images = bulletinImages;
+
+                result = entity;
+            });
+            return result;
+        }
+        public static BulletinPackage ToPackageCache(Bulletin obj)
+        {
+            var result = default(BulletinPackage);
+            BCT.Execute(d =>
+            {
+                var package = new BulletinPackage();
+                var valueFields = new Dictionary<string, string>();
+                valueFields.Add("Название объявления", obj.Title);
+                valueFields.Add("Описание объявления", obj.Description);
+                valueFields.Add("Цена", obj.Price);
+                valueFields.Add("Вид объявления ", "Продаю свое");
+                if (string.IsNullOrEmpty(obj.Images))
+                    valueFields.Add("Фотографии", obj.Images);
+                package.ValueFields = valueFields;
+                package.Title = obj.Title;
+
+                result = package;
+            });
+            return result;
+        }
+        #endregion
+
         #endregion
 
         #region DataService -- Methods
@@ -185,9 +232,6 @@ namespace BulletinEngine.Entity.Data
                         break;
                     case "Remove":
                         BulletinHelper.Remove(entities);
-                        break;
-                    case "Generate":
-                        BulletinHelper.GenerateTask();
                         break;
                     default:
                         break;

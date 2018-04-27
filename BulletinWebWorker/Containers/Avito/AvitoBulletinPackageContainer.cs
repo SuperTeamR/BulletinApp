@@ -26,7 +26,7 @@ namespace BulletinWebWorker.Containers.Avito
 
         public string ProfileUrl => @"https://www.avito.ru/profile";
 
-        public override void AddBulletins2(IEnumerable<TaskCache> tasks)
+        public override void AddBulletins2(IEnumerable<TaskCache_old> tasks)
         {
             UiHelper.UpdateWorkState("Добавление списка буллетинов");
 
@@ -1122,7 +1122,7 @@ namespace BulletinWebWorker.Containers.Avito
 
         #endregion
 
-        public override void GetBulletinList2(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinList2(IEnumerable<TaskCache_old> tasks)
         {
             UiHelper.UpdateWorkState("Выгрузка списка буллетинов");
 
@@ -1150,7 +1150,7 @@ namespace BulletinWebWorker.Containers.Avito
             });
         }
 
-        public override void GetBulletinDetails2(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinDetails2(IEnumerable<TaskCache_old> tasks)
         {
             UiHelper.UpdateWorkState("Выгрузка полей для списка буллетинов");
 

@@ -1,4 +1,5 @@
-﻿using BulletinWebDriver.Core;
+﻿using BulletinWebDriver.Containers;
+using BulletinWebDriver.Core;
 using BulletinWebDriver.Helpers;
 using BulletinWebDriver.Tools;
 using FessooFramework.Tools.Helpers;
@@ -13,11 +14,15 @@ namespace BulletinWebDriver
 {
     class Program
     {
+        private static BoardContainer BoardContainer = new BoardContainer();
+
         static void Main(string[] args)
         {
             Bootstrapper.Current.Run();
             DCT.Context._SessionInfo.HashUID = "Engine";
             DCT.Context._SessionInfo.SessionUID = "Engine";
+            ConsoleHelper.SendMessage($"Connect to {new HubServiceClient().Address}");
+
 
             var command = "TaskExecute";
             if (args != null && args.Any())
@@ -30,7 +35,9 @@ namespace BulletinWebDriver
                     switch (command)
                     {
                         case "TaskExecute":
-                            TaskHelper.Execute();
+                            var task = DriverTaskHelper.Next();
+                            if (task != null)
+                                BoardContainer.Execute(task);
                             Thread.Sleep(60000);
                             break;
                         default:

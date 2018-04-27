@@ -1,5 +1,6 @@
-﻿using BulletinEngine.Core;
-using BulletinEngine.Entity.Converters;
+﻿using BulletinBridge.Data;
+using BulletinEngine.Core;
+using BulletinEngine.Helpers;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.DCT;
 using System;
@@ -89,8 +90,47 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
         {
-             EntityObjectALMCreator<BulletinInstance>.New(BulletinInstanceConverter.Convert, BulletinInstanceConverter.Convert, new Version(1,0,0,0))
+             EntityObjectALMCreator<BulletinInstance>.New(ToCache, ToEntity, new Version(1,0,0,0))
         };
+
+        public static BulletinPackage ToCache(BulletinInstance obj)
+        {
+            BulletinPackage result = null;
+            BCT.Execute(d =>
+            {
+                var groupSignature = GroupHelper.GetGroupSignature(obj.Id);
+                var access = AccessHelper.GetFreeAccess(obj.Id);
+                var valueFields = ValueFieldHelper.GetValueFields(obj.Id);
+                var accessFields = AccessFieldHelper.GetAccessFields(obj.Id);
+                var state = obj.State;
+
+                result = new BulletinPackage
+                {
+                    BulletinId = obj.BulletinId,
+                    BulletinInstanceId = obj.Id,
+                    Url = obj.Url,
+                    Signature = groupSignature,
+                    Access = access,
+                    ValueFields = valueFields,
+                    AccessFields = accessFields,
+                    State = state,
+                    Title = obj.Url,
+                };
+            });
+            return result;
+        }
+        public static BulletinInstance ToEntity(BulletinPackage obj, BulletinInstance entity)
+        {
+            BulletinInstance result = null;
+            BCT.Execute(d =>
+            {
+                entity.State = obj.State;
+                entity.Url = obj.Url;
+
+                result = entity;
+            });
+            return result;
+        }
         #endregion
 
         #region DataService -- Methods

@@ -482,17 +482,17 @@ namespace BulletinWebWorker.Containers.Fake
             return result;
         }
 
-        public override void AddBulletins2(IEnumerable<TaskCache> packages)
+        public override void AddBulletins2(IEnumerable<TaskCache_old> packages)
         {
             throw new NotImplementedException();
         }
 
-        public override void GetBulletinList2(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinList2(IEnumerable<TaskCache_old> tasks)
         {
             throw new NotImplementedException();
         }
 
-        public override void GetBulletinDetails2(IEnumerable<TaskCache> tasks)
+        public override void GetBulletinDetails2(IEnumerable<TaskCache_old> tasks)
         {
             throw new NotImplementedException();
         }

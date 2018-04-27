@@ -201,6 +201,7 @@ namespace BulletinWebDriver.Tools
         {
             DCT.Execute(d =>
             {
+
                 driver.Navigate().GoToUrl(url);
                 //Wait(q => ((IJavaScriptExecutor)q).ExecuteScript("return document.readyState").Equals("complete"), pageLoadingTimeout);
             });

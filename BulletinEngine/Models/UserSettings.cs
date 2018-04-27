@@ -1,4 +1,5 @@
-﻿using BulletinHub.Entity.Converters;
+﻿using BulletinBridge.Data;
+using BulletinEngine.Core;
 using FessooFramework.Objects.Data;
 using System;
 using System.Collections.Generic;
@@ -41,8 +42,26 @@ namespace BulletinHub.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<UserSettings>> CreatorsService => new[]
         {
-            EntityObjectALMCreator<UserSettings>.New(UserSettingsConverter.Convert, UserSettingsConverter.Convert, new Version(1, 0, 0, 0))
+            EntityObjectALMCreator<UserSettings>.New(ToCache, ToEntity, new Version(1, 0, 0, 0))
         };
+        public static UserSettingsCache ToCache(UserSettings obj)
+        {
+            UserSettingsCache result = null;
+            BCT.Execute(d =>
+            {
+            });
+            return result;
+        }
+        public static UserSettings ToEntity(UserSettingsCache obj, UserSettings entity)
+        {
+            var result = default(Data.UserSettings);
+            BCT.Execute(d =>
+            {
+                result.TaskGenerationPeriod = 7 * 24;
+                entity = result;
+            });
+            return entity;
+        }
         #endregion
     }
     public enum UserSettingsState

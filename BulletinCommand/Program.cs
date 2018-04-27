@@ -22,9 +22,10 @@ namespace BulletinCommand
             while (true)
             {
                 #region DEBUG
-               // GenerationHelpers.GenerationClearData();
                 //Для отладки по Enter в цикле вызывает
-                GenerationHelpers.GenerationFull();
+                //var r = BackTaskHelper.Next();
+                //Console.WriteLine($"{r.Id} {r.StateEnum.ToString()} {r.TargetDate.ToString()}");
+                //BackTaskHelper.Complite(new[] { r });
                 #endregion
                 Console.Write("BC> ");
                 var text = Console.ReadLine();
@@ -38,7 +39,11 @@ namespace BulletinCommand
                             GenerationHelpers.GenerationFull();
                             break;
                         case "TaskGenerationClear":
-                            GenerationHelpers.GenerationClearData();                           
+                            GenerationHelpers.GenerationClearData();
+                            break;
+                        case "NextTask":
+                            var r2 = BackTaskHelper.Next();
+                            r2 = r2;
                             break;
                         case "help":
                             Console.WriteLine(Help);

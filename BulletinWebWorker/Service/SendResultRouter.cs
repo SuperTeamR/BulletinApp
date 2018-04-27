@@ -23,7 +23,7 @@ namespace BulletinWebWorker.Service
             });
         }
 
-        public static void TaskWorkDone(IEnumerable<TaskCache> tasks)
+        public static void TaskWorkDone(IEnumerable<TaskCache_old> tasks)
         {
             DCT.ExecuteAsync(d2 =>
             {
@@ -36,7 +36,7 @@ namespace BulletinWebWorker.Service
             });
         }
 
-        public static void AccessBulletinListWorkDone(IEnumerable<TaskCache> tasks)
+        public static void AccessBulletinListWorkDone(IEnumerable<TaskCache_old> tasks)
         {
             DCT.ExecuteAsync(d2 =>
             {
@@ -49,7 +49,7 @@ namespace BulletinWebWorker.Service
             });
         }
 
-        public static void AccessBulletinDetailsWorkDone(IEnumerable<TaskCache> tasks)
+        public static void AccessBulletinDetailsWorkDone(IEnumerable<TaskCache_old> tasks)
         {
             DCT.ExecuteAsync(d2 =>
             {

@@ -6,7 +6,11 @@ namespace BulletinWebDriver.Core
 {
     internal class HubServiceClient : DataServiceClient
     {
-        public override string Address => ConfigurationManager.AppSettings["DataServiceAddress"];
+#if DEBUG
+        public override string Address => "http://localhost:59888/DataService.svc";
+#else
+        public override string Address => "http://176.111.73.51/BulletinHub/DataService.svc";
+#endif
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
         public override string HashUID => "Engine";
         public override string SessionUID => "Engine";
