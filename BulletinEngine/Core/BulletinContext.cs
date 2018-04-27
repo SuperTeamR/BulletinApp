@@ -1,5 +1,6 @@
 ﻿
-using BulletinEngine.Entity.Context;
+using BulletinEngine.Contexts;
+using BulletinHub.Contexts;
 using FessooFramework.Components;
 using FessooFramework.Tools.DataContexts;
 using System;
@@ -28,27 +29,32 @@ namespace BulletinEngine.Core
         }
         public BulletinDb BulletinDb => _Store.Context<BulletinDb>();
         public MainDB MainDb => _Store.Context<MainDB>();
+        public TempDB TempDB => _Store.Context<TempDB>();
         public BulletinContext()
         {
-            var settings = ConfigurationManager.AppSettings;
-            if(ConfigurationManager.AppSettings["IsIntegrated"] == "True")
-            {
-                _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"]);
-                _Store.Add<MainDB>(ConfigurationManager.AppSettings["MainDbName"]);
-            }
-            else
-            {
-                var r = ConfigurationManager.AppSettings["BulletinDbName"];
-                _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"],
-               ConfigurationManager.AppSettings["BulletinDbIp"],
-               ConfigurationManager.AppSettings["BulletinDbLogin"],
-               ConfigurationManager.AppSettings["BulletinDbPassword"]);
+            _Store.Add<TempDB>("BulletinTempDB", "176.111.73.51", @"AMK2", "OnlineHelp59");
+            _Store.Add<BulletinDb>("BulletinDB", "176.111.73.51", @"AMK2", "OnlineHelp59");
+            _Store.Add<MainDB>("MainDB", "176.111.73.51", @"AMK2", "OnlineHelp59");
 
-                _Store.Add<MainDB>(ConfigurationManager.AppSettings["MainDbName"],
-               ConfigurationManager.AppSettings["MainDbIp"],
-               ConfigurationManager.AppSettings["MainDbLogin"],
-               ConfigurationManager.AppSettings["MainDbPassword"]);
-            }
+            //var settings = ConfigurationManager.AppSettings;
+            //if (ConfigurationManager.AppSettings["IsIntegrated"] == "True")
+            //{
+            //    _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"]);
+            //    _Store.Add<MainDB>(ConfigurationManager.AppSettings["MainDbName"]);
+            //}
+            //else
+            //{
+            //    var r = ConfigurationManager.AppSettings["BulletinDbName"];
+            //    _Store.Add<BulletinDb>(ConfigurationManager.AppSettings["BulletinDbName"],
+            //   ConfigurationManager.AppSettings["BulletinDbIp"],
+            //   ConfigurationManager.AppSettings["BulletinDbLogin"],
+            //   ConfigurationManager.AppSettings["BulletinDbPassword"]);
+
+            //    _Store.Add<MainDB>(ConfigurationManager.AppSettings["MainDbName"],
+            //   ConfigurationManager.AppSettings["MainDbIp"],
+            //   ConfigurationManager.AppSettings["MainDbLogin"],
+            //   ConfigurationManager.AppSettings["MainDbPassword"]);
+            //}
         }
     }
 }

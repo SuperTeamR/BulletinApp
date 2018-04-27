@@ -18,7 +18,7 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "Save", objects: bulletins, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                    client.SendQueryCollection("Save", objects: bulletins);
                 }
             });
         }
@@ -31,7 +31,7 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                    client.SendQueryCollection("Save", objects: tasks);
                 }
             });
         }
@@ -44,7 +44,7 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                    client.SendQueryCollection("Save", objects: tasks);
                 }
             });
         }
@@ -57,7 +57,7 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "Save", objects: tasks, sessionUID: d2._SessionInfo.SessionUID, hashUID: d2._SessionInfo.HashUID);
+                    client.SendQueryCollection("Save", objects: tasks);
                 }
             });
         }
@@ -73,7 +73,7 @@ namespace BulletinWebWorker.Service
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
 
-                    client.SendQueryCollection((a) => { }, "AssignBulletinWork", objects: bulletins);
+                    client.SendQueryCollection("AssignBulletinWork", objects: bulletins);
                 }
             });
         }
@@ -86,7 +86,7 @@ namespace BulletinWebWorker.Service
                 {
                     var r = client.Ping();
                     Console.WriteLine($"Ping = {r}");
-                    client.SendQueryCollection((a) => { }, "CheckAccess", objects: accesses);
+                    client.SendQueryCollection("CheckAccess", objects: accesses);
                 }
             });
         }

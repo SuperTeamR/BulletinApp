@@ -41,7 +41,7 @@ namespace BulletinWebWorker.Managers
                     var result = client.Ping();
                     Console.WriteLine($"Ping = {result}");
 
-                    client.SendQueryCollection<TaskCache>(AskForWorkCallback, "Load", objects: Enumerable.Empty<TaskCache>(), sessionUID: d._SessionInfo.SessionUID, hashUID: d._SessionInfo.HashUID);
+                    client.SendQueryCollection<TaskCache>("Load", AskForWorkCallback,  objects: Enumerable.Empty<TaskCache>());
                     //client.CollectionLoad<TaskCache>(AskForWorkCallback);
                 }
 

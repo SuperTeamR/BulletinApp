@@ -1,6 +1,6 @@
 ﻿using BulletinBridge.Data;
 using BulletinWebDriver;
-using BulletinWebDriver.ServiceHelper;
+using BulletinWebDriver.Helpers;
 using BulletinWebDriver.Tools;
 using BulletinWebWorker.Containers.Base;
 using BulletinWebWorker.Containers.Base.Access;
@@ -64,7 +64,7 @@ namespace BulletinWebWorker.Containers.Avito
                             task.State = (int)TaskCacheState.Completed;
                         }
                     }
-                    ServerHelper.SendDoneTasks(tasks);
+                    TaskHelper.Complete(tasks);
                 });
             });
         }
@@ -262,7 +262,7 @@ namespace BulletinWebWorker.Containers.Avito
                     t.State = (int)TaskCacheState.Completed;
                 }
 
-                ServerHelper.SendDoneTasks(tasks);
+                TaskHelper.Complete(tasks);
             });
         }
         BulletinState CheckBulletinState(string url)
@@ -408,7 +408,7 @@ namespace BulletinWebWorker.Containers.Avito
                     bulletins.AddRange(r);
                     task.State = (int)TaskCacheState.Completed;
                 }
-                ServerHelper.SendDoneTasks(tasks);
+                TaskHelper.Complete(tasks);
             });
         }
         IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
@@ -568,7 +568,7 @@ namespace BulletinWebWorker.Containers.Avito
                             task.State = (int)TaskCacheState.Completed;
                         }
                     }
-                    ServerHelper.SendDoneTasks(tasks);
+                    TaskHelper.Complete(tasks);
                 });
             });
         }

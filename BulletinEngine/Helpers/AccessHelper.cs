@@ -25,7 +25,7 @@ namespace BulletinEngine.Helpers
                 var board = c.BulletinDb.Boards.FirstOrDefault(q=>q.Name == "Avito");
                 access.BoardId = board.Id;
                 access.UserId = c.UserId;
-                access.StateEnum = Entity.Data.AccessState.Created;
+                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
                 c.SaveChanges();
             });
             return access;
@@ -38,34 +38,6 @@ namespace BulletinEngine.Helpers
                     c.BulletinDb.Accesses.Remove(entity);
                 c.SaveChanges();
             });
-        }
-        public static Guid? GetActiveAccessId(Guid bulletinId)
-        {
-            Guid? result = null;
-            BCT.Execute(d =>
-            {
-                var allAccesses = d.BulletinDb.Accesses.Where(q => q.UserId == d.UserId).ToArray();
-                var bulletins = d.BulletinDb.BulletinInstances.Where(q => q.State == (int)BulletinInstanceState.WaitPublication).ToArray();
-                if(bulletins.Any())
-                {
-                    var usedAccesses = bulletins.Select(q => q.AccessId).Distinct().ToArray();
-                    var freeAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id)).ToArray();
-                    
-                    if(freeAccesses.Any())
-                    {
-                        //Если есть неиспользованный аккаунт - берем его
-                        var freeAccess = freeAccesses.FirstOrDefault();
-                        result = freeAccess.Id;
-                        return;
-                    }
-                    else
-                    {
-
-                    }
-                }
-                var grouped = bulletins.GroupBy(q => q.AccessId);
-            });
-            return result;
         }
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает свободный доступ к борде для пользователя из инстанции буллетина </summary>
@@ -111,74 +83,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-        /// <summary>
-        /// Получает неиспользованные доступы для буллетина
-        /// </summary>
-        /// <param name="bulletinId"></param>
-        /// <returns></returns>
-        public static IEnumerable<AccessPackage> GetUnusedAccesses(Guid bulletinId)
-        {
-            var result = new List<AccessPackage>();
-
-            BCT.Execute(d =>
-            {
-                var allAccesses = d.BulletinDb.Accesses.ToArray();
-                var usedAccesses = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == bulletinId).Select(q => q.AccessId).ToArray();
-
-
-                var unusedAccesses = allAccesses.Where(q => !usedAccesses.Contains(q.Id));
-                result = unusedAccesses.Select(q => new AccessPackage
-                {
-                    Login = q.Login,
-                    Password = q.Password,
-                    BoardId = q.BoardId,
-                    State = q.State,
-                }).ToList();
-            });
-            return result;
-        }
-        public static IEnumerable<AccessPackage> MarkAccessAsChecked(IEnumerable<AccessPackage> packages)
-        {
-            var result = Enumerable.Empty<AccessPackage>();
-            BCT.Execute(d =>
-            {
-                foreach (var p in packages)
-                {
-                    var dbAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Login == p.Login && q.Password == p.Password);
-                    if (dbAccess != null)
-                    {
-                        dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Activated;
-                        d.BulletinDb.SaveChanges();
-                    }
-                }
-            });
-            return result;
-        }
-        public static IEnumerable<AccessPackage> AddAccesses(IEnumerable<AccessPackage> packages)
-        {
-            var result = Enumerable.Empty<AccessPackage>();
-            BCT.Execute(d =>
-            {
-                foreach (var p in packages)
-                {
-                    var dbAccess = new Access
-                    {
-                        Login = p.Login,
-                        Password = p.Password,
-                        BoardId = d.BulletinDb.Boards.FirstOrDefault().Id,
-                        UserId = d.MainDb.UserAccesses.FirstOrDefault().Id
-                    };
-                    dbAccess.StateEnum = BulletinEngine.Entity.Data.AccessState.Cloning;
-
-                    var dbBulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == dbAccess.UserId).ToArray();
-                    foreach(var b in dbBulletins)
-                    {
-                        b.StateEnum = Entity.Data.BulletinState.Cloning;
-                    }
-                }
-                d.SaveChanges();
-            });
-            return result;
-        }
+       
     }
 }

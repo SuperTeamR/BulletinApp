@@ -8,11 +8,28 @@ namespace BulletinHub.Helpers
 {
     static class BulletinHelper
     {
+        public static IEnumerable<Bulletin> Create(IEnumerable<Bulletin> objs)
+        {
+            var result = Enumerable.Empty<Bulletin>().ToList();
+            BCT.Execute(d =>
+            {
+                var bulletins = objs.ToArray();
+                for (int i = 0; i < objs.Count(); i++)
+                {
+                    var currentBulletin = bulletins[i];
+                    currentBulletin.StateEnum = BulletinState.Created;
+                    result.Add(currentBulletin);
+                }
+                d.BulletinDb.SaveChanges();
+            });
+            return result;
+        }
+
         public static void GenerateTask()
         {
             BCT.Execute(c =>
             {
-                TaskGenerator.GenerateTasks(c.UserId);
+                TaskHelper.GenerateTasks(c.UserId);
             });
         }
         public static IEnumerable<Bulletin> All()
