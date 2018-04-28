@@ -16,8 +16,8 @@ namespace BulletinWebWorker.Containers.Fake
     {
         public override Guid Uid => BoardIds.Fake;
 
-        AccessPackage currentAccess { get; set; }
-        public override bool TryAuth(AccessPackage access)
+        AccessCache currentAccess { get; set; }
+        public override bool TryAuth(AccessCache access)
         {
             var result = false;
             DCT.Execute(d =>

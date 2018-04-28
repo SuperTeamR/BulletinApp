@@ -28,13 +28,13 @@ namespace BulletinClient.ViewModels
         public ICommand CommandClear { get; private set; }
         public ICommand CommandRefresh { get; private set; }
         public ICommand CommandRemove { get; private set; }
-        public AccessPackage SelectedObject
+        public AccessCache SelectedObject
         {
             get => SelectedObjectController.Value;
             set => SelectedObjectController.Value = value;
         }
-        private ObjectController<AccessPackage> SelectedObjectController = new ObjectController<AccessPackage>(null);
-        public ObservableCollection<AccessPackage> MyItems { get; set; }
+        private ObjectController<AccessCache> SelectedObjectController = new ObjectController<AccessCache>(null);
+        public ObservableCollection<AccessCache> MyItems { get; set; }
         public AccessCardVM Card => card = card ?? new AccessCardVM();
         public AccessCardVM card { get; set; }
         #endregion
@@ -45,7 +45,7 @@ namespace BulletinClient.ViewModels
             CommandRefresh = new DelegateCommand(Refresh);
             CommandRemove = new DelegateCommand(Remove);
             Refresh();
-            MyItems = new ObservableCollection<AccessPackage>();
+            MyItems = new ObservableCollection<AccessCache>();
         }
         #endregion
         #region Method
@@ -61,7 +61,7 @@ namespace BulletinClient.ViewModels
             {
                 DCT.ExecuteMainThread(c =>
                 {
-                    MyItems = new ObservableCollection<AccessPackage>(a);
+                    MyItems = new ObservableCollection<AccessCache>(a);
                     RaisePropertyChanged(() => MyItems);
                 });
             });

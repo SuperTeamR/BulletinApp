@@ -5,7 +5,7 @@ namespace BulletinBridge.Data
 {
     public class AggregateBulletinPackage : CacheObject
     {
-        public IEnumerable<AccessPackage> Accesses { get; set; }
+        public IEnumerable<AccessCache> Accesses { get; set; }
         public BulletinPackage Bulletin { get; set; }
     }
 }

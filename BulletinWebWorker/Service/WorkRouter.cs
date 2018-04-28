@@ -48,13 +48,13 @@ namespace BulletinWebWorker.Containers
             bulletinContainer.CloneBulletins(collection);
         }
 
-        public static void AssignProfileWork(IEnumerable<AccessPackage> collection)
+        public static void AssignProfileWork(IEnumerable<AccessCache> collection)
         {
             if (collection.Count() == 0) return;
 
             //TODO - сделать группировку по бордам
             var bulletinContainer = BulletinPackageContainerList.Get(BoardIds.Avito);
-            var accesses = collection.Cast<AccessPackage>().ToArray();
+            var accesses = collection.Cast<AccessCache>().ToArray();
             bulletinContainer.GetBulletinList(accesses);
         }
     }

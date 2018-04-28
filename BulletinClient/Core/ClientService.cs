@@ -86,13 +86,13 @@ namespace BulletinClient
             CloneBulletins(new[] { obj }, (a) => act(a.FirstOrDefault()));
         }
 
-        public void CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
+        public void CreateAccess(AccessCache obj, Action<AccessCache> action = null)
         {
             var act = action == null ? (a) => { } : action;
             CreateAccesses(new[] { obj }, (a) => act(a.FirstOrDefault()));
         }
 
-        public void CreateAccesses(IEnumerable<AccessPackage> objs, Action<IEnumerable<AccessPackage>> action = null)
+        public void CreateAccesses(IEnumerable<AccessCache> objs, Action<IEnumerable<AccessCache>> action = null)
         {
             var act = action == null ? (a) => { } : action;
             SendQueryCollection("CreateAccesses", (a) => act(a), objects: objs);
@@ -108,7 +108,7 @@ namespace BulletinClient
             });
         }
 
-        public static void _CreateAccess(AccessPackage obj, Action<AccessPackage> action = null)
+        public static void _CreateAccess(AccessCache obj, Action<AccessCache> action = null)
         {
             DCT.ExecuteAsync(d =>
             {

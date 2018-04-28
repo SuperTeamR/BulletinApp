@@ -203,7 +203,7 @@ namespace BulletinClient.ViewModels
                     MessageBox.Show("Пожалуйста, заполните все поля для добавления объявления");
                     return;
                 }
-                var access = new AccessPackage
+                var access = new AccessCache
                 {
                     Login = Settings.Default.BoardLogin,
                     Password = Settings.Default.BoardPassword,

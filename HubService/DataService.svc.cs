@@ -52,12 +52,14 @@ namespace HubService
         }
         public override IEnumerable<DataServiceConfigurationBase> Convertors => new DataServiceConfigurationBase[]
         {
-            new DataServiceConfiguration<Access, AccessPackage>(),
+            new DataServiceConfiguration<Access, AccessCache>(),
             new DataServiceConfiguration<Bulletin, BulletinPackage>(),
             new DataServiceConfiguration<Bulletin, BulletinCache>(),
+            new DataServiceConfiguration<BulletinInstance, BulletinInstanceCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache_old>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskAccessCheckCache>(),
+            new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskInstancePublicationCache>(),
         };
 
         protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();

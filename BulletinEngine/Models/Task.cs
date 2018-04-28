@@ -100,7 +100,8 @@ namespace BulletinHub.Entity.Data
              EntityObjectALMCreator<Task>.New(ToCache, ToEntity, new Version(1,0,0,0)),
              EntityObjectALMCreator<Task>.New<TaskCache>(ToCache2, ToEntity2
                  , new Version(1,0,0,0)),
-             EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntity3
+             EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntityDefault
+                 , new Version(1,0,0,0)), EntityObjectALMCreator<Task>.New<TaskInstancePublicationCache>(ToCache4, ToEntityDefault
                  , new Version(1,0,0,0))
         };
         #region Old
@@ -110,7 +111,7 @@ namespace BulletinHub.Entity.Data
             BCT.Execute(d =>
             {
                 var bulletinPackage = new BulletinPackage();
-                var accessPackage = new AccessPackage();
+                var accessPackage = new AccessCache();
 
                 if (obj.TargetType == typeof(BulletinInstance).ToString())
                 {
@@ -167,7 +168,13 @@ namespace BulletinHub.Entity.Data
             return entity;
         }
         #endregion
-        #region Task cache
+        #region Default
+        private Task ToEntityDefault(object arg1, Task arg2)
+        {
+            return arg2;
+        }
+        #endregion
+        #region Task cache - main
         private Task ToEntity2(TaskCache arg1, Task arg2)
         {
             arg2.ErrorDescription = arg1.Error;
@@ -185,21 +192,70 @@ namespace BulletinHub.Entity.Data
         }
         #endregion
         #region Task access cache
-        private Task ToEntity3(object arg1, Task arg2)
-        {
-            return arg2;
-        }
-
         private TaskAccessCheckCache ToCache3(Task arg2)
         {
             var arg1 = new TaskAccessCheckCache();
             var access = BCT.Context.BulletinDb.Accesses.Find(arg2.AccessId);
             if (access != null)
             {
+                arg1.AccessId = access.Id;
                 arg1.Login = access.Login;
                 arg1.Password = access.Password;
             }
             return arg1;
+        }
+        #endregion
+        #region Task instance publication cache
+        private TaskInstancePublicationCache ToCache4(Task arg2)
+        {
+            var arg1 = new TaskInstancePublicationCache();
+            var access = BCT.Context.BulletinDb.Accesses.Find(arg2.AccessId);
+            if (access != null)
+            {
+                arg1.Login = access.Login;
+                arg1.Password = access.Password;
+            }
+            else
+            {
+                arg2.ErrorDescription = "Create task model TaskInstancePublicationCache crash. Access not found";
+                BackTaskHelper.Error(new[] { arg2 });
+                return null;
+            }
+            var groupSign = GroupHelper.GetGroupSignature2(arg2.BulletinId.Value);
+            if (groupSign != null)
+            {
+                arg1.Category1 = groupSign.Category1 == null ? "" : groupSign.Category1;
+                arg1.Category2 = groupSign.Category2 == null ? "" : groupSign.Category2;
+                arg1.Category3 = groupSign.Category3 == null ? "" : groupSign.Category3;
+                arg1.Category4 = groupSign.Category4 == null ? "" : groupSign.Category4;
+                arg1.Category5 = groupSign.Category5 == null ? "" : groupSign.Category5;
+            }
+            else
+            {
+                arg2.ErrorDescription = "Create task model TaskInstancePublicationCache crash. Groups not found";
+                BackTaskHelper.Error(new[] { arg2 });
+                return null;
+            }
+            var bulletin = BCT.Context.BulletinDb.Bulletins.Find(arg2.BulletinId);
+            if (bulletin != null)
+            {
+                arg1.Title = bulletin.Title;
+                arg1.Description = bulletin.Description;
+                arg1.Price = bulletin.Price;
+                arg1.Images = bulletin.Images.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None).ToArray();
+            }
+            else
+            {
+                arg2.ErrorDescription = "Create task model TaskInstancePublicationCache crash. Bulletin not found";
+                BackTaskHelper.Error(new[] { arg2 });
+                return null;
+            }
+            arg1.InstanceId = arg2.InstanceId.Value;
+            return arg1;
+        }
+        private Task ToEntity4(TaskAccessCheckCache arg1, Task arg2)
+        {
+            return arg2;
         }
         #endregion
         #endregion
@@ -218,9 +274,9 @@ namespace BulletinHub.Entity.Data
                 switch (code)
                 {
                     case "Next":
-                        result = new Task[]{ BackTaskHelper.Next() };
+                        result = new Task[] { BackTaskHelper.Next() };
                         break;
-                    case "Complite":
+                    case "Complete":
                         BackTaskHelper.Complite(entities);
                         break;
                     case "Erorr":
@@ -239,5 +295,5 @@ namespace BulletinHub.Entity.Data
 
 
     }
-  
+
 }

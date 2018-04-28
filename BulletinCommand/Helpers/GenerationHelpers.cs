@@ -46,7 +46,7 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 //1. Проверка аккаунтов - на авторизацию и активность
-                GenerationAccessCheck();
+                //GenerationAccessCheck();
                 //2. Сбор данных с аккаунта - сообщения и буллетины(единожды)
                 //3. Публикация инстанций объявлений
                 GenerationBulletinsPublish();

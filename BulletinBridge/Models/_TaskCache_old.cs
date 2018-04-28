@@ -20,7 +20,7 @@ namespace BulletinBridge.Data
         [DataMember]
         public BulletinPackage BulletinPackage { get; set; }
         [DataMember]
-        public AccessPackage AccessPackage { get; set; }
+        public AccessCache AccessPackage { get; set; }
     }
 
 

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 namespace BulletinBridge.Data
 {
     [DataContract]
-    public class AccessPackage : CacheObject
+    public class AccessCache : CacheObject
     {
         [DataMember]
         public Guid BoardId { get; set; }

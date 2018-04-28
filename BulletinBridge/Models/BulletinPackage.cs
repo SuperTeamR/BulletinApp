@@ -12,7 +12,7 @@ namespace BulletinBridge.Data
         public string Title { get; set; }
         public string Views { get; set; }
         public GroupSignature Signature { get; set; }
-        public AccessPackage Access { get; set; }
+        public AccessCache Access { get; set; }
         public Dictionary<string, string> ValueFields { get; set; }
         public Dictionary<string, FieldPackage> AccessFields { get; set; }
 

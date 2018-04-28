@@ -8,7 +8,7 @@ namespace BulletinClient.HelperService
 {
     public static class AccessHelper
     {
-        public static IEnumerable<AccessPackage> DataCollection
+        public static IEnumerable<AccessCache> DataCollection
         {
             get
             {
@@ -19,27 +19,27 @@ namespace BulletinClient.HelperService
             }
             set => dataCollection = value;
         }
-        private static IEnumerable<AccessPackage> dataCollection { get; set; }
-        public static void All(Action<IEnumerable<AccessPackage>> callback)
+        private static IEnumerable<AccessCache> dataCollection { get; set; }
+        public static void All(Action<IEnumerable<AccessCache>> callback)
         {
-            HubServiceHelper.SendQueryCollection<AccessPackage>((a) =>
+            HubServiceHelper.SendQueryCollection<AccessCache>((a) =>
             {
                 DataCollection = a;
                 callback(DataCollection);
             }, "All");
         }
-        internal static void AddAvito(Action<IEnumerable<AccessPackage>> callback, AccessPackage cache)
+        internal static void AddAvito(Action<IEnumerable<AccessCache>> callback, AccessCache cache)
         {
-            HubServiceHelper.SendQueryCollection<AccessPackage>(callback, "AddAvito", cache);
+            HubServiceHelper.SendQueryCollection<AccessCache>(callback, "AddAvito", cache);
         }
-        public static void Save(Action callback, AccessPackage model)
+        public static void Save(Action callback, AccessCache model)
         {
             DCT.Execute(data =>
             {
-                data.HubClient.Save<AccessPackage>((a) => callback?.Invoke(), model);
+                data.HubClient.Save<AccessCache>((a) => callback?.Invoke(), model);
             });
         }
-        internal static void Remove(Action callback, AccessPackage selectedObject)
+        internal static void Remove(Action callback, AccessCache selectedObject)
         {
             DCT.Execute(data =>
             {

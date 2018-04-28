@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BulletinBridge.Models;
-using BulletinEngine.Core;
+using BulletinWebDriver.Core;
+using BulletinWebDriver.Helpers;
 using FessooFramework.Tools.Helpers;
 
 namespace BulletinWebDriver.Containers
@@ -18,11 +19,16 @@ namespace BulletinWebDriver.Containers
 
         internal void Execute(TaskCache task)
         {
-            BCT.Execute(c =>
+            DCT.Execute(c =>
             {
                 if (task == null)
                 {
                     ConsoleHelper.SendMessage("BoardContainer 'task' is null");
+                    return;
+                }
+                if (task.Board == null)
+                {
+                    DriverTaskHelper.Complete(task);
                     return;
                 }
                 var element = GetByName(task.Board);
