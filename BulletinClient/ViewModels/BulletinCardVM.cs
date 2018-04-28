@@ -31,6 +31,7 @@ namespace BulletinClient.ViewModels
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
             CardCategory3 = "iPhone";
+            Item.City = "Подольск";
             CommandAdd = new DelegateCommand(AddAvito);
         }
         #endregion

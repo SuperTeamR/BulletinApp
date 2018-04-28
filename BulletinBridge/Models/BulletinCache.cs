@@ -20,6 +20,8 @@ namespace BulletinBridge.Data
         public string GroupSignature { get; set; }
         [DataMember]
         public string CurrentGroup { get; set; }
+        [DataMember]
+        public string City { get; set; }
 
     }
 }

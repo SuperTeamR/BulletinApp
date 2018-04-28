@@ -211,7 +211,9 @@ namespace BulletinWebDriver.Tools
             var result = false;
             DCT.Execute(d =>
             {
+                
                 var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+                wait.IgnoreExceptionTypes(typeof(StaleElementReferenceException));
                 wait.Until(condition);
                 result = true;
             });

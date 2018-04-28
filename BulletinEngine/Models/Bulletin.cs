@@ -18,11 +18,14 @@ namespace BulletinEngine.Entity.Data
     public class Bulletin : EntityObjectALM<Bulletin, BulletinState>
     {
         #region Entity proeperties
+
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Идентификатор пользователя </summary>
         ///
         /// <value> The identifier of the user. </value>
         ///-------------------------------------------------------------------------------------------------
+
+        public string City { get; set; }
         public Guid UserId { get; set; }
         public Guid? GroupId { get; set; }
         public string Title { get; set; }
