@@ -38,7 +38,7 @@ namespace BulletinWebDriver
                             var task = DriverTaskHelper.Next();
                             if (task != null)
                                 BoardContainer.Execute(task);
-                            Thread.Sleep(60000);
+                            Thread.Sleep(5000);
                             break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");

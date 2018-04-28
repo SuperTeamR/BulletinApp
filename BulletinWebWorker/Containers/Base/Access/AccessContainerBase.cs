@@ -27,7 +27,7 @@ namespace BulletinWebWorker.Containers.Base.Access
         /// <returns>   True if it succeeds, false if it fails. </returns>
         ///-------------------------------------------------------------------------------------------------
 
-        public abstract bool TryAuth(AccessPackage access);
+        public abstract bool TryAuth(AccessCache access);
 
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Авторизация на борде </summary>

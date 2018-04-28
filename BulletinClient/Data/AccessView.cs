@@ -14,7 +14,7 @@ namespace BulletinClient.Data
         {
 
         }
-        public AccessView(AccessPackage package)
+        public AccessView(AccessCache package)
         {
             Login = package.Login;
             Password = package.Password;

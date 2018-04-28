@@ -12,7 +12,7 @@ namespace BulletinEngine.Helpers
         public static IEnumerable<Access> All()
         {
             var result = Enumerable.Empty<Access>();
-            BCT.Execute(c=> 
+            BCT.Execute(c =>
             {
                 result = c.BulletinDb.Accesses.Where(q => q.UserId == c.UserId).ToArray();
             });
@@ -22,10 +22,10 @@ namespace BulletinEngine.Helpers
         {
             BCT.Execute(c =>
             {
-                var board = c.BulletinDb.Boards.FirstOrDefault(q=>q.Name == "Avito");
+                var board = c.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
                 access.BoardId = board.Id;
                 access.UserId = c.UserId;
-                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
+                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Enable;
                 c.SaveChanges();
             });
             return access;
@@ -39,6 +39,32 @@ namespace BulletinEngine.Helpers
                 c.SaveChanges();
             });
         }
+        internal static void Enable(IEnumerable<Guid> ids)
+        {
+            BCT.Execute(c =>
+            {
+                foreach (var id in ids)
+                {
+                    var entity = c.BulletinDb.Accesses.Find(id);
+                    if (entity != null)
+                        entity.StateEnum = FessooFramework.Objects.Data.DefaultState.Enable;
+                }
+                c.SaveChanges();
+            });
+        }
+        internal static void Disable(IEnumerable<Guid> ids)
+        {
+            BCT.Execute(c =>
+            {
+                foreach (var id in ids)
+                {
+                    var entity = c.BulletinDb.Accesses.Find(id);
+                    if (entity != null)
+                        entity.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
+                }
+                c.SaveChanges();
+            });
+        }
         ///-------------------------------------------------------------------------------------------------
         /// <summary>   Получает свободный доступ к борде для пользователя из инстанции буллетина </summary>
         ///
@@ -49,9 +75,9 @@ namespace BulletinEngine.Helpers
         ///
         /// <returns>   The free access. </returns>
         ///-------------------------------------------------------------------------------------------------
-        public static AccessPackage GetFreeAccess(Guid instanceId)
+        public static AccessCache GetFreeAccess(Guid instanceId)
         {
-            AccessPackage result = null;
+            AccessCache result = null;
             BCT.Execute(d =>
             {
                 var dbInstance = d.BulletinDb.BulletinInstances.FirstOrDefault(q => q.Id == instanceId);
@@ -73,7 +99,7 @@ namespace BulletinEngine.Helpers
                 {
                     access = d.BulletinDb.Accesses.FirstOrDefault(q => q.Id == accessId);
                 }
-                result = new AccessPackage
+                result = new AccessCache
                 {
                     //Id = access.Id,
                     Login = access.Login,
@@ -83,6 +109,6 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-       
+
     }
 }

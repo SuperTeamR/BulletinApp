@@ -411,7 +411,7 @@ namespace BulletinWebWorker.Containers.Avito
                 //DriverTaskHelper.Complete(tasks);
             });
         }
-        IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
+        IEnumerable<BulletinPackage> GetBulletinList(AccessCache access)
         {
             var result = Enumerable.Empty<BulletinPackage>();
             DCT.Execute(d =>

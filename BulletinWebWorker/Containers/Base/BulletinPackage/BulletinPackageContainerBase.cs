@@ -61,7 +61,7 @@ namespace BulletinWebWorker.Containers.Base
         ///-------------------------------------------------------------------------------------------------
         public abstract void GetBulletinList2(IEnumerable<TaskCache_old> tasks);
         public abstract void GetBulletinDetails2(IEnumerable<TaskCache_old> tasks);
-        public abstract void GetBulletinList(IEnumerable<AccessPackage> accesses);
+        public abstract void GetBulletinList(IEnumerable<AccessCache> accesses);
         public abstract void GetBulletinDetails(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
         public abstract void CheckModerationState(IEnumerable<BulletinBridge.Data.BulletinPackage> packages);
     }

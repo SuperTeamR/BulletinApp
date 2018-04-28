@@ -436,7 +436,7 @@ namespace BulletinWebWorker.Containers.Avito
         /// An enumerator that allows foreach to be used to process the bulletins in this collection.
         /// </returns>
         ///-------------------------------------------------------------------------------------------------
-        public override void GetBulletinList(IEnumerable<AccessPackage> accesses)
+        public override void GetBulletinList(IEnumerable<AccessCache> accesses)
         {
             UiHelper.UpdateWorkState("Выгрузка списка буллетинов");
 
@@ -464,7 +464,7 @@ namespace BulletinWebWorker.Containers.Avito
 
             });
         }
-        IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
+        IEnumerable<BulletinPackage> GetBulletinList(AccessCache access)
         {
             var result = Enumerable.Empty<BulletinPackage>();
 
@@ -1088,7 +1088,7 @@ namespace BulletinWebWorker.Containers.Avito
                 {
                     var accessContainer = AccessContainerList.Get(Uid);
 
-                    var access = new AccessPackage
+                    var access = new AccessCache
                     {
                         Login = "mostrerkilltest@gmail.com",
                         Password = "OnlineHelp59",

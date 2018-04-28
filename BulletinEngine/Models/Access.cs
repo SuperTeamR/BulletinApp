@@ -86,19 +86,19 @@ namespace BulletinEngine.Entity.Data
         #region Creators
         protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => new[]
         {
-            EntityObjectALMCreator<Access>.New<AccessPackage>(ToCache, ToEntity, new Version(1,0,0,0))
+            EntityObjectALMCreator<Access>.New<AccessCache>(ToCache, ToEntity, new Version(1,0,0,0))
         };
-        private Access ToEntity(AccessPackage cache, Access entity)
+        private Access ToEntity(AccessCache cache, Access entity)
         {
             entity.BoardId = cache.BoardId;
             entity.Login = cache.Login;
             entity.Password = cache.Password;
             return entity;
         }
-        internal static AccessPackage ToCache(Access obj)
+        internal static AccessCache ToCache(Access obj)
         {
             var board = BCT.Context.BulletinDb.Boards.Find(obj.BoardId);
-            var result = new AccessPackage();
+            var result = new AccessCache();
             if (board != null)
             {
                 result.BoardName = board.Name;
@@ -179,6 +179,12 @@ namespace BulletinEngine.Entity.Data
                         break;
                     case "Remove":
                         AccessHelper.Remove(entities);                        
+                        break;
+                    case "Enable":
+                        AccessHelper.Enable(id);
+                        break;
+                    case "Disable":
+                        AccessHelper.Disable(id);
                         break;
                     default:
                         break;

@@ -81,7 +81,9 @@
   <ItemGroup>
     <Compile Include="Containers\BoardRealizations\Avito.cs" />
     <Compile Include="Helpers\FirefoxDriverHelper.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ProxyHelper.cs" />
+    <Compile Include="ServiceHelper\AccessHelper.cs" />
     <Compile Include="Tools\BoardIds.cs" />
     <Compile Include="Boostrapper.cs" />
     <Compile Include="Containers\Avito\AvitoAccessContainer.cs" />
@@ -119,10 +121,6 @@
     <ProjectReference Include="..\BulletinBridge\BulletinBridge.csproj">
       <Project>{e797ca88-a5df-4ec7-9a22-6abe3e393f9a}</Project>
       <Name>BulletinBridge</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BulletinEngine\BulletinHub.csproj">
-      <Project>{061283DB-C550-4FB7-85AF-90FA11133C95}</Project>
-      <Name>BulletinHub</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

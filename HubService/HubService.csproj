@@ -89,8 +89,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configurations\AccessConfiguration.cs" />
-    <Compile Include="Configurations\BulletinConfiguration.cs" />
     <Compile Include="DataService.svc.cs">
       <DependentUpon>DataService.svc</DependentUpon>
     </Compile>

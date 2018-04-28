@@ -78,7 +78,7 @@ namespace BulletinWebWorker.Service
             });
         }
         [Obsolete]
-        public static void AccessWorkResult(IEnumerable<AccessPackage> accesses)
+        public static void AccessWorkResult(IEnumerable<AccessCache> accesses)
         {
             DCT.ExecuteAsync(d2 =>
             {

@@ -245,7 +245,7 @@ namespace BulletinWebWorker.Containers.Fake
         }
 
        
-        public override void GetBulletinList(IEnumerable<AccessPackage> accesses)
+        public override void GetBulletinList(IEnumerable<AccessCache> accesses)
         {
             UiHelper.UpdateWorkState("Выгрузка списка буллетинов");
 
@@ -451,7 +451,7 @@ namespace BulletinWebWorker.Containers.Fake
         }
 
 
-        IEnumerable<BulletinPackage> GetBulletinList(AccessPackage access)
+        IEnumerable<BulletinPackage> GetBulletinList(AccessCache access)
         {
             var result = Enumerable.Empty<BulletinPackage>();
             DCT.Execute(d =>

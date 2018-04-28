@@ -11,13 +11,13 @@ namespace BulletinClient.ViewModels
     public class AccessCardVM : VM
     {
         #region Propety
-        public AccessPackage Item
+        public AccessCache Item
         {
             get => item.Value == null ? CreateItem : item.Value;
             set => item.Value = value;
         }
-        private AccessPackage CreateItem = new AccessPackage();
-        public ObjectController<AccessPackage> item = new ObjectController<AccessPackage>(null);
+        private AccessCache CreateItem = new AccessCache();
+        public ObjectController<AccessCache> item = new ObjectController<AccessCache>(null);
         public ICommand CommandAdd { get; private set; }
 
         #endregion
@@ -28,7 +28,7 @@ namespace BulletinClient.ViewModels
         }
         #endregion
         #region Methods
-        public void Update(AccessPackage selectedObject)
+        public void Update(AccessCache selectedObject)
         {
             Item = selectedObject;
             RaisePropertyChanged(() => Item);
@@ -58,7 +58,7 @@ namespace BulletinClient.ViewModels
             AccessHelper.AddAvito((a) =>
             {
                 item.Value = a.FirstOrDefault();
-                CreateItem = new AccessPackage();
+                CreateItem = new AccessCache();
                 RaisePropertyChanged(() => Item);
             }, Item);
         }

@@ -1,14 +1,18 @@
-﻿using BulletinBridge.Models;
+﻿using BulletinBridge.Data;
+using BulletinBridge.Models;
 using BulletinWebDriver.Core;
 using BulletinWebDriver.Helpers;
+using BulletinWebDriver.ServiceHelper;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Helpers;
 using FessooFramework.Tools.IOC;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -30,7 +34,7 @@ namespace BulletinWebDriver.Containers
             UID = Name;
         }
         #endregion
-        #region Timeout - antirobot
+        #region Timeouts
         private DateTime? LastExecute { get; set; }
         private DateTime? NextExecute { get; set; }
         protected void WaitExecute(FirefoxDriver driver)
@@ -61,19 +65,128 @@ namespace BulletinWebDriver.Containers
                     }
                 }
         }
+        protected bool WaitTitle(FirefoxDriver driver, int timeout, params string[] waitPatterns)
+        {
+            return WaitWebWorker("Title", driver, timeout, waitPatterns);
+        }
+        protected bool WaitPage(FirefoxDriver driver, int timeout, params string[] waitPatterns)
+        {
+            return WaitWebWorker("Page", driver, timeout, waitPatterns);
+        }
+        protected bool WaitUrl(FirefoxDriver driver, int timeout, params string[] waitPatterns)
+        {
+            return WaitWebWorker("Url", driver, timeout, waitPatterns);
+        }
+        protected bool WaitWebWorker(string code, FirefoxDriver driver, int timeout, params string[] waitPatterns)
+        {
+            var result = false;
+            try
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(timeout));
+                wait.Until(d =>
+                {
+                    foreach (var pattern in waitPatterns)
+                    {
+                        switch (code)
+                        {
+                            case "Title":
+                                result = d.Title.Contains(pattern);
+                                break;
+                            case "Page":
+                                result = d.PageSource.Contains(pattern);
+                                break;
+                            case "Url":
+                                result = d.Url.Contains(pattern);
+                                break;
+                            default:
+                                break;
+                        }
+                        if (result)
+                            return result;
+                    }
+                    return result;
+                    ;
+                });
+            }
+            catch (Exception ex)
+            {
+                ConsoleHelper.SendMessage($"WAIT WEB DRIVER. Wait patterns not found from {driver.Url}. Patterns - {string.Join(";", waitPatterns)}");
+            }
+            return result;
+
+
+        }
+        protected bool Wait<TResult>(FirefoxDriver driver, Func<IWebDriver, TResult> condition, int timeout = 20)
+        {
+            var result = false;
+            DCT.Execute(d =>
+            {
+                var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeout));
+                wait.Until(condition);
+                result = true;
+            });
+            return result;
+        }
+        protected Func<IWebDriver, bool> NoAttribute(FirefoxDriver driver, By query, string attribute)
+        {
+            return (d) =>
+            {
+                try
+                {
+                    var currValue = driver.FindElement(query).GetAttribute(attribute);
+                    return currValue == null;
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            };
+        }
+        protected Func<IWebDriver, bool> ElementExists(FirefoxDriver driver,By query)
+        {
+            return (d) => {
+                try
+                {
+                    var element = driver.FindElement(query);
+                    return element != null;
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            };
+        }
+        protected ReadOnlyCollection<IWebElement> FindMany(FirefoxDriver driver, By query)
+        {
+            var result = default(ReadOnlyCollection<IWebElement>);
+            DCT.Execute(d =>
+            {
+                result = driver.FindElements(query);
+            });
+            return result;
+        }
         #endregion
         #region Tools
         public void Execute(TaskCache task)
         {
             DCT.Execute(c =>
             {
+                ConsoleHelper.SendMessage($"Task {UID}.{task.Command} started");
                 switch (task.Command)
                 {
                     case "AccessCheck":
                         checkAccess(task);
                         break;
                     case "InstancePublication":
-                        executeCommand<TaskInstancePublicationCache>(task,(a, b) => InstancePublication(a, b));
+                        executeCommand<TaskInstancePublicationCache>(task, (a, b) => InstancePublication(a, b));
                         break;
                     default:
                         ConsoleHelper.SendMessage($"Command '{task.Command}' not realized in BoardElement");
@@ -83,6 +196,8 @@ namespace BulletinWebDriver.Containers
             {
                 DriverTaskHelper.Error(task, ex.ToString());
             });
+            ConsoleHelper.SendMessage($"Task {UID}.{task.Command} completed");
+
         }
         private void executeCommand<T>(TaskCache task, Action<FirefoxDriver, T> action)
             where T : CacheObject, new()
@@ -103,6 +218,7 @@ namespace BulletinWebDriver.Containers
             {
 #if DEBUG
                 FirefoxHelper.ExecuteWithVisual(browser =>
+                //FirefoxHelper.ExecuteOne(browser =>
 #else
                 FirefoxHelper.ExecuteOne(browser =>
 
@@ -110,7 +226,7 @@ namespace BulletinWebDriver.Containers
                 {
                     ToHome(browser);
                     action?.Invoke(browser, taskModel);
-                }, proxy);
+                }, proxy, 100);
                 //Задание завершилось успешно
                 DriverTaskHelper.Complete(task);
             }
@@ -137,23 +253,27 @@ namespace BulletinWebDriver.Containers
             DCT.Execute(c =>
             {
                 var result = false;
+                Guid? accessId = null;
                 executeCommand<TaskAccessCheckCache>(task,
                 (b, t) =>
                 {
+                    accessId = t.AccessId;
                     result = CheckAccess(b, t);
                 });
+                ConsoleHelper.SendMessage($"CheckAccess from {accessId} completed. IsEnabled{result}");
+                if (accessId == null)
+                    return;
                 if (result)
-                {
-                    //Доступ включить
-                }
+                    AccessHelper.Enable(accessId.Value);
                 else
                 {
-                    //Доступ выключить
+                    AccessHelper.Disable(accessId.Value);
+
                 }
             }, continueExceptionMethod: (c, ex) =>
              {
-                //Задание завершилось с ошибкой
-                DriverTaskHelper.Error(task, ex.ToString());
+                 //Задание завершилось с ошибкой
+                 DriverTaskHelper.Error(task, ex.ToString());
              });
         }
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
@@ -167,6 +287,26 @@ namespace BulletinWebDriver.Containers
             DCT.Execute(d =>
             {
                 var element = driver.FindElements(By.TagName(tag)).FirstOrDefault(q => q.GetAttribute(attribute) == value);
+                if (element != null && action != null)
+                {
+                    action(element);
+                }
+            });
+        }
+        protected void FindTagByTextContains(FirefoxDriver driver, string tag, string text, Action<IWebElement> action)
+        {
+            DCT.Execute(d =>
+            {
+                var elements = driver.FindElements(By.TagName(tag)).ToArray();
+                IWebElement element = null;
+                foreach (var item in elements)
+                {
+                    if (item.Text.Contains(text))
+                    {
+                        element = item;
+                        break;
+                    }
+                }
                 if (element != null && action != null)
                 {
                     action(element);
@@ -187,6 +327,28 @@ namespace BulletinWebDriver.Containers
                 }
             });
         }
+        protected void JsClick(FirefoxDriver driver, By query, Action<IWebElement> after = null)
+        {
+            DCT.Execute(d =>
+            {
+                DoAction(driver, query, e => JsClick(driver, e, after));
+            });
+        }
+        protected IWebElement DoAction(FirefoxDriver driver, By query, Action<IWebElement> after = null)
+        {
+            var result = default(IWebElement);
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElement(query);
+                if (element != null && after != null)
+                {
+                    after(element);
+                }
+                result = element;
+
+            });
+            return result;
+        }
         //protected void NavigatePage()
         //{
         //    DCT.Execute(d =>
@@ -196,6 +358,6 @@ namespace BulletinWebDriver.Containers
         //        //Wait(q => ((IJavaScriptExecutor)q).ExecuteScript("return document.readyState").Equals("complete"), pageLoadingTimeout);
         //    });
         //}
-            #endregion
-        }
+        #endregion
+    }
 }

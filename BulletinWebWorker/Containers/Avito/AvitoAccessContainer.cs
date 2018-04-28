@@ -33,10 +33,10 @@ namespace BulletinWebWorker.Containers.Avito
         public string ProfileUrl => @"https://www.avito.ru/profile";
 
 
-        AccessPackage currentAccess { get; set; }
+        AccessCache currentAccess { get; set; }
 
 
-        public override bool TryAuth(AccessPackage access)
+        public override bool TryAuth(AccessCache access)
         {
             var result = false;
             DCT.Execute(d =>

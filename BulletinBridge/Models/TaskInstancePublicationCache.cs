@@ -9,9 +9,21 @@ namespace BulletinBridge.Models
 {
     public class TaskInstancePublicationCache : CacheObject
     {
+        ///Access
         public string Login { get; set; }
         public string Password { get; set; }
-        public TaskInstancePublicationCache() : base(){ }
-        public TaskInstancePublicationCache(Guid id, DateTime create) : base(id, create){ }
+
+        ///Category
+        public string Category1 { get; set; }
+        public string Category2 { get; set; }
+        public string Category3 { get; set; }
+        public string Category4 { get; set; }
+        public string Category5 { get; set; }
+
+        ///Fields
+        public string Title { get;set;}
+        public string Description { get;set; }
+        public string Price { get;set; }
+        public IEnumerable<string> Images { get;set; }
     }
 }

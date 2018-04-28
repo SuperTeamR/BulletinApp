@@ -1,14 +1,17 @@
 ﻿using BulletinBridge.Models;
 using BulletinWebDriver.Core;
+using BulletinWebDriver.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BulletinWebDriver.Containers.BoardRealizations
 {
@@ -30,16 +33,17 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         {
             WaitExecute(driver);
             Find(driver, "a", "data-marker", "header/login-button", e => JsClick(driver, e));
+            WaitPage(driver, 30000, "Войти");
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             WaitExecute(driver);
             Find(driver, "input", "data-marker", "login-form/login", e => e.SendKeys(login));
             Find(driver, "input", "data-marker", "login-form/password", e => e.SendKeys(password));
             WaitExecute(driver);
             Find(driver, "button", "data-marker", "login-form/submit", e => JsClick(driver, e));
-            WaitExecute(driver);
-            if (driver.PageSource.Contains("href=\"/profile/exit\""))
+            WaitPage(driver, 30000, "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет");
+            if (driver.Title.Contains("Личный кабинет"))
             {
-                if (!driver.PageSource.Contains(""))
-                    return true;
+                return true;
             }
             return false;
         }
@@ -55,18 +59,73 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         {
             if (!Auth(driver, taskModel.Login, taskModel.Password))
                 return false;
-            ///Переход добавлеине + заполенине полей
-            ///!!! Проверка аккаунта на квоту и блокировка
-            //PrepareBulletin(bulletin);
+            WaitPage(driver, 60000, "www.avito.ru/additem");
+            WaitExecute(driver);
 
-            //Выбор типа объявления + кнопка продолжение
-            //ContinueAddOrEdit(EnumHelper.GetValue<BulletinState>(bulletin.State));
+            WaitPage(driver, 30000, "header-button-add-item");
+            FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
 
-            //Публикация
-            //Publicate(bulletin);
+            WaitPage(driver, 30000, "Выберите категорию");
+            WaitExecute(driver);
 
-            //Получить URL для буллетина
-            //GetUrl(bulletin);
+            Thread.Sleep(1000);
+            //SetCategory
+            if (!string.IsNullOrWhiteSpace(taskModel.Category1))
+            {
+                JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
+                WaitPage(driver, 10000, taskModel.Category2);
+            }
+            if (!string.IsNullOrWhiteSpace(taskModel.Category2))
+            {
+                JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
+                WaitPage(driver, 10000, taskModel.Category3);
+            }
+            if (!string.IsNullOrWhiteSpace(taskModel.Category3))
+            {
+                JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
+                WaitPage(driver, 10000, taskModel.Category4);
+            }
+            if (!string.IsNullOrWhiteSpace(taskModel.Category4))
+            {
+                JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
+                WaitPage(driver, 10000, taskModel.Category5);
+            }
+            if (!string.IsNullOrWhiteSpace(taskModel.Category5))
+            {
+                JsClick(driver, By.CssSelector($"input[title='{taskModel.Category5}']"));
+                Thread.Sleep(1000);
+            }
+
+            //Select type
+            JsClick(driver, By.CssSelector($"input[value='20018']"));
+
+            //Set fields
+            //Title
+            DoAction(driver, By.CssSelector($"input[id='item-edit__title']"), e => e.SendKeys(taskModel.Title));
+            DoAction(driver, By.CssSelector($"textarea[id='item-edit__description']"), e => e.SendKeys(taskModel.Description));
+            DoAction(driver, By.CssSelector($"input[id='item-edit__price']"), e => e.SendKeys(taskModel.Price));
+
+            if (taskModel.Images != null && taskModel.Images.Any())
+            {
+                foreach (var img in taskModel.Images)
+                {
+                    var file = ImageHelper.ImageToTemp(img);
+                    var fileInput = driver.FindElementByCssSelector($"input[name='image']");
+                    fileInput.SendKeys(file);
+                    Thread.Sleep(15000);
+                }
+            }
+            //Select base bulletin
+            FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
+
+            FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
+
+            JsClick(driver,By.Id("service-premium"));
+            JsClick(driver,By.Id("service-vip"));
+            JsClick(driver,By.Id("service-highlight"));
+            //Подтверждаем
+            var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+            JsClick(driver, button);
             return true;
         }
         #endregion
