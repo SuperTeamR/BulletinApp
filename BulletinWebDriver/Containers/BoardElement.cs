@@ -186,7 +186,16 @@ namespace BulletinWebDriver.Containers
                         checkAccess(task);
                         break;
                     case "InstancePublication":
-                        executeCommand<TaskInstancePublicationCache>(task, (a, b) => InstancePublication(a, b));
+                        executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
+                        {
+                            var url = InstancePublication(a, b);
+                        if (!string.IsNullOrWhiteSpace(url))
+                            {
+                                var instance = BulletinInstanceHelper.Get(b.InstanceId);
+                                instance.Url = url;
+                                BulletinInstanceHelper.Save(instance);
+                            }
+                        });
                         break;
                     default:
                         ConsoleHelper.SendMessage($"Command '{task.Command}' not realized in BoardElement");
@@ -277,7 +286,7 @@ namespace BulletinWebDriver.Containers
              });
         }
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
-        public abstract bool InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
+        public abstract string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
         #endregion
 
 
@@ -346,6 +355,15 @@ namespace BulletinWebDriver.Containers
                 }
                 result = element;
 
+            });
+            return result;
+        }
+        public IWebElement Find(FirefoxDriver driver, By query)
+        {
+            var result = default(IWebElement);
+            DCT.Execute(d =>
+            {
+                result = driver.FindElement(query);
             });
             return result;
         }

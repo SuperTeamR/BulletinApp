@@ -250,6 +250,7 @@ namespace BulletinHub.Entity.Data
                 BackTaskHelper.Error(new[] { arg2 });
                 return null;
             }
+            arg1.InstanceId = arg2.InstanceId.Value;
             return arg1;
         }
         private Task ToEntity4(TaskAccessCheckCache arg1, Task arg2)

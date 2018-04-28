@@ -90,9 +90,9 @@ namespace BulletinEngine.Entity.Data
         #region ALM -- Creators
         protected override IEnumerable<EntityObjectALMCreator<BulletinInstance>> CreatorsService => new[]
         {
-             EntityObjectALMCreator<BulletinInstance>.New(ToCache, ToEntity, new Version(1,0,0,0))
+             EntityObjectALMCreator<BulletinInstance>.New(ToCache, ToEntity, new Version(1,0,0,0)), EntityObjectALMCreator<BulletinInstance>.New<BulletinInstanceCache>(ToCache2, ToEntity2, new Version(1,0,0,0))
         };
-
+        #region BulletinPackage
         public static BulletinPackage ToCache(BulletinInstance obj)
         {
             BulletinPackage result = null;
@@ -131,6 +131,19 @@ namespace BulletinEngine.Entity.Data
             });
             return result;
         }
+        #endregion
+        #region BulletinInstanceCache
+        public static BulletinInstanceCache ToCache2(BulletinInstance obj)
+        {
+            BulletinInstanceCache result = new BulletinInstanceCache();
+            return result;
+        }
+        public static BulletinInstance ToEntity2(BulletinInstanceCache obj, BulletinInstance entity)
+        {
+            entity.Url = obj.Url;
+            return entity;
+        }
+        #endregion
         #endregion
 
         #region DataService -- Methods

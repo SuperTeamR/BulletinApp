@@ -9,6 +9,8 @@ namespace BulletinBridge.Models
 {
     public class TaskInstancePublicationCache : CacheObject
     {
+        public Guid InstanceId { get; set; }
+
         ///Access
         public string Login { get; set; }
         public string Password { get; set; }

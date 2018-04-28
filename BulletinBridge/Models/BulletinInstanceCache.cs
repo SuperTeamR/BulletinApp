@@ -4,7 +4,7 @@ namespace BulletinBridge.Data
 {
     public class BulletinInstanceCache : CacheObject
     {
-        public int Url { get; set; }
+        public string Url { get; set; }
 
         public BulletinInstanceCache()
         {
