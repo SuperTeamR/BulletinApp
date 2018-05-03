@@ -60,6 +60,17 @@ namespace BulletinCommand.Helpers
                 a.TargetDate = publicationDate;
             });
         }
+        public static void CreateBulletinTemplateCollector(Guid userId, Guid boardId, Bulletin instance, DateTime publicationDate)
+        {
+            Create(TaskCommand.BulletinTemplateCollector, a =>
+            {
+                //Обязательные
+                a.UserId = userId;
+                a.BulletinId = instance.Id;
+                a.TargetDate = publicationDate;
+                a.BoardId = boardId;
+            });
+        }
         #endregion
     }
 }

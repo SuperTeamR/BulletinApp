@@ -1,4 +1,5 @@
-﻿using FessooFramework.Tools.Helpers;
+﻿using BulletinHub.Models;
+using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -25,6 +26,7 @@ namespace BulletinHub.Contexts
     public class TempDB : DbContext
     {
         public DbSet<BulletinHub.Entity.Data.Task> Tasks { get; set; }
+        public DbSet<BulletinTemplate> BulletinTemplate { get; set; }
 
         public TempDB()
         {

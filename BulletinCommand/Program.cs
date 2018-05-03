@@ -6,11 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace BulletinCommand
 {
-    class Program
+    public class Program
     {
         static string Help => "Help informations" + Environment.NewLine + Environment.NewLine
            + "TaskGeneration - full task generation" + Environment.NewLine
@@ -22,10 +23,6 @@ namespace BulletinCommand
             while (true)
             {
                 #region DEBUG
-                //Для отладки по Enter в цикле вызывает
-                //var r = BackTaskHelper.Next();
-                //Console.WriteLine($"{r.Id} {r.StateEnum.ToString()} {r.TargetDate.ToString()}");
-                //BackTaskHelper.Complite(new[] { r });
                 #endregion
                 Console.Write("BC> ");
                 var text = Console.ReadLine();
@@ -55,5 +52,6 @@ namespace BulletinCommand
                 });
             }
         }
+       
     }
 }

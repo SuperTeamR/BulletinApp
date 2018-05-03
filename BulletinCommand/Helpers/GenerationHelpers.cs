@@ -18,22 +18,26 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 //1. Проверка аккаунтов - на авторизацию и активность
-                foreach (var access in c.BulletinDb.Accesses.Where(q=>!q.HasBlocked).ToArray())
+                foreach (var access in c.BulletinDb.Accesses.Where(q => !q.HasBlocked).ToArray())
                 {
                     access.GenerationCheckNext = null;
                     access.StateEnum = access.StateEnum;
                 }
                 c.SaveChanges();
-                //2. Сбор данных с аккаунта - сообщения и буллетины(единожды)
-                //3. Публикация инстанций объявлений
+                //2. Публикация инстанций объявлений
                 foreach (var bulletin in c.BulletinDb.Bulletins.ToArray())
                 {
                     bulletin.GenerationCheckNext = null;
                     bulletin.StateEnum = bulletin.StateEnum;
                 }
                 c.SaveChanges();
-                //4. Редактирование существующих инстанций
-                //5. Сбор аналитики по инстанциям
+
+
+                //0. Сбор данных с аккаунта - сообщения и буллетины -
+                //0. Редактирование существующих инстанций
+                //0. Сбор аналитики по инстанциям
+
+                //Clear tasks
                 c.TempDB.Tasks.RemoveRange(c.TempDB.Tasks.ToArray());
                 c.SaveChanges();
             });
@@ -46,16 +50,19 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 //1. Проверка аккаунтов - на авторизацию и активность
-                //GenerationAccessCheck();
-                //2. Сбор данных с аккаунта - сообщения и буллетины(единожды)
-                //3. Публикация инстанций объявлений
+                GenerationAccessCheck();
+                //2. Публикация инстанций объявлений
                 GenerationBulletinsPublish();
-                //4. Редактирование существующих инстанций
-                //5. Сбор аналитики по инстанциям
+                //3. Сбор данных под аккаунт
+                GenerationCollectorBulletinTemplate();
+
+                //0. Сбор данных с аккаунта - сообщения и буллетины(единожды)
+                //0. Редактирование существующих инстанций
+                //0. Сбор аналитики по инстанциям
             });
             Console.WriteLine($"GenerationFull execute complete");
         }
-
+        #region AccessCheck
         public static void GenerationAccessCheck()
         {
             BCT.Execute(c =>
@@ -63,16 +70,22 @@ namespace BulletinCommand.Helpers
                 var date = DateTime.Now;
                 var acceses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.GenerationCheckNext == null || date > q.GenerationCheckNext).ToArray();
                 foreach (var access in acceses)
-                {
-                    var tasks = c.TempDB.Tasks.Where(q => q.AccessId == access.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.AccessCheck);
-                    if (tasks != null)
-                        CommandTaskHelper.Remove(tasks);
-                    access.SetGenerationCheck();
-                    CommandTaskHelper.CreateAccessCheck(access);
-                }
+                    TaskAccessCheck(access);
             });
         }
-
+        private static void TaskAccessCheck(Access access)
+        {
+            BCT.Execute(c =>
+            {
+                var tasks = c.TempDB.Tasks.Where(q => q.AccessId == access.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.AccessCheck);
+                if (tasks != null)
+                    CommandTaskHelper.Remove(tasks);
+                access.SetGenerationCheck();
+                CommandTaskHelper.CreateAccessCheck(access);
+            });
+        }
+        #endregion
+        #region BulletinsPublish
         /// <summary>
         /// Минуты
         /// </summary>
@@ -82,7 +95,7 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 var date = DateTime.Now;
-                var bulletins = c.BulletinDb.Bulletins.Where(q => 
+                var bulletins = c.BulletinDb.Bulletins.Where(q =>
                 (q.GenerationCheckNext == null || date > q.GenerationCheckNext)).ToArray();
                 foreach (var bulletinsByUser in bulletins.GroupBy(q => q.UserId).ToArray())
                 {
@@ -90,7 +103,7 @@ namespace BulletinCommand.Helpers
                     var instancs = new List<BulletinInstance>();
                     foreach (var bulletin in bulletinsByUser)
                     {
-                        var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id).ToArray();
+                        var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).ToArray();
                         if (tasks != null && tasks.Any())
                             CommandTaskHelper.Remove(tasks);
                         var i = BulletinHelper.CreateInstance(bulletin);
@@ -103,8 +116,8 @@ namespace BulletinCommand.Helpers
                     if (instancs.Any())
                     {
                         var datePublish = date;
-                       
-                        foreach (var instByBoard in instancs.GroupBy(q=>q.BoardId).ToArray())
+
+                        foreach (var instByBoard in instancs.GroupBy(q => q.BoardId).ToArray())
                         {
                             var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == bulletinsByUser.Key && q.BoardId == instByBoard.Key && q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable).ToArray();
                             if (accesses.Any())
@@ -131,5 +144,27 @@ namespace BulletinCommand.Helpers
                 c.SaveChanges();
             });
         }
+        #endregion
+        #region CollectorBulletinTemplate
+        public static void GenerationCollectorBulletinTemplate()
+        {
+            BCT.Execute(c =>
+            {
+                var date = DateTime.Now;
+                var bulletins = c.BulletinDb.Bulletins.Where(q => !q.HasRemoved).ToArray();
+                var boards = c.BulletinDb.Boards.Where(q => !q.HasRemoved).ToArray();
+                foreach (var board in boards)
+                {
+                    foreach (var bulletin in bulletins)
+                    {
+                        var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.BulletinTemplateCollector).ToArray();
+                        if (tasks != null && tasks.Any())
+                            CommandTaskHelper.Remove(tasks);
+                        CommandTaskHelper.CreateBulletinTemplateCollector(bulletin.UserId, board.Id, bulletin, DateTime.Now);
+                    }
+                }
+            });
+        }
+        #endregion
     }
 }
