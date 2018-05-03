@@ -147,9 +147,10 @@ namespace BulletinWebDriver.Containers
                 }
             };
         }
-        protected Func<IWebDriver, bool> ElementExists(FirefoxDriver driver,By query)
+        protected Func<IWebDriver, bool> ElementExists(FirefoxDriver driver, By query)
         {
-            return (d) => {
+            return (d) =>
+            {
                 try
                 {
                     var element = driver.FindElement(query);
@@ -190,13 +191,20 @@ namespace BulletinWebDriver.Containers
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
                         {
                             var url = InstancePublication(a, b);
-                        if (!string.IsNullOrWhiteSpace(url))
+                            if (!string.IsNullOrWhiteSpace(url))
                             {
                                 var instance = BulletinInstanceHelper.Get(b.InstanceId);
                                 instance.Url = url;
                                 BulletinInstanceHelper.Save(instance);
                             }
                         });
+                        break;
+                    case "BulletinTemplateCollector":
+                        executeCommand<TaskBulletinTemplateCollectorCache>(task, (a, b) =>
+                        {
+                            var templateModels = BulletinTemplateCollector(a, b);
+                            BulletinTemplateHelper.Save(templateModels);
+                        }, false);
                         break;
                     default:
                         ConsoleHelper.SendMessage($"Command '{task.Command}' not realized in BoardElement");
@@ -209,7 +217,7 @@ namespace BulletinWebDriver.Containers
             ConsoleHelper.SendMessage($"Task {UID}.{task.Command} completed");
 
         }
-        private void executeCommand<T>(TaskCache task, Action<FirefoxDriver, T> action)
+        private void executeCommand<T>(TaskCache task, Action<FirefoxDriver, T> action, bool hasProxy = true)
             where T : CacheObject, new()
         {
             var taskModel = DriverTaskHelper.GetTask<T>(task);
@@ -218,14 +226,14 @@ namespace BulletinWebDriver.Containers
                 ConsoleHelper.SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            ProxyCardCheckCache proxy = null;
-            //var proxy = ProxyHelper.GetProxy(URL, IPExceptionsString);
-            //if (proxy == null)
-            //{
-            //    ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
-            //    throw new Exception("Command execute crash and stoped, proxy not found or service not available");
-            //}
-            //else
+            //ProxyCardCheckCache proxy = null;
+            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString) : null;
+            if (proxy == null && hasProxy)
+            {
+                ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
+                throw new Exception("Command execute crash and stoped, proxy not found or service not available");
+            }
+            else
             {
 #if DEBUG
                 FirefoxHelper.ExecuteWithVisual(browser =>
@@ -237,7 +245,7 @@ namespace BulletinWebDriver.Containers
                 {
                     ToHome(browser);
                     action?.Invoke(browser, taskModel);
-                }, proxy, 100);
+                }, proxy, 30);
                 //Задание завершилось успешно
                 DriverTaskHelper.Complete(task);
             }
@@ -258,7 +266,7 @@ namespace BulletinWebDriver.Containers
         }
         public abstract bool Auth(FirefoxDriver driver, string login, string password);
         #endregion
-        #region 1.Check access
+        #region -- Steps
         private void checkAccess(TaskCache task)
         {
             DCT.Execute(c =>
@@ -289,6 +297,7 @@ namespace BulletinWebDriver.Containers
         }
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
+        public abstract IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel);
         #endregion
         #region DriverTools
         protected void Find(FirefoxDriver driver, string tag, string attribute, string value, Action<IWebElement> action)
@@ -336,7 +345,7 @@ namespace BulletinWebDriver.Containers
                 }
             });
         }
-      
+
         protected void JsClick(FirefoxDriver driver, By query, Action<IWebElement> after = null)
         {
             DCT.Execute(d =>

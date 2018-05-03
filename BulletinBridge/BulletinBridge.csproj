@@ -79,6 +79,7 @@
     <Compile Include="Models\GroupSignature.cs" />
     <Compile Include="Models\OptionTag.cs" />
     <Compile Include="Models\TabState.cs" />
+    <Compile Include="Models\TaskBulletinTemplateCollectorCache.cs" />
     <Compile Include="Models\TaskInstancePublicationCache.cs" />
     <Compile Include="Models\TaskAccessCheckCache.cs" />
     <Compile Include="Models\TaskCache.cs" />

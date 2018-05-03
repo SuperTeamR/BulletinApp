@@ -28,9 +28,31 @@ namespace BulletinBridge.Models
         [DataMember]
         public string Images { get; set; }
         [DataMember]
-        public string GroupSignature { get; set; }
+        public string Category1 { get; set; }
         [DataMember]
-        public string Region { get; set; }
+        public string Category2 { get; set; }
+        [DataMember]
+        public string Category3 { get; set; }
+        [DataMember]
+        public string Category4 { get; set; }
+        [DataMember]
+        public string Category5 { get; set; }
+
+        /// <summary>
+        /// Область - Калининградская область, Москва, Московская область т.д.
+        /// </summary>
+        [DataMember]
+        public string Region1 { get; set; }
+        /// <summary>
+        /// Город - Москва, Санкт-петербург, Подольск
+        /// </summary>
+        [DataMember]
+        public string Region2 { get; set; }
+        /// <summary>
+        /// Район или метро 
+        /// </summary>
+        [DataMember]
+        public string Region3 { get; set; }
 
     }
 }

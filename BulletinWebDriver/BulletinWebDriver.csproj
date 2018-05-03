@@ -83,8 +83,10 @@
     <Compile Include="Helpers\FirefoxDriverHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\ProxyHelper.cs" />
+    <Compile Include="Helpers\RegexHelper.cs" />
     <Compile Include="ServiceHelper\AccessHelper.cs" />
     <Compile Include="ServiceHelper\BulletinInstanceHelper.cs" />
+    <Compile Include="ServiceHelper\BulletinTemplateHelper.cs" />
     <Compile Include="Tools\BoardIds.cs" />
     <Compile Include="Boostrapper.cs" />
     <Compile Include="Containers\Avito\AvitoAccessContainer.cs" />

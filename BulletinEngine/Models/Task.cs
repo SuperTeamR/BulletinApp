@@ -26,12 +26,13 @@ namespace BulletinHub.Entity.Data
         None = 0,
         AccessCheck = 1,
         InstancePublication = 2,
+        BulletinTemplateCollector = 3,
 
         //Obsolute
-        Creation = 3,
-        Checking = 4,
-        Editing = 5,
-        Cloning = 6,
+        Creation = 4,
+        Checking = 5,
+        Editing = 6,
+        Cloning = 7,
 
     }
     public class Task : EntityObjectALM<Task, TaskState>
@@ -98,11 +99,10 @@ namespace BulletinHub.Entity.Data
         protected override IEnumerable<EntityObjectALMCreator<Task>> CreatorsService => new[]
         {
              EntityObjectALMCreator<Task>.New(ToCache, ToEntity, new Version(1,0,0,0)),
-             EntityObjectALMCreator<Task>.New<TaskCache>(ToCache2, ToEntity2
-                 , new Version(1,0,0,0)),
-             EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntityDefault
-                 , new Version(1,0,0,0)), EntityObjectALMCreator<Task>.New<TaskInstancePublicationCache>(ToCache4, ToEntityDefault
-                 , new Version(1,0,0,0))
+             EntityObjectALMCreator<Task>.New<TaskCache>(ToCache2, ToEntity2, new Version(1,0,0,0)),
+             EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntityDefault, new Version(1,0,0,0)),
+             EntityObjectALMCreator<Task>.New<TaskInstancePublicationCache>(ToCache4, ToEntityDefault, new Version(1,0,0,0)),
+             EntityObjectALMCreator<Task>.New<TaskBulletinTemplateCollectorCache>(ToCache5, ToEntityDefault, new Version(1,0,0,0))
         };
         #region Old
         public static TaskCache_old ToCache(Data.Task obj)
@@ -191,7 +191,7 @@ namespace BulletinHub.Entity.Data
             return arg1;
         }
         #endregion
-        #region Task access cache
+        #region Task AccessCheck cache
         private TaskAccessCheckCache ToCache3(Task arg2)
         {
             var arg1 = new TaskAccessCheckCache();
@@ -205,7 +205,7 @@ namespace BulletinHub.Entity.Data
             return arg1;
         }
         #endregion
-        #region Task instance publication cache
+        #region Task InstancePublication cache
         private TaskInstancePublicationCache ToCache4(Task arg2)
         {
             var arg1 = new TaskInstancePublicationCache();
@@ -258,10 +258,19 @@ namespace BulletinHub.Entity.Data
             return arg2;
         }
         #endregion
+        #region Task BulletinTemplateCollector Cache
+        private TaskBulletinTemplateCollectorCache ToCache5(Task arg2)
+        {
+            var arg1 = new TaskBulletinTemplateCollectorCache();
+            arg1.BulletinId = arg2.BulletinId.Value;
+            var bulletin = BCT.Context.BulletinDb.Bulletins.Find(arg1.BulletinId);
+            if (bulletin != null)
+                arg1.Queries = new string[] { bulletin.Title };
+            return arg1;
+        }
         #endregion
-
+        #endregion
         #region DataService -- Methods
-
         public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
         {
             var result = Enumerable.Empty<EntityObject>();
