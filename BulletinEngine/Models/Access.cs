@@ -41,7 +41,14 @@ namespace BulletinEngine.Entity.Data
         /// <value> The password. </value>
         ///-------------------------------------------------------------------------------------------------
         public string Password { get; set; }
-
+        /// <summary>
+        /// Телефон привязанный к аккаунту
+        /// </summary>
+        public string Phone { get; set; }
+        /// <summary>
+        /// Заблокирован пользователем - не используем больше ни где
+        /// </summary>
+        public bool HasBlocked { get; set; }
 
         public DateTime? GenerationCheckLast { get; set; }
         public DateTime? GenerationCheckNext { get; set; }
@@ -93,6 +100,8 @@ namespace BulletinEngine.Entity.Data
             entity.BoardId = cache.BoardId;
             entity.Login = cache.Login;
             entity.Password = cache.Password;
+            entity.Phone = cache.Phone;
+            entity.HasBlocked = cache.HasBlocked;
             return entity;
         }
         internal static AccessCache ToCache(Access obj)
@@ -106,6 +115,8 @@ namespace BulletinEngine.Entity.Data
             result.BoardId = obj.BoardId;
             result.Login = obj.Login;
             result.Password = obj.Password;
+            result.Phone = obj.Phone;
+            result.HasBlocked = obj.HasBlocked;
             return result;
         }
         #endregion

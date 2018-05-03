@@ -290,8 +290,6 @@ namespace BulletinWebDriver.Containers
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
         #endregion
-
-
         #region DriverTools
         protected void Find(FirefoxDriver driver, string tag, string attribute, string value, Action<IWebElement> action)
         {

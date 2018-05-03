@@ -15,6 +15,10 @@ namespace BulletinBridge.Data
         public string Login {get;set;}
         [DataMember]
         public string Password { get; set; }
+        [DataMember]
+        public string Phone { get; set; }
+        [DataMember]
+        public bool HasBlocked { get; set; }
     }
 
     public enum AccessState

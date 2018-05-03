@@ -118,6 +118,10 @@
     <Compile Include="Migrations\201805021754099_BulletinDb_15.Designer.cs">
       <DependentUpon>201805021754099_BulletinDb_15.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805030744277_BulletinDb_16.cs" />
+    <Compile Include="Migrations\201805030744277_BulletinDb_16.Designer.cs">
+      <DependentUpon>201805030744277_BulletinDb_16.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Board.cs" />
@@ -245,6 +249,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805021754099_BulletinDb_15.resx">
       <DependentUpon>201805021754099_BulletinDb_15.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805030744277_BulletinDb_16.resx">
+      <DependentUpon>201805030744277_BulletinDb_16.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

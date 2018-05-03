@@ -9,7 +9,11 @@ namespace BulletinClient
 {
     public class ServiceClient : FessooFramework.Tools.Web.DataService.DataServiceClient
     {
-        public override string Address => Settings.Default.DataServiceAddress;
+#if DEBUG
+        public override string Address => "http://localhost:59888/DataService.svc";
+#else
+        public override string Address => "http://176.111.73.51/BulletinHub/DataService.svc";
+#endif
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
         public override string HashUID => "Example";
         public override string SessionUID => "Example";

@@ -28,6 +28,16 @@ namespace BulletinClient.Views
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            CardSave();
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            CardSave();
+        }
+
+        void CardSave()
+        {
             var dc = DataContext as AccessCardVM;
             dc.Save();
         }

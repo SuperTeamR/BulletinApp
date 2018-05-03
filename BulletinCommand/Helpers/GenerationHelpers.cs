@@ -18,7 +18,7 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 //1. Проверка аккаунтов - на авторизацию и активность
-                foreach (var access in c.BulletinDb.Accesses.ToArray())
+                foreach (var access in c.BulletinDb.Accesses.Where(q=>!q.HasBlocked).ToArray())
                 {
                     access.GenerationCheckNext = null;
                     access.StateEnum = access.StateEnum;
@@ -61,7 +61,7 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 var date = DateTime.Now;
-                var acceses = c.BulletinDb.Accesses.Where(q => q.GenerationCheckNext == null || date > q.GenerationCheckNext).ToArray();
+                var acceses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.GenerationCheckNext == null || date > q.GenerationCheckNext).ToArray();
                 foreach (var access in acceses)
                 {
                     var tasks = c.TempDB.Tasks.Where(q => q.AccessId == access.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.AccessCheck);
@@ -106,7 +106,7 @@ namespace BulletinCommand.Helpers
                        
                         foreach (var instByBoard in instancs.GroupBy(q=>q.BoardId).ToArray())
                         {
-                            var accesses = c.BulletinDb.Accesses.Where(q => q.UserId == bulletinsByUser.Key && q.BoardId == instByBoard.Key && q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable).ToArray();
+                            var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == bulletinsByUser.Key && q.BoardId == instByBoard.Key && q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable).ToArray();
                             if (accesses.Any())
                             {
                                 var accessCount = accesses.Count();
