@@ -176,21 +176,21 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         }
         private string pattern2 = "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?title=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?<div class=\"about";
         //private string pattern1 = "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?title=\"([\\s,\\S,\\n].*?)\"";
-        private string pattern3 = "data-srcpath=\"//([\\s,\\S,\\n].*?)\"";
+        private string pattern3 = "//([\\s,\\S,\\n].*?)\"";
         public override IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel)
         {
-            var result = Enumerable.Empty<BulletinTemplateCache>();
+            var result = new List<BulletinTemplateCache>();
             try
             {
                 //Получаю данные
                 var html = "";
                 foreach (var query in taskModel.Queries)
                 {
-                    WaitExecute(driver);
-                    var pageCount = 1;
+                    var pageCount = 10;
                     for (int i = 1; i <= pageCount; i++)
                     {
                         var url = $"https://www.avito.ru?p={i}&q={query}";
+                        WaitExecute(driver);
                         driver.Navigate().GoToUrl(url);
                         html += driver.PageSource;
                     }
@@ -198,16 +198,19 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 }
                 //Получаю вхождения
                 var matches = RegexHelper.Execute(pattern2, html);
-                Console.WriteLine("Complete");
-                Console.ReadLine();
                 foreach (var m in matches)
                 {
                     var id = m.Groups[1].Value;
-                    var iamges = RegexHelper.Execute(pattern2, m.Groups[2].Value).Select(q => q.Groups[1].Value);
+                    var imgSource = m.Groups[2].Value.ToString();
+                    var imgMatches = RegexHelper.Execute(pattern3, imgSource);
+                    var images = imgMatches.Select(q => "https://"+ q.Groups[1].Value);
                     var link = m.Groups[3].Value;
                     var title = m.Groups[4].Value;
-                    var price = m.Groups[5].Value;
-                    var time = m.Groups[6].Value;
+                    var temp = new BulletinTemplateCache();
+                    temp.URL = "https://avito.ru" + link;
+                    temp.Title = title;
+                    temp.Images = string.Join(";",images);
+                    result.Add(temp);
                 }
             }
             catch (Exception ex)
