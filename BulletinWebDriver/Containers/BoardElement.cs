@@ -3,6 +3,7 @@ using BulletinBridge.Models;
 using BulletinWebDriver.Core;
 using BulletinWebDriver.Helpers;
 using BulletinWebDriver.ServiceHelper;
+using CollectorModels;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Helpers;
 using FessooFramework.Tools.IOC;
@@ -217,13 +218,14 @@ namespace BulletinWebDriver.Containers
                 ConsoleHelper.SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            var proxy = ProxyHelper.GetProxy(URL, IPExceptionsString);
-            if (proxy == null)
-            {
-                ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
-                throw new Exception("Command execute crash and stoped, proxy not found or service not available");
-            }
-            else
+            ProxyCardCheckCache proxy = null;
+            //var proxy = ProxyHelper.GetProxy(URL, IPExceptionsString);
+            //if (proxy == null)
+            //{
+            //    ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
+            //    throw new Exception("Command execute crash and stoped, proxy not found or service not available");
+            //}
+            //else
             {
 #if DEBUG
                 FirefoxHelper.ExecuteWithVisual(browser =>
@@ -336,6 +338,7 @@ namespace BulletinWebDriver.Containers
                 }
             });
         }
+      
         protected void JsClick(FirefoxDriver driver, By query, Action<IWebElement> after = null)
         {
             DCT.Execute(d =>

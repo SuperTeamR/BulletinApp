@@ -40,7 +40,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             Find(driver, "input", "data-marker", "login-form/password", e => e.SendKeys(password));
             WaitExecute(driver);
             Find(driver, "button", "data-marker", "login-form/submit", e => JsClick(driver, e));
-            WaitPage(driver, 30000, "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет");
+            WaitPage(driver, 30000, "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет", "Доступ заблокирован");
             if (driver.Title.Contains("Личный кабинет"))
             {
                 return true;
@@ -71,26 +71,33 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitPage(driver, 30000, "Выберите категорию");
                 WaitExecute(driver);
 
-                Thread.Sleep(1000);
+                Thread.Sleep(3000);
+                //SetCategory first
+                JsClick(driver, By.CssSelector($"input[title='Животные']"));
+                WaitPage(driver, 10000, taskModel.Category1);
                 //SetCategory
                 if (!string.IsNullOrWhiteSpace(taskModel.Category1))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
+                    Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category2);
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category2))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
+                    Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category3);
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category3))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
+                    Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category4);
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category4))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
+                    Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category5);
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category5))
@@ -102,37 +109,25 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
 
-                //
 
-                //Select city
-                //Another
-                //var comboboxCount = driver.FindElementByName("locationId");
-                //IList<IWebElement> allOptions = comboboxCount.FindElements(By.TagName("option"));
-                //var option = allOptions.FirstOrDefault(q => q.Text.Contains("Выбрать другой"));
-                //if (option != null)
-                //    option.Click();
-
-                ////Select first city
-                //Find(driver, "select", "class", "js-regions-region", e =>
-                //{
-                //    IList<IWebElement> fistCities = e.FindElements(By.TagName("option"));
-                //    var city = fistCities.FirstOrDefault(q => q.Text.Contains("Московская область"));
-                //    city.Click();
-                //});
-                ////Select second city
-                //Find(driver, "select", "class", "js-regions-city", e =>
-                //{
-                //    IList<IWebElement> fistCities = e.FindElements(By.TagName("option"));
-                //    var city = fistCities.FirstOrDefault(q => q.Text.Contains("Подольск"));
-                //    city.Click();
-                //});
-                ////Select confirmation
-                //FindTagByTextContains(driver, "button", "Выбрать", e => JsClick(driver, e));
-                DoAction(driver, By.CssSelector($"input[id='item-edit__address']"), e =>
+                var comboboxCount = driver.FindElementByName("locationId");
+                if (comboboxCount.Displayed)
                 {
-                    e.Clear();
-                    e.SendKeys("Подольск");
-                    });
+                    IList<IWebElement> allOptions = comboboxCount.FindElements(By.TagName("option"));
+                    var option = allOptions.FirstOrDefault(q => q.Selected);
+                    driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "value", "639180");
+                    driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "data-parent-id", "637680");
+                }
+                else
+                {
+                    DoAction(driver, By.CssSelector($"input[id='item-edit__address']"), e =>
+                     {
+                         e.Clear();
+                         e.SendKeys("Московская область, Подольск");
+                         e.SendKeys(OpenQA.Selenium.Keys.Return);
+                         Find(driver, "li", "data-marker", "suggest(0)", e2 => JsClick(driver, e2));
+                     });
+                }
 
                 //Set fields
                 //Title
@@ -147,7 +142,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         var file = ImageHelper.ImageToTemp(img);
                         var fileInput = driver.FindElementByCssSelector($"input[name='image']");
                         fileInput.SendKeys(file);
-                        Thread.Sleep(15000);
+                        Thread.Sleep(22000);
                     }
                 }
                 WaitExecute(driver);
@@ -175,7 +170,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             }
             catch (Exception ex)
             {
-                
+
             }
             return result;
         }

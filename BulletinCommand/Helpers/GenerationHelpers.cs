@@ -113,7 +113,7 @@ namespace BulletinCommand.Helpers
                                 var currentAccess = 0;
                                 foreach (var instance in instByBoard)
                                 {
-                                    instance.AccessId = accesses[0].Id;
+                                    instance.AccessId = accesses[currentAccess].Id;
                                     CommandTaskHelper.CreateInstancePublication(bulletinsByUser.Key, instance, datePublish);
                                     datePublish = datePublish.AddMinutes(5);
 
