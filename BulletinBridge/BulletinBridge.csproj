@@ -71,6 +71,7 @@
     <Compile Include="Models\BulletinCache.cs" />
     <Compile Include="Models\BulletinInstanceCache.cs" />
     <Compile Include="Models\BulletinPackage.cs" />
+    <Compile Include="Models\BulletinTemplateCache.cs" />
     <Compile Include="Models\CategoryTree.cs" />
     <Compile Include="Models\FieldPackage.cs" />
     <Compile Include="Models\GroupPackage.cs" />
