@@ -149,12 +149,29 @@ namespace BulletinCommand.Helpers
                             }
                         }
 
-
+                        var bulletinViews = 0;
                         var viewBlock = b.FindElementSafe(By.ClassName("title-info-views"));
                         if (viewBlock != null)
                         {
-                            var views = viewBlock.Text;
+                            bulletinViews = Int32.Parse(Regex.Match(viewBlock.Text, "\\d+").Value);
                         }
+
+                        var categoriesBlocks = b.FindElementsByClassName("js-breadcrumbs-link").ToArray();
+                        var rawCategories = new string[5];
+
+                        //Skip city in category block
+                        for (var i = 1; i < categoriesBlocks.Length; i++)
+                        {
+                            var categoryElement = categoriesBlocks[i];
+                            rawCategories[i - 1] = categoryElement.Text;
+                        }
+                        cache.Category1 = rawCategories[0];
+                        cache.Category2 = rawCategories[1];
+                        cache.Category3 = rawCategories[2];
+                        cache.Category4 = rawCategories[3];
+                        cache.Category5 = rawCategories[4];
+
+                        cache.Views = bulletinViews;
                         cache.Description = bulletinDescription;
                         cache.IsHandled = true;
                     }
