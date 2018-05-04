@@ -8,6 +8,7 @@ using System.Threading;
 using BulletinBridge.Models;
 using BulletinCommand.Extensions;
 using BulletinEngine.Core;
+using BulletinHub.Helpers;
 using FessooFramework.Tools.DCT;
 using OpenQA.Selenium;
 
@@ -15,9 +16,10 @@ namespace BulletinCommand.Helpers
 {
     public static class BulletinCollector
     {
-        private static int maxPages = 10;
+        private static int maxPages = 1;
         //private static string imagePattern = "background-image: url\\(\"//([\\s,\\S,\\n].*?)\"\\);";
         private static string imagePattern = "background-image:\\surl\\(\\\"(.+?)\\\"\\)";
+        private static string addressPattern = "([^,]*),?\\s?(.*?)$";
         public static IEnumerable<BulletinSheetCache> GetBulletinsByQuery(string initialUrl, string query)
         {
             var bulletins = new List<BulletinSheetCache>();
@@ -28,18 +30,18 @@ namespace BulletinCommand.Helpers
                 {
                     for (var i = 0; i < maxPages; i++)
                     {
-                        var url = string.Format($"{initialUrl}?q={query}");
+                        var url = string.Format($"{initialUrl}/rossiya?q={query}");
                         if (i > 0)
                         {
                             if (b.Url.Contains("telefony"))
                             {
 
-                                url = string.Format($"{initialUrl}//moskva/telefony/{query.ToLower()}?p={i + 1}&sgtd=8");
+                                url = string.Format($"{initialUrl}//rossiya/telefony/{query.ToLower()}?p={i + 1}&sgtd=8");
                             }
                             else
                             {
 
-                                url = string.Format($"{initialUrl}?p={i + 1}&q={query}&sgtd=8");
+                                url = string.Format($"{initialUrl}/rossiya?p={i + 1}&q={query}&sgtd=8");
                             }
                         }
 
@@ -149,6 +151,27 @@ namespace BulletinCommand.Helpers
                             }
                         }
 
+                        var isIndividualSeller = false;
+                        var sellerBlock = b.FindElementSafe(By.ClassName("seller-info-col"));
+                        if (sellerBlock != null)
+                        {
+                            isIndividualSeller = sellerBlock.Text.Contains("Продавец");
+                        }
+
+                        var regions = new string[2];
+                        var addressBlock = b.FindElementsByClassName("seller-info-prop").FirstOrDefault(q => q.Text.Contains("Адрес"));
+                        if (addressBlock != null)
+                        {
+                            var cityBlock = addressBlock.FindElementSafe(By.ClassName("seller-info-value"));
+                            var rawAdress = cityBlock.Text;
+                            var match = RegexHelper.Execute(addressPattern, rawAdress).FirstOrDefault();
+                            if (match != null)
+                            {
+                                regions[0] = match.Groups[1].Value;
+                                regions[1] = match.Groups[2].Value;
+                            }
+                        }
+
                         var bulletinViews = 0;
                         var viewBlock = b.FindElementSafe(By.ClassName("title-info-views"));
                         if (viewBlock != null)
@@ -165,6 +188,11 @@ namespace BulletinCommand.Helpers
                             var categoryElement = categoriesBlocks[i];
                             rawCategories[i - 1] = categoryElement.Text;
                         }
+
+                        cache.IsIndividualSeller = isIndividualSeller;
+                        cache.Region1 = regions[0];
+                        cache.Region2 = regions[1];
+
                         cache.Category1 = rawCategories[0];
                         cache.Category2 = rawCategories[1];
                         cache.Category3 = rawCategories[2];

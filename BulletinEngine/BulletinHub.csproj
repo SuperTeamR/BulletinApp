@@ -74,6 +74,7 @@
     <Compile Include="Core\BulletinContext.cs" />
     <Compile Include="Core\BCT.cs" />
     <Compile Include="Contexts\BulletinDb.cs" />
+    <Compile Include="Helpers\RegexHelper.cs" />
     <Compile Include="Migrations\201804261228078_InitialCreate.cs" />
     <Compile Include="Migrations\201804261228078_InitialCreate.Designer.cs">
       <DependentUpon>201804261228078_InitialCreate.cs</DependentUpon>

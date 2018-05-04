@@ -15,6 +15,9 @@ namespace BulletinBridge.Models
         public string Category3 { get; set; }
         public string Category4 { get; set; }
         public string Category5 { get; set; }
+        public string Region1 { get; set; }
+        public string Region2 { get; set; }
+        public bool IsIndividualSeller { get; set; }
         public bool IsHandled { get; set; }
     }
 }
