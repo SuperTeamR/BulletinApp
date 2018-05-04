@@ -237,7 +237,7 @@ namespace BulletinEngine.Entity.Data
                         BulletinHelper.Remove(entities);
                         break;
                     case "Publicate":
-                        result = new[] {BulletinHelper.Publicate(entities.FirstOrDefault())};
+                        BulletinHelper.BulletinPublicate(entities.FirstOrDefault());
                         break;
                     default:
                         break;
