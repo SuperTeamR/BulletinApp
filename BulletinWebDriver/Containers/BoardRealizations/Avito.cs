@@ -174,9 +174,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             }
             return result;
         }
-        private string pattern2 = "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?title=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?<div class=\"about";
-        //private string pattern1 = "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?title=\"([\\s,\\S,\\n].*?)\"";
-        private string pattern3 = "//([\\s,\\S,\\n].*?)\"";
+
         public override IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel)
         {
             var result = new List<BulletinTemplateCache>();
@@ -186,7 +184,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 var html = "";
                 foreach (var query in taskModel.Queries)
                 {
-                    var pageCount = 10;
+                    var pageCount = 1;
                     for (int i = 1; i <= pageCount; i++)
                     {
                         var url = $"https://www.avito.ru?p={i}&q={query}";
@@ -194,22 +192,45 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         driver.Navigate().GoToUrl(url);
                         html += driver.PageSource;
                     }
-
                 }
                 //Получаю вхождения
-                var matches = RegexHelper.Execute(pattern2, html);
+                var pattern = 
+                    "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?" + //ID
+                    "class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?" + //Images
+                    "class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?" + //Links
+                    "title=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?<div class=\"about"; //Title
+                var patternLinks = "//([\\s,\\S,\\n].*?)\"";
+                var matches = RegexHelper.Execute(pattern, html);
                 foreach (var m in matches)
                 {
                     var id = m.Groups[1].Value;
+
                     var imgSource = m.Groups[2].Value.ToString();
-                    var imgMatches = RegexHelper.Execute(pattern3, imgSource);
-                    var images = imgMatches.Select(q => "https://"+ q.Groups[1].Value);
-                    var link = m.Groups[3].Value;
-                    var title = m.Groups[4].Value;
+                    var imgMatches = RegexHelper.Execute(patternLinks, imgSource);
+                    var images = imgMatches.Select(q => "https://" + q.Groups[1].Value);
                     var temp = new BulletinTemplateCache();
-                    temp.URL = "https://avito.ru" + link;
-                    temp.Title = title;
-                    temp.Images = string.Join(";",images);
+                    temp.URL = "https://avito.ru" + m.Groups[3].Value;
+                    temp.Title = m.Groups[4].Value;
+                    temp.Images = string.Join(";", images);
+
+                    WaitExecute(driver);
+                    driver.Navigate().GoToUrl(temp.URL);
+
+                    var cardPattern = "js-price-value-string\">([\\s,\\S,\\n,\\r]*?)&nbsp;" //Price
+                        + @"[\s,\S,\n]*?"
+                        + "title-info-title-text\">([\\s,\\S,\\n].*?)</span>" //Title
+                        + @"[\s,\S,\n]*?"
+                        + "<a href=\"#\" class=\"js-show-stat pseudo-link\"[\\s,\\S,\\n]*?>([\\s,\\S,\\n]*?)</a>" //Stats
+                        + @"[\s,\S,\n]*?"
+                        + "itemprop=\"description\">([\\s,\\S,\\n]*?)</div>" //Description
+                        ;
+                    var cardMatches = RegexHelper.Execute(cardPattern, driver.PageSource);
+                    var m2 = cardMatches.FirstOrDefault();
+                    temp.Price = m2.Groups[1].Value;
+                    temp.Title = m2.Groups[2].Value;
+                    temp.Count = m2.Groups[3].Value;
+                    temp.Description = m2.Groups[4].Value;
+
                     result.Add(temp);
                 }
             }
@@ -218,6 +239,11 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
             }
             return result;
+        }
+        private string Clear(string str)
+        {
+            str = str.Replace("\r\n", "");
+            return str;
         }
         #endregion
     }
