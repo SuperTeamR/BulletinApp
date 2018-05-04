@@ -97,6 +97,7 @@
     <Compile Include="HelperService\BulletinHelper.cs" />
     <Compile Include="HelperService\HubServiceHelper.cs" />
     <Compile Include="HelperService\MainServiceHelper.cs" />
+    <Compile Include="HelperService\TemplateHelper.cs" />
     <Compile Include="Helpers\ClipboardHelper.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\CustomDataGrid.cs" />
@@ -139,6 +140,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TemplateCardV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TemplateCollectionV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\WorkTableV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -152,6 +161,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\ClientService.cs" />
+    <Compile Include="ViewModels\TemplateCardVM.cs" />
+    <Compile Include="ViewModels\TemplateCollectionVM.cs" />
     <Compile Include="Views\AccessCardV.xaml.cs">
       <DependentUpon>AccessCardV.xaml</DependentUpon>
     </Compile>
@@ -169,6 +180,12 @@
     </Compile>
     <Compile Include="Views\LoginV.xaml.cs">
       <DependentUpon>LoginV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TemplateCardV.xaml.cs">
+      <DependentUpon>TemplateCardV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TemplateCollectionV.xaml.cs">
+      <DependentUpon>TemplateCollectionV.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\WorkTableV.xaml.cs">
       <DependentUpon>WorkTableV.xaml</DependentUpon>

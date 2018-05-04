@@ -26,6 +26,10 @@ namespace BulletinClient.ViewModels
         public AccessCollectionVM accessCollectionView { get; set; }
         public BulletinCollectionVM BulletinCollectionView => bulletinCollectionView = bulletinCollectionView ?? new BulletinCollectionVM();
         public BulletinCollectionVM bulletinCollectionView { get; set; }
+        public TemplateCollectionVM TemplateCollectionView =>
+            templateCollectionView = templateCollectionView ?? new TemplateCollectionVM();
+        public TemplateCollectionVM templateCollectionView { get; set; }
+
         public bool Bulletin => Bulletins != null && Bulletins.Any();
         public bool NotBulletin => Bulletins == null || !Bulletins.Any();
         public string CardCategory1 { get; set; }

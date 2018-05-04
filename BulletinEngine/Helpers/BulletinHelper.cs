@@ -64,5 +64,15 @@ namespace BulletinHub.Helpers
                 c.SaveChanges();
             });
         }
+
+        public static Bulletin Publicate(Bulletin model)
+        {
+            BCT.Execute(d =>
+            {
+
+
+            });
+            return model;
+        }
     }
 }

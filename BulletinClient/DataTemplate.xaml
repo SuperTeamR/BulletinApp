@@ -24,4 +24,10 @@
     <DataTemplate DataType="{x:Type VM:BulletinCardVM}">
         <V:BulletinCardV />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:TemplateCollectionVM}">
+        <V:TemplateCollectionV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:TemplateCardVM}">
+        <V:TemplateCardV />
+    </DataTemplate>
 </ResourceDictionary>

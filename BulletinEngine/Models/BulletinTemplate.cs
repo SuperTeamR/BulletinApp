@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BulletinEngine.Core;
+using BulletinEngine.Entity.Data;
+using BulletinHub.Helpers;
 
 namespace BulletinHub.Models
 {
@@ -96,9 +99,11 @@ namespace BulletinHub.Models
             cache.URL = entity.URL;
             cache.Title = entity.Title;
             cache.Description = entity.Description;
+            if (!string.IsNullOrEmpty(cache.Description))
+                cache.Description = cache.Description.Replace("<br>", Environment.NewLine);
             cache.Price = entity.Price;
             cache.Count = entity.Count;
-            cache.Images = entity.Images;
+            cache.Images = entity.Images.Replace(";", Environment.NewLine);
             cache.Category1 = entity.Category1;
             cache.Category2 = entity.Category2;
             cache.Category3 = entity.Category3;
@@ -109,6 +114,33 @@ namespace BulletinHub.Models
             cache.Region3 = entity.Region3;
             return cache;
         }
+        #endregion
+
+
+        #region Custom query
+
+        public override IEnumerable<EntityObject> CustomCollectionLoad(string code, string sessionUID = "", string hashUID = "", IEnumerable<EntityObject> obj = null, IEnumerable<Guid> id = null)
+        {
+            var result = Enumerable.Empty<EntityObject>();
+            BCT.Execute(c =>
+            {
+                //Пока не заморачивался - передаётся базовый объект и требуется привести к типу
+                var entities = Enumerable.Empty<BulletinTemplate>();
+                if (obj.Any())
+                    entities = obj.Select(q => (BulletinTemplate)q).ToArray();
+                switch (code)
+                {
+                    case "All":
+                        result = TemplateHelper.All().Take(50);
+                        break;
+                    case "MarkAsUsed":
+                        result = new[] { TemplateHelper.MarkAsUsed(entities.FirstOrDefault())};
+                        break;
+                }
+            });
+            return result;
+        }
+
         #endregion
     }
 }

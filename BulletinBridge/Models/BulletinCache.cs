@@ -23,5 +23,7 @@ namespace BulletinBridge.Data
         [DataMember]
         public string City { get; set; }
 
+        public bool InPublicationProcess { get; set; }
+
     }
 }

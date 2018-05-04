@@ -46,6 +46,10 @@ namespace BulletinClient.HelperService
             HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "AddAvito", cache);
         }
 
+        public static void Publicate(Action<IEnumerable<BulletinCache>> callback, BulletinCache cache)
+        {
+            HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "Publicate", cache);
+        }
         public static void Edit(Action<IEnumerable<BulletinCache>> callback, BulletinCache model)
         {
             HubServiceHelper.SendQueryCollection(callback, "Edit", model);

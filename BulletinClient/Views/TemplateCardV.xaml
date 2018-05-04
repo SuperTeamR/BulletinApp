@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="BulletinClient.Views.TemplateCardV"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BulletinClient.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+        <TextBlock Text="Template" Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
+
+
+        <TextBlock   Text="Город"  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <StackPanel Grid.Row="1" Grid.Column="1">
+            <TextBlock Margin="5" Text="{Binding Item.Region1}"></TextBlock>
+            <TextBlock Margin="5" Text="{Binding Item.Region2}"></TextBlock>
+        </StackPanel>
+        <TextBlock   Text="Категория"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsEnabled="False" Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.CurrentGroup, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+                />
+
+        <StackPanel  Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding Item.Category1}" />
+            <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding Item.Category2}" /> 
+            <TextBlock Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding Item.Category2}" /> 
+
+        </StackPanel>
+
+        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsReadOnly="True" Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+                 />
+
+        <TextBlock  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsReadOnly="True" Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" />
+
+        <TextBlock  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsReadOnly="True" Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MaxHeight="200" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" />
+
+        <TextBlock   Text="Цена"  Margin="5" Grid.Row="7" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsReadOnly="True" Margin="5" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+                 />
+    </Grid>
+</UserControl>

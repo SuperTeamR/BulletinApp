@@ -4,7 +4,9 @@ using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.Controllers;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using BulletinBridge.Models;
 
 namespace BulletinClient.ViewModels
 {
@@ -23,7 +25,14 @@ namespace BulletinClient.ViewModels
         }
         private BulletinCache CreateItem = new BulletinCache();
         public ObjectController<BulletinCache> item = new ObjectController<BulletinCache>(null);
+        public TemplateCollectionVM TemplateCollectionView =>
+            templateCollectionView = templateCollectionView ?? CreateTemplateCollectionView();
+        public TemplateCollectionVM templateCollectionView { get; set; }
+
+        public bool CanPublicate => Item.State != 1 && Item.State != 2 && !Item.InPublicationProcess;
+
         public ICommand CommandAdd { get; private set; }
+        public ICommand CommandPublicate { get; set; }
         #endregion
         #region Constructor
         public BulletinCardVM()
@@ -33,6 +42,7 @@ namespace BulletinClient.ViewModels
             CardCategory3 = "iPhone";
             Item.City = "Подольск";
             CommandAdd = new DelegateCommand(AddAvito);
+            CommandPublicate = new DelegateCommand(Publicate);
         }
         #endregion
         #region Methods
@@ -48,7 +58,7 @@ namespace BulletinClient.ViewModels
         }
         internal void Save()
         {
-            if (Check())
+            if (CheckIfCanEdit())
             {
                 SetSignature();
                 BulletinHelper.Edit((a) => { }, Item);
@@ -57,17 +67,33 @@ namespace BulletinClient.ViewModels
         }
         public void SetSignature()
         {
-           Item.GroupSignature = BulletinHelper.StringToSha256String(CardCategory1, CardCategory2, CardCategory3, CardCategory4, CardCategory5);
+            Item.GroupSignature = BulletinHelper.StringToSha256String(CardCategory1, CardCategory2, CardCategory3, CardCategory4, CardCategory5);
         }
-        private bool Check()
+        private bool CheckIfCanEdit()
         {
-            if (item.Value == null)
+            if (item.Value == null || Item.State == (int)(BulletinState.Created))
             {
                 //MessageBox.Show("Необходимо выбрать объект в списке источников");
                 return false;
             }
             return true;
         }
+
+        private void Publicate()
+        {
+            if (!CanPublicate)
+            {
+                MessageBox.Show("Объявление уже было отправлено на публикацию");
+                return;
+            }
+            BulletinHelper.Publicate(a =>
+            {
+                Item.InPublicationProcess = true;
+                MessageBox.Show("Объявление отправлено на публикацию");
+                RaisePropertyChanged(() => CanPublicate);
+            }, Item);
+        }
+
         private void AddAvito()
         {
             SetSignature();
@@ -78,6 +104,42 @@ namespace BulletinClient.ViewModels
                 RaisePropertyChanged(() => Item);
             }, Item);
         }
+
+        private void AddAvitoWithTemplate(BulletinTemplateCache template)
+        {
+            //Объект не выбран. Просто подставляем поля
+            if (item.Value == null)
+            {
+                CreateItem.Title = template.Title;
+                CreateItem.Description = template.Description;
+                CreateItem.Images = template.Images;
+            }
+            //Объект выбран. Создаем новый буллетин на базе шаблона и цены старого буллетина
+            else
+            {
+                CreateItem = new BulletinCache
+                {
+                    Title = template.Title,
+                    Description = template.Description,
+                    Images = template.Images,
+                    Price = Item.Price,
+                    GroupSignature = Item.GroupSignature,
+                    City = Item.City
+                };
+                item.Value = null;
+                AddAvito();
+                TemplateHelper.MarkAsUsed(templateCollectionView.Refresh, template);
+            }
+            RaisePropertyChanged(() => Item);
+        }
+
+        public TemplateCollectionVM CreateTemplateCollectionView()
+        {
+            var collection = new TemplateCollectionVM();
+            collection.UseAsTemplateAction = AddAvitoWithTemplate;
+            return collection;
+        }
+
         #endregion
     }
 }
