@@ -49,6 +49,7 @@ namespace BulletinEngine.Entity.Data
         /// Заблокирован пользователем - не используем больше ни где
         /// </summary>
         public bool HasBlocked { get; set; }
+        public DateTime? LastPublication { get; set; }
 
         public DateTime? GenerationCheckLast { get; set; }
         public DateTime? GenerationCheckNext { get; set; }
@@ -64,6 +65,12 @@ namespace BulletinEngine.Entity.Data
         {
             GenerationCheckLast = DateTime.Now;
             GenerationCheckNext = GenerationCheckLast.Value.AddSeconds(GenerationCheckPeriod);
+            StateEnum = StateEnum;
+            BCT.SaveChanges();
+        }
+        public void SetLastPublication()
+        {
+            LastPublication = DateTime.Now;
             StateEnum = StateEnum;
             BCT.SaveChanges();
         }
@@ -86,6 +93,7 @@ namespace BulletinEngine.Entity.Data
             arg1.Password = arg2.Password;
             arg1.GenerationCheckLast = arg2.GenerationCheckLast;
             arg1.GenerationCheckNext = arg2.GenerationCheckNext;
+            arg1.LastPublication = arg2.LastPublication;
             return arg1;
         }
         #endregion

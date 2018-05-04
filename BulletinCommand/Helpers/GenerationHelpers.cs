@@ -1,6 +1,7 @@
 ﻿using BulletinEngine.Contexts;
 using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
+using BulletinHub.Helpers;
 using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
@@ -50,7 +51,7 @@ namespace BulletinCommand.Helpers
             BCT.Execute(c =>
             {
                 //1. Проверка аккаунтов - на авторизацию и активность
-                GenerationAccessCheck();
+                //GenerationAccessCheck();
                 //2. Публикация инстанций объявлений
                 GenerationBulletinsPublish();
                 //3. Сбор данных под аккаунт
@@ -79,9 +80,9 @@ namespace BulletinCommand.Helpers
             {
                 var tasks = c.TempDB.Tasks.Where(q => q.AccessId == access.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.AccessCheck);
                 if (tasks != null)
-                    CommandTaskHelper.Remove(tasks);
+                    TaskHelper.Remove(tasks);
                 access.SetGenerationCheck();
-                CommandTaskHelper.CreateAccessCheck(access);
+                TaskHelper.CreateAccessCheck(access);
             });
         }
         #endregion
@@ -89,7 +90,7 @@ namespace BulletinCommand.Helpers
         /// <summary>
         /// Минуты
         /// </summary>
-        public static int SprintPublicashionTimeout = 30;
+        public static int SprintPublicashionTimeout = 5;
         public static void GenerationBulletinsPublish()
         {
             BCT.Execute(c =>
@@ -97,53 +98,13 @@ namespace BulletinCommand.Helpers
                 var date = DateTime.Now;
                 var bulletins = c.BulletinDb.Bulletins.Where(q =>
                 (q.GenerationCheckNext == null || date > q.GenerationCheckNext)).ToArray();
-                foreach (var bulletinsByUser in bulletins.GroupBy(q => q.UserId).ToArray())
-                {
-                    var buls = bulletinsByUser.OrderBy(q => q.DatePublication).ToArray();
-                    var instancs = new List<BulletinInstance>();
-                    foreach (var bulletin in bulletinsByUser)
-                    {
-                        var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).ToArray();
-                        if (tasks != null && tasks.Any())
-                            CommandTaskHelper.Remove(tasks);
-                        var i = BulletinHelper.CreateInstance(bulletin);
-                        if (i.Any())
-                        {
-                            instancs.AddRange(i);
-                            bulletin.SetGenerationCheck();
-                        }
-                    }
-                    if (instancs.Any())
-                    {
-                        var datePublish = date;
-
-                        foreach (var instByBoard in instancs.GroupBy(q => q.BoardId).ToArray())
-                        {
-                            var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == bulletinsByUser.Key && q.BoardId == instByBoard.Key && q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable).ToArray();
-                            if (accesses.Any())
-                            {
-                                var accessCount = accesses.Count();
-                                var currentAccess = 0;
-                                foreach (var instance in instByBoard)
-                                {
-                                    instance.AccessId = accesses[currentAccess].Id;
-                                    CommandTaskHelper.CreateInstancePublication(bulletinsByUser.Key, instance, datePublish);
-                                    datePublish = datePublish.AddMinutes(5);
-
-                                    currentAccess += 1;
-                                    if (currentAccess >= accessCount)
-                                    {
-                                        currentAccess = 0;
-                                        datePublish = datePublish.AddMinutes(SprintPublicashionTimeout);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                foreach (var bulletin in bulletins.ToArray())
+                    BulletinHub.Helpers.BulletinHelper.BulletinPublicate(bulletin);
                 c.SaveChanges();
             });
         }
+       
+      
         #endregion
         #region CollectorBulletinTemplate
         public static void GenerationCollectorBulletinTemplate()
@@ -159,8 +120,8 @@ namespace BulletinCommand.Helpers
                     {
                         var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.BulletinTemplateCollector).ToArray();
                         if (tasks != null && tasks.Any())
-                            CommandTaskHelper.Remove(tasks);
-                        CommandTaskHelper.CreateBulletinTemplateCollector(bulletin.UserId, board.Id, bulletin, DateTime.Now);
+                            TaskHelper.Remove(tasks);
+                        TaskHelper.CreateBulletinTemplateCollector(bulletin.UserId, board.Id, bulletin, DateTime.Now);
                     }
                 }
             });

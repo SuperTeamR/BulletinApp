@@ -75,6 +75,7 @@
     <Compile Include="Core\BCT.cs" />
     <Compile Include="Contexts\BulletinDb.cs" />
     <Compile Include="Helpers\RegexHelper.cs" />
+    <Compile Include="Helpers\TaskHelper.cs" />
     <Compile Include="Helpers\TemplateHelper.cs" />
     <Compile Include="Migrations\201804261228078_InitialCreate.cs" />
     <Compile Include="Migrations\201804261228078_InitialCreate.Designer.cs">
@@ -123,6 +124,10 @@
     <Compile Include="Migrations\201805030744277_BulletinDb_16.cs" />
     <Compile Include="Migrations\201805030744277_BulletinDb_16.Designer.cs">
       <DependentUpon>201805030744277_BulletinDb_16.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805041359334_BulletinDb_17.cs" />
+    <Compile Include="Migrations\201805041359334_BulletinDb_17.Designer.cs">
+      <DependentUpon>201805041359334_BulletinDb_17.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\Application.cs" />
@@ -255,6 +260,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805030744277_BulletinDb_16.resx">
       <DependentUpon>201805030744277_BulletinDb_16.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805041359334_BulletinDb_17.resx">
+      <DependentUpon>201805041359334_BulletinDb_17.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

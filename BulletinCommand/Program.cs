@@ -23,8 +23,8 @@ namespace BulletinCommand
             while (true)
             {
                 #region DEBUG
-                var caches = BulletinCollector.GetBulletinsByQuery(@"http://avito.ru", "iPhone");
-                caches = BulletinCollector.GetBulletinsBySheets(caches);
+                //var caches = BulletinCollector.GetBulletinsByQuery(@"http://avito.ru", "iPhone");
+                //caches = BulletinCollector.GetBulletinsBySheets(caches);
                 #endregion
                 Console.Write("BC> ");
                 var text = Console.ReadLine();

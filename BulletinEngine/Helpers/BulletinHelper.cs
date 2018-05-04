@@ -3,11 +3,67 @@ using BulletinEngine.Entity.Data;
 using System.Collections.Generic;
 using System.Linq;
 using BulletinHub.Tools;
+using System;
+using BulletinEngine.Helpers;
 
 namespace BulletinHub.Helpers
 {
-    static class BulletinHelper
+    public static class BulletinHelper
     {
+        public static void BulletinPublicate(Bulletin bulletin)
+        {
+            BCT.Execute(c =>
+            {
+                var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).ToArray();
+                if (tasks != null && tasks.Any())
+                    TaskHelper.Remove(tasks);
+                var instances = BulletinHelper.CreateInstance(bulletin);
+                if (instances.Any())
+                {
+                    bulletin.SetGenerationCheck();
+                    var datePublishs = c.TempDB.Tasks.Where(q => q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).Select(q => q.TargetDate).ToArray();
+                    datePublishs = datePublishs.Where(q => q.HasValue).ToArray();
+                    var datePublish = DateTime.Now;
+                    if (datePublishs.Any())
+                        datePublish = datePublishs.Max().Value;
+                    datePublish = datePublish.AddMinutes(5);
+                    foreach (var instance in instances)
+                    {
+                        var access = AccessHelper.GetNextAccess(bulletin.UserId, instance.BoardId, instance.BulletinId);
+                        if (access == null)
+                            continue;
+                        instance.AccessId = access.Id;
+                        TaskHelper.CreateInstancePublication(bulletin.UserId, instance, datePublish);
+                    }
+                }
+            });
+        }
+        /// <summary>
+        /// Создаёт базовую инстанцию без распределения по доступу
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IEnumerable<BulletinInstance> CreateInstance(Bulletin bulletin)
+        {
+            var result = new List<BulletinInstance>();
+            BCT.Execute(c =>
+            {
+                var boards = c.BulletinDb.Boards.ToArray();
+                foreach (var board in boards)
+                {
+                    var instance = new BulletinInstance();
+                    instance.BoardId = board.Id;
+                    instance.BulletinId = bulletin.Id;
+                    instance.GroupId = bulletin.GroupId.Value;
+                    instance.StateEnum = BulletinInstanceState.Created;
+                    result.Add(instance);
+                }
+                c.SaveChanges();
+            });
+            return result;
+        }
+
+
         public static IEnumerable<Bulletin> Create(IEnumerable<Bulletin> objs)
         {
             var result = Enumerable.Empty<Bulletin>().ToList();
