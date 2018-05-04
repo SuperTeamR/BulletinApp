@@ -35,7 +35,7 @@
         <TabControl SelectedIndex="{Binding SelectedIndexTab}"  Grid.Row="1" BorderThickness="0,1,0,0" TabStripPlacement="Left" Background="Transparent" >
             <TabItem Header="Access" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding AccessCollectionView}" />
             <TabItem Header="Bulltins" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding BulletinCollectionView}" />
-            <TabItem Header="Templates" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding TemplateCollectionView}" />
+            <!--<TabItem Header="Templates" Padding="10" BorderThickness="0,0,0,0" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" Content="{Binding TemplateCollectionView}" />-->
             <TabItem Header="Добавить" Padding="10" BorderThickness="0,0,0,1" FontSize="13" FontWeight="Medium" Background="White" Foreground="DarkBlue" >
                     <Grid VerticalAlignment="Top"  Grid.IsSharedSizeScope="True">
                         <Grid.RowDefinitions>
