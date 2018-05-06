@@ -129,6 +129,14 @@
     <Compile Include="Migrations\201805041359334_BulletinDb_17.Designer.cs">
       <DependentUpon>201805041359334_BulletinDb_17.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805050722357_TempDB_4.cs" />
+    <Compile Include="Migrations\201805050722357_TempDB_4.Designer.cs">
+      <DependentUpon>201805050722357_TempDB_4.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805051135404_TempDB_5.cs" />
+    <Compile Include="Migrations\201805051135404_TempDB_5.Designer.cs">
+      <DependentUpon>201805051135404_TempDB_5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Board.cs" />
@@ -263,6 +271,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805041359334_BulletinDb_17.resx">
       <DependentUpon>201805041359334_BulletinDb_17.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805050722357_TempDB_4.resx">
+      <DependentUpon>201805050722357_TempDB_4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805051135404_TempDB_5.resx">
+      <DependentUpon>201805051135404_TempDB_5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

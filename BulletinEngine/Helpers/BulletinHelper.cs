@@ -25,7 +25,11 @@ namespace BulletinHub.Helpers
                     datePublishs = datePublishs.Where(q => q.HasValue).ToArray();
                     var datePublish = DateTime.Now;
                     if (datePublishs.Any())
-                        datePublish = datePublishs.Max().Value;
+                    {
+                        var max = datePublishs.Max().Value;
+                        if (datePublish > DateTime.Now)
+                            datePublish = max;
+                    }
                     datePublish = datePublish.AddMinutes(5);
                     foreach (var instance in instances)
                     {

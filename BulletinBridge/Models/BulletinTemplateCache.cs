@@ -18,12 +18,12 @@ namespace BulletinBridge.Models
         [DataMember]
         public string Description { get; set; }
         [DataMember]
-        public string Price { get; set; }
+        public int Price { get; set; }
         /// <summary>
         /// Количество просмотров
         /// </summary>
         [DataMember]
-        public string Count { get; set; }
+        public int Count { get; set; }
 
         [DataMember]
         public string Images { get; set; }
@@ -54,5 +54,9 @@ namespace BulletinBridge.Models
         [DataMember]
         public string Region3 { get; set; }
 
+        [DataMember]
+        public bool IsIndividualSeller { get; set; }
+        [DataMember]
+        public bool IsHandled { get; set; }
     }
 }

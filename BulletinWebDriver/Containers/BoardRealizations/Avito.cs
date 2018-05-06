@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -184,17 +185,17 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 var html = "";
                 foreach (var query in taskModel.Queries)
                 {
-                    var pageCount = 1;
+                    var pageCount = 2;
                     for (int i = 1; i <= pageCount; i++)
                     {
-                        var url = $"https://www.avito.ru?p={i}&q={query}";
+                        var url = $"https://www.avito.ru/rossiya?p={i}&q={query}";
                         WaitExecute(driver);
                         driver.Navigate().GoToUrl(url);
                         html += driver.PageSource;
                     }
                 }
                 //Получаю вхождения
-                var pattern = 
+                var pattern =
                     "id=\"([\\s,\\S,\\n].*?)\" data-type[\\s,\\S,\\n]*?" + //ID
                     "class=\"item-photo item-photo_large\">([\\s,\\S,\\n]*?)<div class=\"favorites[\\s,\\S,\\n]*?" + //Images
                     "class=\"item-description-title-link\"[\\s,\\S,\\n].*?href=\"([\\s,\\S,\\n].*?)\"[\\s,\\S,\\n]*?" + //Links
@@ -203,40 +204,90 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 var matches = RegexHelper.Execute(pattern, html);
                 foreach (var m in matches)
                 {
-                    var id = m.Groups[1].Value;
+                    try
+                    {
+                        var id = m.Groups[1].Value;
 
-                    var imgSource = m.Groups[2].Value.ToString();
-                    var imgMatches = RegexHelper.Execute(patternLinks, imgSource);
-                    var images = imgMatches.Select(q => "https://" + q.Groups[1].Value);
-                    var temp = new BulletinTemplateCache();
-                    temp.URL = "https://avito.ru" + m.Groups[3].Value;
-                    temp.Title = m.Groups[4].Value;
-                    temp.Images = string.Join(";", images);
+                        var imgSource = m.Groups[2].Value.ToString();
+                        var imgMatches = RegexHelper.Execute(patternLinks, imgSource);
+                        var images = imgMatches.Select(q => "https://" + q.Groups[1].Value);
+                        var temp = new BulletinTemplateCache();
+                        temp.URL = "https://avito.ru" + m.Groups[3].Value;
+                        temp.Title = m.Groups[4].Value;
+                        temp.Images = string.Join(";", images);
 
-                    WaitExecute(driver);
-                    driver.Navigate().GoToUrl(temp.URL);
+                        WaitExecute(driver);
+                        driver.Navigate().GoToUrl(temp.URL);
 
-                    var cardPattern = "js-price-value-string\">([\\s,\\S,\\n,\\r]*?)&nbsp;" //Price
-                        + @"[\s,\S,\n]*?"
-                        + "title-info-title-text\">([\\s,\\S,\\n].*?)</span>" //Title
-                        + @"[\s,\S,\n]*?"
-                        + "<a href=\"#\" class=\"js-show-stat pseudo-link\"[\\s,\\S,\\n]*?>([\\s,\\S,\\n]*?)</a>" //Stats
-                        + @"[\s,\S,\n]*?"
-                        + "itemprop=\"description\">([\\s,\\S,\\n]*?)</div>" //Description
-                        ;
-                    var cardMatches = RegexHelper.Execute(cardPattern, driver.PageSource);
-                    var m2 = cardMatches.FirstOrDefault();
-                    temp.Price = m2.Groups[1].Value;
-                    temp.Title = m2.Groups[2].Value;
-                    temp.Count = m2.Groups[3].Value;
-                    temp.Description = m2.Groups[4].Value;
+                        //Price
+                        var price = RegexHelper.GetValue("js-price-value-string\">([\\s,\\S,\\n,\\r]*?)&nbsp;", driver.PageSource);
+                        try
+                        {
+                            if (price.Contains("Цена не указана") || price.Contains("Договорная") || string.IsNullOrWhiteSpace(price))
+                                temp.Price = 0;
+                            else
+                            {
+                                var priceText = price.Trim();
+                                priceText = priceText.Replace(" ", "");
+                                temp.Price = Int32.Parse(priceText);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            var r3 = ex;
+                        }
+                        //Title
+                        temp.Title = RegexHelper.GetValue("title-info-title-text\">([\\s,\\S,\\n].*?)</span>", driver.PageSource);
+                        //Count
+                        var count = RegexHelper.GetValue("<a href=\"#\" class=\"js-show-stat pseudo-link\"[\\s,\\S,\\n]*?>([\\s,\\S,\\n]*?)</a>", driver.PageSource);
+                        try
+                        {
+                            if (string.IsNullOrEmpty(count))
+                                temp.Count = 0;
+                            else
+                                temp.Count = Int32.Parse(Regex.Match(count, "\\d+").Value);
+                        }
+                        catch (Exception ex)
+                        {
+                            var r4 = ex;
+                        }
+                        //Description
+                        temp.Description = RegexHelper.GetValue("itemprop=\"description\">([\\s,\\S,\\n]*?)</div>", driver.PageSource);
+                        //Owner type
+                        var seller = RegexHelper.GetValue("seller-info-name([\\s,\\S,\\n]*?)seller-info-value", driver.PageSource);
+                        temp.IsIndividualSeller = seller.Contains("Продавец");
+                        //City
+                        var city = RegexHelper.GetValue("Адрес</div> <div class=\"seller-info-value\">([\\s,\\S,\\n]*?)</div>", driver.PageSource);
+                        var cityParts = city.Split(',');
+                        temp.Region1 = cityParts[0].Trim();
+                        temp.Region2 = cityParts.Count() > 1 ? cityParts[1].Trim() : null;
+                        //Category
+                        var categoryText = RegexHelper.GetValue("<div class=\"breadcrumbs js-breadcrumbs\">([\\s,\\S,\\n]*?)</div>", driver.PageSource);
+                        var categories = RegexHelper.Execute("title=\".*?>([\\s,\\S,\\n]*?)</a>", categoryText).ToArray();
+                        var rawCategories = new string[5];
+                        for (var i = 1; i < categories.Length; i++)
+                        {
+                            var categoryElement = categories[i];
+                            rawCategories[i - 1] = categoryElement.Groups[1].Value;
+                        }
+                        temp.Category1 = rawCategories[0];
+                        temp.Category2 = rawCategories[1];
+                        temp.Category3 = rawCategories[2];
+                        temp.Category4 = rawCategories[3];
+                        temp.Category5 = rawCategories[4];
 
-                    result.Add(temp);
+                        temp.IsHandled = true;
+                        result.Add(temp);
+                    }
+                    catch (Exception ex)
+                    {
+                        var r2 = ex;
+                    }
                 }
             }
             catch (Exception ex)
             {
-
+                var r = ex;
             }
             return result;
         }
