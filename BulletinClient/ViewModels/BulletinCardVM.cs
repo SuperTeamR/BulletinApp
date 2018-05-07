@@ -126,6 +126,7 @@ namespace BulletinClient.ViewModels
             {
                 CreateItem.Title = template.Title;
                 CreateItem.Description = template.Description;
+                CreateItem.Price = template.Price.ToString();
                 CreateItem.Images = template.Images;
             }
             //Объект выбран. Создаем новую инстанцию на базе шаблона и цены старого буллетина
