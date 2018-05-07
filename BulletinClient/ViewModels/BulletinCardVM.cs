@@ -1,4 +1,5 @@
-﻿using BulletinBridge.Data;
+﻿using System;
+using BulletinBridge.Data;
 using BulletinClient.HelperService;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
@@ -18,6 +19,10 @@ namespace BulletinClient.ViewModels
         public string CardCategory3 { get; set; }
         public string CardCategory4 { get; set; }
         public string CardCategory5 { get; set; }
+        
+        public DateTime PublicationDate { get; set; }
+        public bool HasCustomDate { get; set; }
+
         public BulletinCache Item
         {
             get => item.Value == null ? CreateItem : item.Value;
@@ -40,6 +45,8 @@ namespace BulletinClient.ViewModels
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
             CardCategory3 = "iPhone";
+            PublicationDate = DateTime.Now.AddMinutes(30);
+            HasCustomDate = true;
             Item.City = "Подольск";
             CommandAdd = new DelegateCommand(AddAvito);
             CommandPublicate = new DelegateCommand(Publicate);
@@ -86,6 +93,7 @@ namespace BulletinClient.ViewModels
                 MessageBox.Show("Объявление уже было отправлено на публикацию");
                 return;
             }
+            Item.PublicationDate = HasCustomDate ? (DateTime?)PublicationDate : null;
             BulletinHelper.Publicate(a =>
             {
                 Item.InPublicationProcess = true;

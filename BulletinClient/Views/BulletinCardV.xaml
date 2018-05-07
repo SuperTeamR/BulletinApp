@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BulletinClient.Views"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -12,6 +13,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -30,19 +32,29 @@
 
         <TextBlock Text="Bulletin card" Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
 
+        <TextBlock   Text="Дата публикации"  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1">
+            <CheckBox x:Name="HasCustomDateCheckBox"  Margin="5"  VerticalAlignment="Center" HorizontalAlignment="Left" 
+                      IsChecked="{Binding HasCustomDate}" BorderThickness="1,1,1,1" />
+            <xctk:DateTimePicker IsEnabled="{Binding Path=IsChecked, ElementName=HasCustomDateCheckBox}" 
+                                 Value="{Binding PublicationDate}" 
+                                 FormatString="dd.MM.yyyy HH:mm" 
+                                 Format="Custom" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14"></xctk:DateTimePicker>
 
-        <TextBlock   Text="Город"  Margin="5" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <ComboBox Margin="5" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" IsEditable="True" Text="{Binding Item.City}">
+        </StackPanel>
+
+        <TextBlock   Text="Город"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <ComboBox Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" IsEditable="True" Text="{Binding Item.City}">
             <ComboBoxItem IsSelected="True">Москва</ComboBoxItem>
             <ComboBoxItem>Санкт-Петербург</ComboBoxItem>
             <ComboBoxItem>Подольск</ComboBoxItem>
         </ComboBox>
 
-        <TextBlock   Text="Категория"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox IsEnabled="False" Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.CurrentGroup, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Категория"  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox IsEnabled="False" Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.CurrentGroup, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <StackPanel  Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+        <StackPanel  Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
 
             <TextBox IsEnabled="False" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="120" Text="{Binding CardCategory1}" BorderThickness="0,0,0,1"/>
 
@@ -67,21 +79,21 @@
                                     </ComboBox>-->
         </StackPanel>
 
-        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+        <TextBlock  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
+        <TextBlock  Margin="5" Grid.Row="7" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Images"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Images, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="3" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>
 
-        <TextBlock   Text="Цена"  Margin="5" Grid.Row="7" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
+        <TextBlock   Text="Цена"  Margin="5" Grid.Row="8" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
+        <TextBox Margin="5" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <ScrollViewer Grid.Row="8" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible">
+        <ScrollViewer Grid.Row="9" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible">
             <ContentControl Content="{Binding TemplateCollectionView}" Margin ="10" />
         </ScrollViewer>
     </Grid>

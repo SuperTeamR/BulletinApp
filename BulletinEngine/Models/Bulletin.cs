@@ -33,7 +33,6 @@ namespace BulletinEngine.Entity.Data
         public string Price { get; set; }
         public string Images { get; set; }
         public DateTime? DatePublication { get; set; }
-
         public DateTime? GenerationCheckLast { get; set; }
         public DateTime? GenerationCheckNext { get; set; }
 #if DEBUG
@@ -97,6 +96,7 @@ namespace BulletinEngine.Entity.Data
             entity.Description = cache.Description;
             entity.Images = cache.Images;
             entity.Price = cache.Price;
+            entity.DatePublication = cache.PublicationDate;
             var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q => q.Hash == cache.GroupSignature);
             if (group != null)
             {
@@ -113,6 +113,7 @@ namespace BulletinEngine.Entity.Data
             cache.Description = entity.Description;
             cache.Images = entity.Images;
             cache.Price = entity.Price;
+            cache.PublicationDate = entity.DatePublication;
             var group = GroupHelper.GetGroupSignature2(entity.Id);
             if (group != null)
             {

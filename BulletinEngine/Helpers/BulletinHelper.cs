@@ -21,16 +21,24 @@ namespace BulletinHub.Helpers
                 if (instances.Any())
                 {
                     bulletin.SetGenerationCheck();
-                    var datePublishs = c.TempDB.Tasks.Where(q => q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).Select(q => q.TargetDate).ToArray();
-                    datePublishs = datePublishs.Where(q => q.HasValue).ToArray();
                     var datePublish = DateTime.Now;
-                    if (datePublishs.Any())
+                    if (bulletin.DatePublication != null)
                     {
-                        var max = datePublishs.Max().Value;
-                        if (datePublish > DateTime.Now)
-                            datePublish = max;
+                        datePublish = bulletin.DatePublication.Value;
                     }
-                    datePublish = datePublish.AddMinutes(5);
+                    else
+                    {
+                        var datePublishs = c.TempDB.Tasks.Where(q => q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).Select(q => q.TargetDate).ToArray();
+                        datePublishs = datePublishs.Where(q => q.HasValue).ToArray();
+                        if (datePublishs.Any())
+                        {
+                            var max = datePublishs.Max().Value;
+                            if (datePublish > DateTime.Now)
+                                datePublish = max;
+                        }
+                        datePublish = datePublish.AddMinutes(5);
+                    }
+                
                     foreach (var instance in instances)
                     {
                         var access = AccessHelper.GetNextAccess(bulletin.UserId, instance.BoardId, instance.BulletinId);

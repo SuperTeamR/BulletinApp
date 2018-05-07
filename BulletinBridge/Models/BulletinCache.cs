@@ -1,4 +1,5 @@
-﻿using FessooFramework.Objects.Data;
+﻿using System;
+using FessooFramework.Objects.Data;
 using System.Runtime.Serialization;
 
 namespace BulletinBridge.Data
@@ -22,6 +23,8 @@ namespace BulletinBridge.Data
         public string CurrentGroup { get; set; }
         [DataMember]
         public string City { get; set; }
+        [DataMember]
+        public DateTime? PublicationDate { get; set; }
 
         public bool InPublicationProcess { get; set; }
 
