@@ -45,6 +45,7 @@ namespace BulletinHub.Helpers
                         if (access == null)
                             continue;
                         instance.AccessId = access.Id;
+                        c.SaveChanges();
                         TaskHelper.CreateInstancePublication(bulletin.UserId, instance, datePublish);
                     }
                 }

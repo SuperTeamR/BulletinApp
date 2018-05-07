@@ -169,7 +169,6 @@ namespace BulletinEngine.Entity.Data
                 {
                     dbAccess.Login = access.Login;
                     dbAccess.Password = access.Password;
-                    dbAccess.State = (int)AccessState.Unchecked;
                     d.SaveChanges();
                 }
                 result = new TDataModel[] { access as TDataModel };

@@ -145,7 +145,7 @@ namespace BulletinHub.Models
                 switch (code)
                 {
                     case "All":
-                        result = TemplateHelper.All().Take(50);
+                        result = TemplateHelper.All().Where(q => q.IsIndividualSeller).OrderByDescending(q => q.Count).Take(100);
                         break;
                     case "MarkAsUsed":
                         result = new[] { TemplateHelper.MarkAsUsed(entities.FirstOrDefault())};

@@ -19,13 +19,13 @@ namespace BulletinClient.ViewModels
         public string CardCategory3 { get; set; }
         public string CardCategory4 { get; set; }
         public string CardCategory5 { get; set; }
-        
+
         public DateTime PublicationDate { get; set; }
         public bool HasCustomDate { get; set; }
 
         public DateTime MinimumDate
         {
-            get { return DateTime.Now;}
+            get { return DateTime.Now; }
         }
 
         public BulletinCache Item
@@ -39,7 +39,7 @@ namespace BulletinClient.ViewModels
             templateCollectionView = templateCollectionView ?? CreateTemplateCollectionView();
         public TemplateCollectionVM templateCollectionView { get; set; }
 
-        public bool CanPublicate => Item.State != 1 && Item.State != 2 && !Item.InPublicationProcess;
+        public bool CanPublicate => !Item.InPublicationProcess;
 
         public ICommand CommandAdd { get; private set; }
         public ICommand CommandPublicate { get; set; }
@@ -62,6 +62,7 @@ namespace BulletinClient.ViewModels
         {
             Item = selectedObject;
             RaisePropertyChanged(() => Item);
+            RaisePropertyChanged(() => CanPublicate);
         }
         public void Clear()
         {
@@ -127,22 +128,16 @@ namespace BulletinClient.ViewModels
                 CreateItem.Description = template.Description;
                 CreateItem.Images = template.Images;
             }
-            //Объект выбран. Создаем новый буллетин на базе шаблона и цены старого буллетина
+            //Объект выбран. Создаем новую инстанцию на базе шаблона и цены старого буллетина
             else
             {
-                CreateItem = new BulletinCache
-                {
-                    Title = template.Title,
-                    Description = template.Description,
-                    Images = template.Images,
-                    Price = Item.Price,
-                    GroupSignature = Item.GroupSignature,
-                    City = Item.City
-                };
-                item.Value = null;
-                AddAvito();
-                TemplateHelper.MarkAsUsed(templateCollectionView.Refresh, template);
+                var bulletin = item.Value;
+                bulletin.Title = template.Title;
+                bulletin.Description = template.Description;
+                bulletin.Images = template.Images;
             }
+
+            TemplateHelper.MarkAsUsed(templateCollectionView.Refresh, template);
             RaisePropertyChanged(() => Item);
         }
 
