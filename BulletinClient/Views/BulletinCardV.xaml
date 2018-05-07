@@ -38,6 +38,8 @@
                       IsChecked="{Binding HasCustomDate}" BorderThickness="1,1,1,1" />
             <xctk:DateTimePicker IsEnabled="{Binding Path=IsChecked, ElementName=HasCustomDateCheckBox}" 
                                  Value="{Binding PublicationDate}" 
+                                 Minimum="{Binding MinimumDate}"
+                                 ClipValueToMinMax="True"
                                  FormatString="dd.MM.yyyy HH:mm" 
                                  Format="Custom" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="14"></xctk:DateTimePicker>
 

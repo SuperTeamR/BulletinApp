@@ -23,6 +23,11 @@ namespace BulletinClient.ViewModels
         public DateTime PublicationDate { get; set; }
         public bool HasCustomDate { get; set; }
 
+        public DateTime MinimumDate
+        {
+            get { return DateTime.Now;}
+        }
+
         public BulletinCache Item
         {
             get => item.Value == null ? CreateItem : item.Value;
