@@ -75,10 +75,8 @@
   <ItemGroup>
     <Compile Include="Extensions\WebElementExtensions.cs" />
     <Compile Include="Helpers\BulletinCollector.cs" />
-    <Compile Include="Helpers\BulletinHelper.cs" />
     <Compile Include="Helpers\FirefoxDriverHelper.cs" />
     <Compile Include="Helpers\GenerationHelpers.cs" />
-    <Compile Include="Helpers\CommandTaskHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

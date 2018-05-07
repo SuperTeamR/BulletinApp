@@ -55,7 +55,7 @@ namespace BulletinCommand.Helpers
                 //2. Публикация инстанций объявлений
                 GenerationBulletinsPublish();
                 //3. Сбор данных под аккаунт
-                GenerationCollectorBulletinTemplate();
+                //GenerationCollectorBulletinTemplate();
 
                 //0. Сбор данных с аккаунта - сообщения и буллетины(единожды)
                 //0. Редактирование существующих инстанций

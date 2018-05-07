@@ -17,11 +17,11 @@ namespace BulletinHub.Models
         public string URL { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Price { get; set; }
+        public int Price { get; set; }
         /// <summary>
         /// Количество просмотров
         /// </summary>
-        public string Count { get; set; }
+        public int Count { get; set; }
 
         public string Images { get; set; }
         public string Category1 { get; set; }
@@ -42,6 +42,14 @@ namespace BulletinHub.Models
         /// Район или метро 
         /// </summary>
         public string Region3 { get; set; }
+        /// <summary>
+        /// True - продавец, false - компания
+        /// </summary>
+        public bool IsIndividualSeller { get; set; }
+        /// <summary>
+        /// True - заполнено полностью, false - не заполнено
+        /// </summary>
+        public bool IsHandled { get; set; }
         #endregion
         #region ALM
         protected override IEnumerable<EntityObjectALMConfiguration<BulletinTemplate, DefaultState>> Configurations => Enumerable.Empty<EntityObjectALMConfiguration<BulletinTemplate, DefaultState>>();
@@ -67,6 +75,8 @@ namespace BulletinHub.Models
             arg1.Region1 = arg2.Region1;
             arg1.Region2 = arg2.Region2;
             arg1.Region3 = arg2.Region3;
+            arg1.IsHandled = arg2.IsHandled;
+            arg1.IsIndividualSeller = arg2.IsIndividualSeller;
             return arg1;
         }
         #endregion
@@ -91,6 +101,8 @@ namespace BulletinHub.Models
             entity.Region1 = cache.Region1;
             entity.Region2 = cache.Region2;
             entity.Region3 = cache.Region3;
+            entity.IsIndividualSeller = cache.IsIndividualSeller;
+            entity.IsHandled = cache.IsHandled;
             return entity;
         }
         internal static BulletinTemplateCache ToCache(BulletinTemplate entity)
@@ -112,6 +124,8 @@ namespace BulletinHub.Models
             cache.Region1 = entity.Region1;
             cache.Region2 = entity.Region2;
             cache.Region3 = entity.Region3;
+            entity.IsIndividualSeller = cache.IsIndividualSeller;
+            entity.IsHandled = cache.IsHandled;
             return cache;
         }
         #endregion
