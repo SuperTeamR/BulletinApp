@@ -21,7 +21,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
     {
         #region Property
         public override string URL { get => "https://www.avito.ru"; }
-        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован", "Ошибка при установлении защищённого соединения" };
+        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован" };
         public override IEnumerable<string> BlockedExceptionsString => new[] { "Учётная запись заблокирована по причине", "Доступ заблокирован" };
         public override int PageNavigationTimeout => 3000;
         #endregion
@@ -77,7 +77,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 ConsoleHelper.SendMessage($"InstancePublication => Started from task {taskModel.Id}. Instance {taskModel.InstanceId}");
                 WaitPage(driver, 30000, "www.avito.ru/additem");
                 WaitExecute(driver);
-
+               
                 WaitPage(driver, 30000, "header-button-add-item");
                 FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
                 ConsoleHelper.SendMessage($"InstancePublication => Click from Add button");
@@ -158,46 +158,12 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 if (taskModel.Images != null && taskModel.Images.Any())
                 {
-                    var current = 0;
                     foreach (var img in taskModel.Images)
                     {
                         var file = ImageHelper.ImageToTemp(img);
                         var fileInput = driver.FindElementByCssSelector($"input[name='image']");
                         fileInput.SendKeys(file);
-
-                        #region Evil image loaded
-                        current += 1;
-                        try
-                        {
-                            Find(driver, "div", "class", "form-uploader__collection js-uploader-collection", collection =>
-                            {
-                                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(30000));
-                                wait.Until(d =>
-                                {
-                                    try
-                                    {
-                                        IEnumerable<IWebElement> items = collection.FindElements(By.TagName("div"));
-                                        items = items.Where(q => q.GetAttribute("class") == "form-uploader-item js-uploader-item");
-                                        if (items.Count() < current)
-                                            return false;
-                                        var states = items.Select(q => q.GetAttribute("data-state"));
-                                        if (states.All(q => q == "active"))
-                                            return true;
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        var r2 = ex;
-                                    }
-                                    return false;
-                                });
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            var r = ex;
-                        }
-                        #endregion
-
+                        Thread.Sleep(17000);
                         ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
                     }
                 }
@@ -219,16 +185,16 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
                 //Confirmation
-
-                var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
-                JsClick(driver, button);
-                WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-                //Get URL
-                var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                var href = a.GetAttribute("href");
-                result = href;
-                ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
+               
+                //var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                //JsClick(driver, button);
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                ////Get URL
+                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                //var href = a.GetAttribute("href");
+                //result = href;
+                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {
