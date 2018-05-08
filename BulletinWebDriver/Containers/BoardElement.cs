@@ -236,12 +236,12 @@ namespace BulletinWebDriver.Containers
             }
             else
             {
-#if DEBUG
-                FirefoxHelper.ExecuteWithVisual(browser =>
-                //FirefoxHelper.ExecuteOne(browser =>
-#else
-                FirefoxHelper.ExecuteOne(browser =>
 
+#if DEBUG && !DEBUG_REMOTE
+       FirefoxHelper.ExecuteWithVisual(browser =>
+#endif
+#if RELEASE || DEBUG_REMOTE
+                FirefoxHelper.ExecuteOne(browser =>
 #endif
                 {
                     ToHome(browser);

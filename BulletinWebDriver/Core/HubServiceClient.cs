@@ -6,9 +6,10 @@ namespace BulletinWebDriver.Core
 {
     internal class HubServiceClient : DataServiceClient
     {
-#if DEBUG
+#if DEBUG && !DEBUG_REMOTE
         public override string Address => "http://localhost:59888/DataService.svc";
-#else
+#endif
+#if RELEASE || DEBUG_REMOTE
         public override string Address => "http://176.111.73.51/BulletinHub/DataService.svc";
 #endif
         public override TimeSpan PostTimeout => TimeSpan.FromSeconds(100);
