@@ -247,7 +247,7 @@ namespace BulletinWebDriver.Containers
                 {
                     ToHome(browser);
                     action?.Invoke(browser, taskModel);
-                }, proxy, 100);
+                }, proxy, 35);
                 //Задание завершилось успешно
                 DriverTaskHelper.Complete(task);
             }
