@@ -83,6 +83,7 @@ namespace BulletinWebDriver.Containers
             var result = false;
             try
             {
+                ConsoleHelper.SendMessage($"WaitWebWorker => Wait load started. Type {code}, patterns {string.Join(";", waitPatterns)}");
                 var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(timeout));
                 wait.Until(d =>
                 {
