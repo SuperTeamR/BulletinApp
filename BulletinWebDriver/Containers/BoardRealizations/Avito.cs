@@ -77,7 +77,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 ConsoleHelper.SendMessage($"InstancePublication => Started from task {taskModel.Id}. Instance {taskModel.InstanceId}");
                 WaitPage(driver, 30000, "www.avito.ru/additem");
                 WaitExecute(driver);
-               
+
                 WaitPage(driver, 30000, "header-button-add-item");
 
                 FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
@@ -89,6 +89,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 ConsoleHelper.SendMessage($"InstancePublication => Page from add bulletin loaded");
 
+                var oldImplicitWait = driver.Manage().Timeouts().ImplicitWait;
+                driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
                 var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(60000));
                 wait.Until(d =>
                 {
@@ -106,36 +108,44 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     if (!string.IsNullOrWhiteSpace(taskModel.Category1))
                     {
                         JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
-                        WaitPage(driver, 10000, taskModel.Category2);
-                        ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
-                        category1 = true;
+                        if (WaitPage(driver, 10000, taskModel.Category2))
+                        {
+                            ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
+                            category1 = true;
+                        };
                     }
                     else
                         category1 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category2))
                     {
                         JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
-                        WaitPage(driver, 10000, taskModel.Category3);
-                        ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
-                        category2 = true;
+                        if (WaitPage(driver, 10000, taskModel.Category3))
+                        {
+                            ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
+                            category2 = true;
+                        }
                     }
                     else
                         category2 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category3))
                     {
                         JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
-                        WaitPage(driver, 10000, taskModel.Category4);
-                        ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
-                        category3 = true;
+                        if (WaitPage(driver, 10000, taskModel.Category4))
+                        {
+                            ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
+                            category3 = true;
+                        }
                     }
                     else
                         category3 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category4))
                     {
                         JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
-                        WaitPage(driver, 10000, taskModel.Category5);
-                        ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
-                        category4 = true;
+                        if (WaitPage(driver, 10000, taskModel.Category5))
+                        {
+                            ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
+                            category4 = true;
+                        }
                     }
                     else
                         category4 = true;
@@ -152,8 +162,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         return true;
                     return false;
                 });
+                driver.Manage().Timeouts().ImplicitWait = oldImplicitWait;
 
-               
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
