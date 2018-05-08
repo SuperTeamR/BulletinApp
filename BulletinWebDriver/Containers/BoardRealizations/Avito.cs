@@ -21,7 +21,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
     {
         #region Property
         public override string URL { get => "https://www.avito.ru"; }
-        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован", , "Ошибка при установлении защищённого соединения" };
+        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован", "Ошибка при установлении защищённого соединения" };
         public override IEnumerable<string> BlockedExceptionsString => new[] { "Учётная запись заблокирована по причине", "Доступ заблокирован" };
         public override int PageNavigationTimeout => 3000;
         #endregion
@@ -79,6 +79,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                
                 WaitPage(driver, 30000, "header-button-add-item");
+
                 FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
                 ConsoleHelper.SendMessage($"InstancePublication => Click from Add button");
 
@@ -87,40 +88,72 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitPage(driver, 30000, "Животные");
 
                 ConsoleHelper.SendMessage($"InstancePublication => Page from add bulletin loaded");
-                //SetCategory first
-                JsClick(driver, By.CssSelector($"input[title='Животные']"));
-                ConsoleHelper.SendMessage($"InstancePublication => Set default category 'Животные'");
-                WaitPage(driver, 10000, taskModel.Category1);
-                //SetCategory
-                if (!string.IsNullOrWhiteSpace(taskModel.Category1))
+
+                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(60000));
+                wait.Until(d =>
                 {
-                    JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
-                    WaitPage(driver, 10000, taskModel.Category2);
-                    ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
-                }
-                if (!string.IsNullOrWhiteSpace(taskModel.Category2))
-                {
-                    JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
-                    WaitPage(driver, 10000, taskModel.Category3);
-                    ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
-                }
-                if (!string.IsNullOrWhiteSpace(taskModel.Category3))
-                {
-                    JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
-                    WaitPage(driver, 10000, taskModel.Category4);
-                    ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
-                }
-                if (!string.IsNullOrWhiteSpace(taskModel.Category4))
-                {
-                    JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
-                    WaitPage(driver, 10000, taskModel.Category5);
-                    ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
-                }
-                if (!string.IsNullOrWhiteSpace(taskModel.Category5))
-                {
-                    JsClick(driver, By.CssSelector($"input[title='{taskModel.Category5}']"));
-                    ConsoleHelper.SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
-                }
+                    var category1 = false;
+                    var category2 = false;
+                    var category3 = false;
+                    var category4 = false;
+                    var category5 = false;
+
+                    //SetCategory first
+                    JsClick(driver, By.CssSelector($"input[title='Животные']"));
+                    ConsoleHelper.SendMessage($"InstancePublication => Set default category 'Животные'");
+                    WaitPage(driver, 10000, taskModel.Category1);
+                    //SetCategory
+                    if (!string.IsNullOrWhiteSpace(taskModel.Category1))
+                    {
+                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
+                        WaitPage(driver, 10000, taskModel.Category2);
+                        ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
+                        category1 = true;
+                    }
+                    else
+                        category1 = true;
+                    if (!string.IsNullOrWhiteSpace(taskModel.Category2))
+                    {
+                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
+                        WaitPage(driver, 10000, taskModel.Category3);
+                        ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
+                        category2 = true;
+                    }
+                    else
+                        category2 = true;
+                    if (!string.IsNullOrWhiteSpace(taskModel.Category3))
+                    {
+                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
+                        WaitPage(driver, 10000, taskModel.Category4);
+                        ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
+                        category3 = true;
+                    }
+                    else
+                        category3 = true;
+                    if (!string.IsNullOrWhiteSpace(taskModel.Category4))
+                    {
+                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
+                        WaitPage(driver, 10000, taskModel.Category5);
+                        ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
+                        category4 = true;
+                    }
+                    else
+                        category4 = true;
+                    if (!string.IsNullOrWhiteSpace(taskModel.Category5))
+                    {
+                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category5}']"));
+                        ConsoleHelper.SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
+                        category5 = true;
+                    }
+                    else
+                        category5 = true;
+
+                    if (category1 && category2 && category3 && category4 && category5)
+                        return true;
+                    return false;
+                });
+
+               
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
