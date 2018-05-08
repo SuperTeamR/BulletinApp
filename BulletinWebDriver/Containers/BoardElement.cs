@@ -261,7 +261,7 @@ namespace BulletinWebDriver.Containers
        FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
 #if RELEASE || DEBUG_REMOTE
-                FirefoxHelper.ExecuteOne(browser =>
+                FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
                 {
                     ToHome(browser);
@@ -278,7 +278,7 @@ namespace BulletinWebDriver.Containers
             try
             {
                 WaitExecute(driver);
-                driver.Navigate().GoToUrl(URL);
+                driver.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
             }
             catch (Exception ex)
             {

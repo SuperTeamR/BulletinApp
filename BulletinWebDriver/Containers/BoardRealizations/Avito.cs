@@ -163,7 +163,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     return false;
                 });
                 driver.Manage().Timeouts().ImplicitWait = oldImplicitWait;
-
+               
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
@@ -214,6 +214,12 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 }
                 WaitExecute(driver);
                 //Select base bulletin
+                if (driver.PageSource.Contains("Разово"))
+                {
+                    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
+                    return result;
+                }
+
                 FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
