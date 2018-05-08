@@ -21,7 +21,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
     {
         #region Property
         public override string URL { get => "https://www.avito.ru"; }
-        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован" };
+        public override IEnumerable<string> IPExceptionsString => new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован", , "Ошибка при установлении защищённого соединения" };
         public override IEnumerable<string> BlockedExceptionsString => new[] { "Учётная запись заблокирована по причине", "Доступ заблокирован" };
         public override int PageNavigationTimeout => 3000;
         #endregion
@@ -187,16 +187,16 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
                 //Confirmation
-               
-                //var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
-                //JsClick(driver, button);
-                //WaitExecute(driver);
-                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-                ////Get URL
-                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                //var href = a.GetAttribute("href");
-                //result = href;
-                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
+
+                var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                JsClick(driver, button);
+                WaitExecute(driver);
+                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                //Get URL
+                var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                var href = a.GetAttribute("href");
+                result = href;
+                ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {
