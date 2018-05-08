@@ -214,6 +214,7 @@ namespace BulletinWebDriver.Containers
             }, continueExceptionMethod: (ex, continueMethod) =>
             {
                 DriverTaskHelper.Error(task, ex.ToString());
+                DriverTaskHelper.Complete(task);
             });
             ConsoleHelper.SendMessage($"Task {UID}.{task.Command} completed");
 
