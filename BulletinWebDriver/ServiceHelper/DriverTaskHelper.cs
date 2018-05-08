@@ -15,7 +15,6 @@ namespace BulletinWebDriver.Helpers
     {
         public static TaskCache Next()
         {
-            ConsoleHelper.SendMessage($"TaskHelper => Get next task excuted");
             return DCT.Execute(c => c.HubClient.RSendQueryObject<TaskCache>("Next"));
         }
 
