@@ -158,12 +158,14 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 if (taskModel.Images != null && taskModel.Images.Any())
                 {
+                    var count = 0;
                     foreach (var img in taskModel.Images)
                     {
+                        count++;
                         var file = ImageHelper.ImageToTemp(img);
                         var fileInput = driver.FindElementByCssSelector($"input[name='image']");
                         fileInput.SendKeys(file);
-                        Thread.Sleep(17000);
+                        WaitElementCountByCssSelector(driver, 30, count, "div[class~='form-uploader-item'][data-state='active']");
                         ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
                     }
                 }

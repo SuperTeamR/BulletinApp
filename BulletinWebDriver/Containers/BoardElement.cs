@@ -78,6 +78,44 @@ namespace BulletinWebDriver.Containers
         {
             return WaitWebWorker("Url", driver, timeout, waitPatterns);
         }
+
+        protected bool WaitElementCountByCssSelector(FirefoxDriver driver, int timeout, int count, params string[] waitPatterns)
+        {
+            return WaitWebWorker("ElementCountByCssSelector", driver, timeout, count, waitPatterns);
+        }
+
+        protected bool WaitWebWorker(string code, FirefoxDriver driver, int timeout, int count,
+            params string[] waitPatterns)
+        {
+            var result = false;
+            try
+            {
+                ConsoleHelper.SendMessage($"WaitWebWorker => Wait load started. Type {code}, patterns {string.Join(";", waitPatterns)}");
+                var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(timeout));
+                wait.Until(d =>
+                {
+                    foreach (var pattern in waitPatterns)
+                    {
+                        switch (code)
+                        {
+                            case "ElementCountByCssSelector":
+                                result = d.FindElements(By.CssSelector(pattern)).Count == count;
+                                break;
+                        }
+                        if (result)
+                            return result;
+                    }
+                    return result;
+                    ;
+                });
+            }
+            catch (Exception ex)
+            {
+                ConsoleHelper.SendMessage($"WAIT WEB DRIVER. Wait patterns not found from {driver.Url}. Patterns - {string.Join(";", waitPatterns)}");
+            }
+            return result;
+        }
+
         protected bool WaitWebWorker(string code, FirefoxDriver driver, int timeout, params string[] waitPatterns)
         {
             var result = false;
@@ -137,25 +175,6 @@ namespace BulletinWebDriver.Containers
                 {
                     var currValue = driver.FindElement(query).GetAttribute(attribute);
                     return currValue == null;
-                }
-                catch (NoSuchElementException)
-                {
-                    return false;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    return false;
-                }
-            };
-        }
-        protected Func<IWebDriver, bool> ElementExists(FirefoxDriver driver, By query)
-        {
-            return (d) =>
-            {
-                try
-                {
-                    var element = driver.FindElement(query);
-                    return element != null;
                 }
                 catch (NoSuchElementException)
                 {
