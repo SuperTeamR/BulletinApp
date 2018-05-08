@@ -1,6 +1,7 @@
 ﻿using BulletinBridge.Models;
 using BulletinWebDriver.Core;
 using BulletinWebDriver.Helpers;
+using FessooFramework.Tools.Helpers;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
@@ -32,17 +33,22 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         #region Default
         public override bool Auth(FirefoxDriver driver, string login, string password)
         {
+            ConsoleHelper.SendMessage($"Auth => Start from {login}");
             WaitExecute(driver);
             Find(driver, "a", "data-marker", "header/login-button", e => JsClick(driver, e));
             WaitPage(driver, 30000, "Войти");
+            ConsoleHelper.SendMessage($"Auth => Click from Enter");
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
             WaitExecute(driver);
             Find(driver, "input", "data-marker", "login-form/login", e => e.SendKeys(login));
             Find(driver, "input", "data-marker", "login-form/password", e => e.SendKeys(password));
             WaitExecute(driver);
+            ConsoleHelper.SendMessage($"Auth => Set login and password");
             Find(driver, "button", "data-marker", "login-form/submit", e => JsClick(driver, e));
             WaitPage(driver, 30000, "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет", "Доступ заблокирован");
-            if (driver.Title.Contains("Личный кабинет"))
+            var authResult = driver.Title.Contains("Личный кабинет");
+            ConsoleHelper.SendMessage($"Auth => Complete, auth is {authResult}");
+            if (authResult)
             {
                 return true;
             }
@@ -63,18 +69,23 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             {
                 if (!Auth(driver, taskModel.Login, taskModel.Password))
                     return result;
+                ConsoleHelper.SendMessage($"InstancePublication => Started from task {taskModel.Id}. Instance {taskModel.InstanceId}");
                 WaitPage(driver, 60000, "www.avito.ru/additem");
                 WaitExecute(driver);
-
+               
                 WaitPage(driver, 30000, "header-button-add-item");
                 FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
+                ConsoleHelper.SendMessage($"InstancePublication => Click from Add button");
 
                 WaitPage(driver, 30000, "Выберите категорию");
                 WaitExecute(driver);
 
+                ConsoleHelper.SendMessage($"InstancePublication => Page from add bulletin loaded");
+
                 Thread.Sleep(3000);
                 //SetCategory first
                 JsClick(driver, By.CssSelector($"input[title='Животные']"));
+                ConsoleHelper.SendMessage($"InstancePublication => Set default category 'Животные'");
                 WaitPage(driver, 10000, taskModel.Category1);
                 //SetCategory
                 if (!string.IsNullOrWhiteSpace(taskModel.Category1))
@@ -82,33 +93,39 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
                     Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category2);
+                    ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category2))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
                     Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category3);
+                    ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category3))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
                     Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category4);
+                    ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category4))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
                     Thread.Sleep(1000);
                     WaitPage(driver, 10000, taskModel.Category5);
+                    ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
                 }
                 if (!string.IsNullOrWhiteSpace(taskModel.Category5))
                 {
                     JsClick(driver, By.CssSelector($"input[title='{taskModel.Category5}']"));
                     Thread.Sleep(1000);
+                    ConsoleHelper.SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
                 }
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
+                ConsoleHelper.SendMessage($"InstancePublication => Select owner type");
 
 
                 var comboboxCount = driver.FindElementByName("locationId");
@@ -118,6 +135,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     var option = allOptions.FirstOrDefault(q => q.Selected);
                     driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "value", "639180");
                     driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "data-parent-id", "637680");
+                    ConsoleHelper.SendMessage($"InstancePublication => Set location from selector");
                 }
                 else
                 {
@@ -128,6 +146,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                          e.SendKeys(OpenQA.Selenium.Keys.Return);
                          Find(driver, "li", "data-marker", "suggest(0)", e2 => JsClick(driver, e2));
                      });
+                    ConsoleHelper.SendMessage($"InstancePublication => Set location from search string");
                 }
 
                 //Set fields
@@ -135,6 +154,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 DoAction(driver, By.CssSelector($"input[id='item-edit__title']"), e => e.SendKeys(taskModel.Title));
                 DoAction(driver, By.CssSelector($"textarea[id='item-edit__description']"), e => e.SendKeys(taskModel.Description));
                 DoAction(driver, By.CssSelector($"input[id='item-edit__price']"), e => e.SendKeys(taskModel.Price));
+
+                ConsoleHelper.SendMessage($"InstancePublication => Set fields");
 
                 if (taskModel.Images != null && taskModel.Images.Any())
                 {
@@ -144,15 +165,18 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         var fileInput = driver.FindElementByCssSelector($"input[name='image']");
                         fileInput.SendKeys(file);
                         Thread.Sleep(22000);
+                        ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
                     }
                 }
                 WaitExecute(driver);
                 //Select base bulletin
                 FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
                 WaitExecute(driver);
+                ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
 
                 FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
+                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
 
                 JsClick(driver, By.Id("service-premium"));
                 WaitExecute(driver);
@@ -160,14 +184,17 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 JsClick(driver, By.Id("service-highlight"));
                 WaitExecute(driver);
+                ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
                 //Confirmation
                 var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
                 JsClick(driver, button);
                 WaitExecute(driver);
+                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
                 //Get URL
                 var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
                 var href = a.GetAttribute("href");
                 result = href;
+                ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {
