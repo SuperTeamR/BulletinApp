@@ -43,6 +43,7 @@ namespace BulletinClient.ViewModels
 
         public ICommand CommandAdd { get; private set; }
         public ICommand CommandPublicate { get; set; }
+        public ICommand CommandClear { get; set; }
         #endregion
         #region Constructor
         public BulletinCardVM()
@@ -55,6 +56,7 @@ namespace BulletinClient.ViewModels
             Item.City = "Подольск";
             CommandAdd = new DelegateCommand(AddAvito);
             CommandPublicate = new DelegateCommand(Publicate);
+            CommandClear = new DelegateCommand(Clear);
         }
         #endregion
         #region Methods
@@ -68,6 +70,7 @@ namespace BulletinClient.ViewModels
         {
             Item = null;
             RaisePropertyChanged(() => Item);
+            RaisePropertyChanged(() => CanPublicate);
         }
         internal void Save()
         {
