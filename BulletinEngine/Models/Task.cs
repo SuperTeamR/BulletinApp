@@ -27,12 +27,13 @@ namespace BulletinHub.Entity.Data
         AccessCheck = 1,
         InstancePublication = 2,
         BulletinTemplateCollector = 3,
+        ActivateAccess = 4,
 
         //Obsolute
-        Creation = 4,
-        Checking = 5,
-        Editing = 6,
-        Cloning = 7,
+        Creation = 5,
+        Checking = 6,
+        Editing = 7,
+        Cloning = 8,
 
     }
     public class Task : EntityObjectALM<Task, TaskState>

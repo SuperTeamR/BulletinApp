@@ -209,7 +209,7 @@ namespace BulletinWebDriver.Containers
                     case "AccessCheck":
                         checkAccess(task);
                         break;
-                    case "ActivateBulletin":
+                    case "ActivateAccess":
                         executeCommand<TaskAccessCheckCache>(task, ActivateBulletins, false);
                         break;
                     case "InstancePublication":
@@ -222,7 +222,7 @@ namespace BulletinWebDriver.Containers
                                 instance.Url = url;
                                 BulletinInstanceHelper.Save(instance);
                             }
-#if Release
+#if RELEASE
                         });
 #endif
 #if DEBUG_REMOTE

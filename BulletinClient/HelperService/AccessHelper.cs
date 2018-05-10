@@ -32,6 +32,11 @@ namespace BulletinClient.HelperService
         {
             HubServiceHelper.SendQueryCollection<AccessCache>(callback, "AddAvito", cache);
         }
+
+        internal static void ActivateAccess(Action<IEnumerable<AccessCache>> callback, AccessCache cache)
+        {
+            HubServiceHelper.SendQueryCollection<AccessCache>(callback, "ActivateAccess", cache);
+        }
         public static void Save(Action callback, AccessCache model)
         {
             DCT.Execute(data =>

@@ -26,6 +26,7 @@
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="2" >
             <Button Content="Add" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
+            <Button Content="Activate" Command="{Binding CommandActivate}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
            
         </StackPanel>
 
