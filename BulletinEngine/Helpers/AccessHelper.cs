@@ -14,7 +14,7 @@ namespace BulletinEngine.Helpers
             Access result = null;
             BCT.Execute(c =>
             {
-                var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == ClientId && q.BoardId == BoardId && q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable).OrderBy(q => q.LastPublication).ToArray();
+                var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == ClientId && q.BoardId == BoardId && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Created || q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
                 foreach (var access in accesses)
                 {
                     if (!c.BulletinDb.BulletinInstances.Any(q => q.BoardId == BoardId && q.BulletinId == BulletinId && q.AccessId == access.Id))
