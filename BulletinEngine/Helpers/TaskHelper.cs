@@ -46,6 +46,18 @@ namespace BulletinHub.Helpers
             });
         }
 
+        public static void CreateActivateAccess(Access access)
+        {
+            Create(TaskCommand.ActivateAccess, a =>
+            {  
+                //Обязательные
+                a.BoardId = access.BoardId;
+                a.UserId = access.UserId;
+
+                a.AccessId = access.Id;
+            });
+        }
+
         public static void CreateInstancePublication(Guid userId, BulletinInstance instance, DateTime publicationDate)
         {
             Create(TaskCommand.InstancePublication, a =>

@@ -195,8 +195,11 @@ namespace BulletinEngine.Entity.Data
                     case "AddAvito":
                         result = new[] { AccessHelper.AddAvito(entities.FirstOrDefault()) };
                         break;
+                    case "ActivateAccess":
+                        AccessHelper.ActivateAccess(entities.FirstOrDefault());
+                        break;
                     case "Remove":
-                        AccessHelper.Remove(entities);                        
+                        AccessHelper.Remove(entities);
                         break;
                     case "Enable":
                         AccessHelper.Enable(id);
@@ -212,5 +215,5 @@ namespace BulletinEngine.Entity.Data
         }
         #endregion
     }
-   
+
 }

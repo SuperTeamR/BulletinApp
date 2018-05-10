@@ -4,6 +4,7 @@ using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
 using FessooFramework.Tools.Controllers;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace BulletinClient.ViewModels
@@ -19,13 +20,18 @@ namespace BulletinClient.ViewModels
         private AccessCache CreateItem = new AccessCache();
         public ObjectController<AccessCache> item = new ObjectController<AccessCache>(null);
         public ICommand CommandAdd { get; private set; }
+        public ICommand CommandActivate { get; private set; }
 
         #endregion
         #region Constructor
         public AccessCardVM()
         {
             CommandAdd = new DelegateCommand(AddAvito);
+            CommandActivate = new DelegateCommand(ActivateAccess);
         }
+
+     
+
         #endregion
         #region Methods
         public void Update(AccessCache selectedObject)
@@ -57,6 +63,16 @@ namespace BulletinClient.ViewModels
         {
             AccessHelper.AddAvito((a) =>
             {
+                item.Value = a.FirstOrDefault();
+                CreateItem = new AccessCache();
+                RaisePropertyChanged(() => Item);
+            }, Item);
+        }
+        private void ActivateAccess()
+        {
+            AccessHelper.ActivateAccess(a =>
+            {
+                MessageBox.Show("Отправлена задача на активацию");
                 item.Value = a.FirstOrDefault();
                 CreateItem = new AccessCache();
                 RaisePropertyChanged(() => Item);

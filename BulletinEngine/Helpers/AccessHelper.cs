@@ -4,11 +4,20 @@ using BulletinEngine.Entity.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BulletinHub.Helpers;
 
 namespace BulletinEngine.Helpers
 {
     public static class AccessHelper
     {
+        public static void ActivateAccess(Access access)
+        {
+            BCT.Execute(d =>
+            {
+                TaskHelper.CreateActivateAccess(access);
+            });
+        }
+
         public static Access GetNextAccess(Guid ClientId, Guid BoardId, Guid BulletinId)
         {
             Access result = null;
