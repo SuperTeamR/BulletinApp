@@ -8,6 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BulletinBridge.Models;
+using FessooFramework.Tools.DCT;
+using DCT = BulletinClient.Core.DCT;
 
 namespace BulletinClient.ViewModels
 {
@@ -97,18 +99,21 @@ namespace BulletinClient.ViewModels
 
         private void Publicate()
         {
-            if (!CanPublicate)
+            DCT.ExecuteAsync(d =>
             {
-                MessageBox.Show("Объявление уже было отправлено на публикацию");
-                return;
-            }
-            Item.PublicationDate = HasCustomDate ? (DateTime?)PublicationDate : null;
-            BulletinHelper.Publicate(a =>
-            {
-                Item.InPublicationProcess = true;
-                MessageBox.Show("Объявление отправлено на публикацию");
-                RaisePropertyChanged(() => CanPublicate);
-            }, Item);
+                if (!CanPublicate)
+                {
+                    MessageBox.Show("Объявление уже было отправлено на публикацию");
+                    return;
+                }
+                Item.PublicationDate = HasCustomDate ? (DateTime?)PublicationDate : null;
+                BulletinHelper.Publicate(a =>
+                {
+                    Item.InPublicationProcess = true;
+                    MessageBox.Show("Объявление отправлено на публикацию");
+                    RaisePropertyChanged(() => CanPublicate);
+                }, Item);
+            });
         }
 
         private void AddAvito()
