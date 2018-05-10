@@ -94,6 +94,8 @@ namespace BulletinWebDriver.Containers
                 var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(timeout));
                 wait.Until(d =>
                 {
+                    if (!d.PageSource.Contains("form-uploader-progress"))
+                        return false;
                     foreach (var pattern in waitPatterns)
                     {
                         switch (code)
@@ -220,7 +222,13 @@ namespace BulletinWebDriver.Containers
                                 instance.Url = url;
                                 BulletinInstanceHelper.Save(instance);
                             }
+#if Release
                         });
+#endif
+#if DEBUG_REMOTE
+                        }, hasProxy:false);
+#endif
+
                         break;
                     case "BulletinTemplateCollector":
                         executeCommand<TaskBulletinTemplateCollectorCache>(task, (a, b) =>
@@ -250,7 +258,6 @@ namespace BulletinWebDriver.Containers
                 ConsoleHelper.SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            //ProxyCardCheckCache proxy = null;
             ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString) : null;
             if (proxy == null && hasProxy)
             {
@@ -264,7 +271,7 @@ namespace BulletinWebDriver.Containers
        FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
 #if RELEASE || DEBUG_REMOTE
-                FirefoxHelper.ExecuteWithVisual(browser =>
+                FirefoxHelper.ExecuteOne(browser =>
 #endif
                 {
                     ToHome(browser);
