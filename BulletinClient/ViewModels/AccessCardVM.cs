@@ -21,6 +21,7 @@ namespace BulletinClient.ViewModels
         public ObjectController<AccessCache> item = new ObjectController<AccessCache>(null);
         public ICommand CommandAdd { get; private set; }
         public ICommand CommandActivate { get; private set; }
+        public ICommand CommandOpen { get; set; }
 
         #endregion
         #region Constructor
@@ -28,12 +29,19 @@ namespace BulletinClient.ViewModels
         {
             CommandAdd = new DelegateCommand(AddAvito);
             CommandActivate = new DelegateCommand(ActivateAccess);
+            CommandOpen = new DelegateCommand(Open);
         }
 
-     
+
 
         #endregion
         #region Methods
+
+        private void Open()
+        {
+            System.Diagnostics.Process.Start("http://www.avito.ru/profile");
+        }
+
         public void Update(AccessCache selectedObject)
         {
             Item = selectedObject;
