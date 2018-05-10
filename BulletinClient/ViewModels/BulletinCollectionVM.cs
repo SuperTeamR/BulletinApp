@@ -25,7 +25,6 @@ namespace BulletinClient.ViewModels
         }
         #endregion
         #region Property
-        public ICommand CommandClear { get; private set; }
         public ICommand CommandRefresh { get; private set; }
         public ICommand CommandRemove { get; private set; }
         public BulletinCache SelectedObject
@@ -41,7 +40,6 @@ namespace BulletinClient.ViewModels
         #region Constructor
         public BulletinCollectionVM()
         {
-            CommandClear = new DelegateCommand(Clear);
             CommandRefresh = new DelegateCommand(Refresh);
             CommandRemove = new DelegateCommand(Remove);
             Refresh();
@@ -65,12 +63,6 @@ namespace BulletinClient.ViewModels
                     RaisePropertyChanged(() => MyItems);
                 });
             });
-        }
-
-        private void Clear()
-        {
-            SelectedObject = null;
-            Card.Clear();
         }
 
         private bool CheckSelected()

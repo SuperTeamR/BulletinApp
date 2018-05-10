@@ -11,6 +11,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -26,6 +27,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="2" >
+            <Button Content="Clear" Command="{Binding CommandClear}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
             <Button Content="Add" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
             <Button Content="Publicate" Command="{Binding CommandPublicate}" Visibility="{Binding CanPublicate, Converter={StaticResource BoolToVis}}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
         </StackPanel>
@@ -95,8 +97,6 @@
         <TextBox Margin="5" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Price, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
                  TextChanged="TextBox_TextChanged"/>
 
-        <ScrollViewer Grid.Row="9" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Visible">
-            <ContentControl Content="{Binding TemplateCollectionView}" Margin ="10" />
-        </ScrollViewer>
+        <ContentControl Grid.Row="1" Grid.RowSpan="9" Grid.Column="2"  Content="{Binding TemplateCollectionView}" Margin ="10" />
     </Grid>
 </UserControl>

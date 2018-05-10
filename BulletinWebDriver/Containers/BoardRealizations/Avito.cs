@@ -67,6 +67,51 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             //return Auth(driver, "RyboMan02@gmail.com", "Zcvb208x");
         }
 
+        public override void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel)
+        {
+            try
+            {
+                var inactivePage = @"www.avito.ru/profile/items/inactive";
+
+                if (!Auth(driver, taskModel.Login, taskModel.Password))
+                    return;
+                WaitPage(driver, 3000, inactivePage);
+                WaitExecute(driver);
+
+                var ids = new List<string>();
+                var nextPagePattern = "(Следующая страница)";
+                var buttonPattern = "profile-item-title\">[\\s\\S\\r\\n]*?<a name=\"item_([\\d]+)";
+                var count = 1;
+                var hasNextPage = true;
+                while (hasNextPage)
+                {
+                    count++;
+                    var html = driver.PageSource;
+                    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
+
+                    var matches = RegexHelper.Execute(buttonPattern, html).ToArray();
+                    if (matches.Any())
+                        ids.AddRange(matches.Select(q => q.Groups[1].Value));
+
+                    if (hasNextPage)
+                    {
+                        driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p={count}&s=4");
+                        WaitPage(driver, 30000, inactivePage + $"/rossiya?p={count}&s=4");
+                    }
+                }
+                foreach (var id in ids)
+                {
+                    ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
+                    var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
+                    driver.Navigate().GoToUrl(activationLink);
+                    WaitExecute(driver);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
         public override string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel)
         {
             string result = null;

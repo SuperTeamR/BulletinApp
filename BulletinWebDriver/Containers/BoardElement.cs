@@ -209,6 +209,9 @@ namespace BulletinWebDriver.Containers
                     case "AccessCheck":
                         checkAccess(task);
                         break;
+                    case "ActivateBulletin":
+                        executeCommand<TaskAccessCheckCache>(task, ActivateBulletins, false);
+                        break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
                         {
@@ -324,6 +327,7 @@ namespace BulletinWebDriver.Containers
              });
         }
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
+        public abstract void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
         public abstract IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel);
         #endregion
