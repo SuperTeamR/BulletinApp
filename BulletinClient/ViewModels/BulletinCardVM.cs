@@ -51,7 +51,7 @@ namespace BulletinClient.ViewModels
             CardCategory1 = "Бытовая электроника";
             CardCategory2 = "Телефоны";
             CardCategory3 = "iPhone";
-            PublicationDate = DateTime.Now.AddMinutes(30);
+            PublicationDate = DateTime.Now;
             HasCustomDate = true;
             Item.City = "Подольск";
             CommandAdd = new DelegateCommand(AddAvito);
