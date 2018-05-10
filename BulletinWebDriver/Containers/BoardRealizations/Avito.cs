@@ -89,6 +89,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 ConsoleHelper.SendMessage($"InstancePublication => Page from add bulletin loaded");
 
+                var setCategory = false;
                 var oldImplicitWait = driver.Manage().Timeouts().ImplicitWait;
                 driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
                 var wait = new WebDriverWait(driver, TimeSpan.FromMilliseconds(60000));
@@ -159,11 +160,17 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         category5 = true;
 
                     if (category1 && category2 && category3 && category4 && category5)
+                    {
+                        setCategory = true;
                         return true;
+                    }
                     return false;
                 });
                 driver.Manage().Timeouts().ImplicitWait = oldImplicitWait;
-               
+                if (setCategory)
+                {
+                    ConsoleHelper.SendMessage($"InstancePublication => Category");
+                }
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
@@ -204,48 +211,85 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     var count = 0;
                     foreach (var img in taskModel.Images)
                     {
-                        count++;
-                        var file = ImageHelper.ImageToTemp(img);
-                        var fileInput = driver.FindElementByCssSelector($"input[name='image']");
-                        fileInput.SendKeys(file);
-                        WaitElementCountByCssSelector(driver, 30, count, "div[class~='form-uploader-item'][data-state='active']");
-                        ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
+                        try
+                        {
+                            count++;
+                            var file = ImageHelper.ImageToTemp(img);
+                            ConsoleHelper.SendMessage($"InstancePublication => Image {img} save to {file}");
+                            if (string.IsNullOrWhiteSpace(file))
+                                continue;
+                            var fileInput = driver.FindElementByCssSelector($"input[name='image']");
+                            fileInput.SendKeys(file);
+                            WaitElementCountByCssSelector(driver, 30, count, "div[class~='form-uploader-item'][data-state='active']");
+                            ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
+                        }
+                        catch (Exception ex)
+                        {
+                            var r4 = ex;
+                        }
                     }
                 }
                 WaitExecute(driver);
-                //Select base bulletin
-                if (driver.PageSource.Contains("Разово"))
-                {
-                    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
-                    return result;
-                }
+                ////Select base bulletin
+                //if (driver.PageSource.Contains("Разово"))
+                //{
+                //    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
+                //    return result;
+                //}
 
-                FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
+                FindTagByTextContains(driver, "span", "Быстрая продажа", e => JsClick(driver, e));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
 
-                FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
+                FindTagByTextContains(driver, "button", "Продолжить с пакетом «Быстрая продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Click continue");
 
                 JsClick(driver, By.Id("service-premium"));
                 WaitExecute(driver);
-                JsClick(driver, By.Id("service-vip"));
-                WaitExecute(driver);
                 JsClick(driver, By.Id("service-highlight"));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
-                //Confirmation
 
                 var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
                 JsClick(driver, button);
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+
                 //Get URL
-                var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                var href = a.GetAttribute("href");
-                result = href;
-                ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
+                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                //var href = a.GetAttribute("href");
+                //result = href;
+                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
+
+                //Confirmation
+
+                //FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
+
+                //FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+
+                //JsClick(driver, By.Id("service-premium"));
+                //WaitExecute(driver);
+                //JsClick(driver, By.Id("service-vip"));
+                //WaitExecute(driver);
+                //JsClick(driver, By.Id("service-highlight"));
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
+                ////Confirmation
+
+                //var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                //JsClick(driver, button);
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                ////Get URL
+                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                //var href = a.GetAttribute("href");
+                //result = href;
+                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {
