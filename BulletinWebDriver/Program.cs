@@ -40,7 +40,8 @@ namespace BulletinWebDriver
                             var task = DriverTaskHelper.Next();
                             if (task != null)
                                 BoardContainer.Execute(task);
-                            Thread.Sleep(5000);
+                            else
+                                Thread.Sleep(5000);
                             break;
                         case "TestActivate":
                             var avito = new Avito();

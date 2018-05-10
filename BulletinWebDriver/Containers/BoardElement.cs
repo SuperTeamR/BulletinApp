@@ -222,12 +222,13 @@ namespace BulletinWebDriver.Containers
                                 instance.Url = url;
                                 BulletinInstanceHelper.Save(instance);
                             }
-#if Release
                         });
-#endif
-#if DEBUG_REMOTE
-                        }, hasProxy:false);
-#endif
+//#if Release
+//                        });
+//#endif
+                        //#if DEBUG_REMOTE
+                        //                        }, hasProxy:false);
+                        //#endif
 
                         break;
                     case "BulletinTemplateCollector":
@@ -258,7 +259,7 @@ namespace BulletinWebDriver.Containers
                 ConsoleHelper.SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString) : null;
+            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString, 2500) : null;
             if (proxy == null && hasProxy)
             {
                 ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");

@@ -275,25 +275,24 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     }
                 }
                 WaitExecute(driver);
-                ////Select base bulletin
-                //if (driver.PageSource.Contains("Разово"))
-                //{
-                //    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
-                //    return result;
-                //}
+                //Select base bulletin
+                if (driver.PageSource.Contains("Разово"))
+                {
+                    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
+                    Find(driver, "input", "name", "fees[eula]", c => JsClick(driver, c));
+                }
 
                 FindTagByTextContains(driver, "span", "Быстрая продажа", e => JsClick(driver, e));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
 
+
+
                 FindTagByTextContains(driver, "button", "Продолжить с пакетом «Быстрая продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-
                 JsClick(driver, By.Id("service-premium"));
-                WaitExecute(driver);
                 JsClick(driver, By.Id("service-highlight"));
-                WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
 
                 var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
