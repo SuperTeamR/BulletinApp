@@ -9,6 +9,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using BulletinBridge.Models;
+using BulletinWebDriver.Containers.BoardRealizations;
 
 namespace BulletinWebDriver
 {
@@ -39,6 +41,19 @@ namespace BulletinWebDriver
                             if (task != null)
                                 BoardContainer.Execute(task);
                             Thread.Sleep(5000);
+                            break;
+                        case "TestActivate":
+                            var avito = new Avito();
+                            var task2 = new TaskAccessCheckCache
+                            {
+                                Login = "kirill.shleif@mail.ru",
+                                Password = "OnlineHelp59"
+                            };
+                            FirefoxHelper.ExecuteWithVisual(browser =>
+                            {
+                                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                                avito.ActivateBulletins(browser, task2);
+                            }, null, 100);
                             break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");

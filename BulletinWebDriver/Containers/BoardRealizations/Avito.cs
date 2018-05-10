@@ -67,6 +67,50 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             //return Auth(driver, "RyboMan02@gmail.com", "Zcvb208x");
         }
 
+        public override void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel)
+        {
+            try
+            {
+                var inactivePage = @"www.avito.ru/profile/items/inactive";
+
+                if (!Auth(driver, taskModel.Login, taskModel.Password))
+                    return;
+                WaitPage(driver, 3000, inactivePage);
+                WaitExecute(driver);
+
+                var ids = new List<string>();
+                var nextPagePattern = "(Следующая страница)";
+                var buttonPattern = "profile-item-title\">[\\s\\S\\r\\n]*?<a name=\"item_([\\d]+)";
+                var count = 1;
+                var hasNextPage = true;
+                while (hasNextPage)
+                {
+                    count++;
+                    var html = driver.PageSource;
+                    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
+
+                    var matches = RegexHelper.Execute(buttonPattern, html).ToArray();
+                    if(matches.Any())
+                        ids.AddRange(matches.Select(q => q.Groups[1].Value));
+
+                    if (hasNextPage)
+                    {
+                        driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p={count}&s=4");
+                        WaitPage(driver, 30000, inactivePage + $"/rossiya?p={count}&s=4");
+                    }
+                }
+                foreach (var id in ids)
+                {
+                    var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
+                    driver.Navigate().GoToUrl(activationLink);
+                    WaitPage(driver, 3000, activationLink);
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        
         public override string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel)
         {
             string result = null;
@@ -224,28 +268,28 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
 
-                FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
-                WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                //FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
 
-                JsClick(driver, By.Id("service-premium"));
-                WaitExecute(driver);
-                JsClick(driver, By.Id("service-vip"));
-                WaitExecute(driver);
-                JsClick(driver, By.Id("service-highlight"));
-                WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
-                //Confirmation
+                //JsClick(driver, By.Id("service-premium"));
+                //WaitExecute(driver);
+                //JsClick(driver, By.Id("service-vip"));
+                //WaitExecute(driver);
+                //JsClick(driver, By.Id("service-highlight"));
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
+                ////Confirmation
 
-                var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
-                JsClick(driver, button);
-                WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-                //Get URL
-                var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                var href = a.GetAttribute("href");
-                result = href;
-                ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
+                //var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                //JsClick(driver, button);
+                //WaitExecute(driver);
+                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                ////Get URL
+                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                //var href = a.GetAttribute("href");
+                //result = href;
+                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {
