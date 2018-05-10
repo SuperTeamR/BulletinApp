@@ -90,7 +90,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
 
                     var matches = RegexHelper.Execute(buttonPattern, html).ToArray();
-                    if(matches.Any())
+                    if (matches.Any())
                         ids.AddRange(matches.Select(q => q.Groups[1].Value));
 
                     if (hasNextPage)
@@ -101,6 +101,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 }
                 foreach (var id in ids)
                 {
+                    ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                     var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
                     driver.Navigate().GoToUrl(activationLink);
                     WaitPage(driver, 3000, activationLink);
@@ -110,7 +111,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             {
             }
         }
-        
+
         public override string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel)
         {
             string result = null;
@@ -207,7 +208,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     return false;
                 });
                 driver.Manage().Timeouts().ImplicitWait = oldImplicitWait;
-               
+
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
