@@ -104,7 +104,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                     var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
                     driver.Navigate().GoToUrl(activationLink);
-                    WaitPage(driver, 3000, activationLink);
+                    WaitExecute(driver);
                 }
             }
             catch (Exception ex)
