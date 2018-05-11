@@ -121,7 +121,10 @@ namespace BulletinClient.ViewModels
 
         private void Open(AccessCache cache)
         {
-            System.Diagnostics.Process.Start("http://www.avito.ru/profile");
+            FirefoxHelper.ExecuteWithVisual(b =>
+            {
+                BoardHelper.Auth(b, cache.Login, cache.Password);
+            }, 20, true);
         }
         #endregion
     }
