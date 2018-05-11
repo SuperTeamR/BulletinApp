@@ -74,6 +74,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.108.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -90,8 +91,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Containers\BoardRealizations\Avito.cs" />
+    <Compile Include="Helpers\DebugHelper.cs" />
     <Compile Include="Helpers\FirefoxDriverHelper.cs" />
+    <Compile Include="Helpers\FreegateHelper.cs" />
+    <Compile Include="Helpers\HttpHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\JsonHelper.cs" />
+    <Compile Include="Helpers\OnlineSimHelper.cs" />
     <Compile Include="Helpers\ProxyHelper.cs" />
     <Compile Include="Helpers\RegexHelper.cs" />
     <Compile Include="ServiceHelper\AccessHelper.cs" />

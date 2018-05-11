@@ -92,6 +92,7 @@
     <Compile Include="Models\TaskInstancePublicationCache.cs" />
     <Compile Include="Models\TaskAccessCheckCache.cs" />
     <Compile Include="Models\TaskCache.cs" />
+    <Compile Include="Models\TaskRegistrationCache.cs" />
     <Compile Include="Models\_TaskCache_old.cs" />
     <Compile Include="Models\UserSettingsCache.cs" />
     <Compile Include="Models\XlsPackage.cs" />

@@ -53,7 +53,8 @@ namespace BulletinEngine.Helpers
                 var board = c.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
                 access.BoardId = board.Id;
                 access.UserId = c.UserId;
-                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Enable;
+                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
+                TaskHelper.CreateAccessRegistration(access);
                 c.SaveChanges();
             });
             return access;

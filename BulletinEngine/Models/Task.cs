@@ -28,13 +28,13 @@ namespace BulletinHub.Entity.Data
         InstancePublication = 2,
         BulletinTemplateCollector = 3,
         ActivateAccess = 4,
+        Registration = 5,
 
         //Obsolute
-        Creation = 5,
-        Checking = 6,
-        Editing = 7,
-        Cloning = 8,
-
+        Creation = 55,
+        Checking = 66,
+        Editing = 77,
+        Cloning = 88,
     }
     public class Task : EntityObjectALM<Task, TaskState>
     {
@@ -103,7 +103,7 @@ namespace BulletinHub.Entity.Data
              EntityObjectALMCreator<Task>.New<TaskCache>(ToCache2, ToEntity2, new Version(1,0,0,0)),
              EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntityDefault, new Version(1,0,0,0)),
              EntityObjectALMCreator<Task>.New<TaskInstancePublicationCache>(ToCache4, ToEntityDefault, new Version(1,0,0,0)),
-             EntityObjectALMCreator<Task>.New<TaskBulletinTemplateCollectorCache>(ToCache5, ToEntityDefault, new Version(1,0,0,0))
+             EntityObjectALMCreator<Task>.New<TaskBulletinTemplateCollectorCache>(ToCache5, ToEntityDefault, new Version(1,0,0,0)),  EntityObjectALMCreator<Task>.New<TaskRegistrationCache>(ToCache6, ToEntityDefault, new Version(1,0,0,0))
         };
         #region Old
         public static TaskCache_old ToCache(Data.Task obj)
@@ -267,6 +267,20 @@ namespace BulletinHub.Entity.Data
             var bulletin = BCT.Context.BulletinDb.Bulletins.Find(arg1.BulletinId);
             if (bulletin != null)
                 arg1.Queries = new string[] { bulletin.Title };
+            return arg1;
+        }
+        #endregion
+        #region Task Registration Cache
+        private TaskRegistrationCache ToCache6(Task arg2)
+        {
+            var arg1 = new TaskRegistrationCache();
+            arg1.AccessId = arg2.AccessId.Value;
+            var access = BCT.Context.BulletinDb.Accesses.Find(arg1.AccessId);
+            if (access != null)
+            {
+                access.Login = access.Login;
+                access.Password = access.Password;
+            }
             return arg1;
         }
         #endregion

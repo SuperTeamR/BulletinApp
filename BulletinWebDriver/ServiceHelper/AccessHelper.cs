@@ -23,9 +23,13 @@ namespace BulletinWebDriver.ServiceHelper
             DCT.Execute(c => c.HubClient.RSendQueryObject<AccessCache>("Disable", id: accessId));
         }
 
-        internal static AccessCache GetAccess(object accessId)
+        internal static AccessCache GetAccess(Guid accessId)
         {
-            throw new NotImplementedException();
+           return  DCT.Execute(c => c.HubClient.RObjectLoad<AccessCache>(accessId));
+        }
+        internal static void Save(AccessCache access)
+        {
+            DCT.Execute(c => c.HubClient.Save<AccessCache>((a)=> { },access));
         }
     }
 }

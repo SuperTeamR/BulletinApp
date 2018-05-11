@@ -72,6 +72,19 @@ namespace BulletinHub.Helpers
                 a.TargetDate = publicationDate;
             });
         }
+
+        internal static void CreateAccessRegistration(Access access)
+        {
+            Create(TaskCommand.Registration, a =>
+            {
+                //Обязательные
+                a.UserId = access.UserId;
+                a.AccessId = access.Id;
+                a.BoardId = access.BoardId;
+                a.TargetDate = DateTime.Now;
+            });
+        }
+
         public static void CreateBulletinTemplateCollector(Guid userId, Guid boardId, Bulletin instance, DateTime publicationDate)
         {
             Create(TaskCommand.BulletinTemplateCollector, a =>

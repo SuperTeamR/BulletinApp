@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using BulletinBridge.Data;
 
 namespace BulletinWebDriver.Containers.BoardRealizations
 {
@@ -61,6 +62,87 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         }
         #endregion
         #region Realization
+        public override AccessCache Registration(FirefoxDriver driver, AccessCache access)
+        {
+            var result = access;
+            DCT.Execute(c =>
+            {
+                var getNum = OnlineSimHelper.GetNum(ServiceType.avito);
+                var getState = OnlineSimHelper.GetState(getNum.tzid);
+                access.Phone = getState.number;
+                access.PhoneTZID = getState.tzid;
+
+                WaitExecute(driver);
+                //Перехожу в регистрацию
+                driver.Navigate().GoToUrl("https://www.avito.ru/registration");
+                WaitExecute(driver);
+
+                //Заполняю все поля
+                DoAction(driver, By.CssSelector($"input[name='name']"), e =>
+                {
+                    e.Clear();
+                    e.SendKeys("Валера");
+                });
+                DoAction(driver, By.CssSelector($"input[name='email']"), e =>
+                {
+                    e.Clear();
+                    e.SendKeys(access.Login);
+                });
+                var phone = access.Phone.Replace("+7", "");
+                DoAction(driver, By.CssSelector($"input[name='phone']"), e =>
+                {
+                    e.Clear();
+                    e.SendKeys(phone);
+                });
+              
+                for (int i = 0; i < 10; i++)
+                {
+                    DoAction(driver, By.CssSelector($"input[name='password']"), e =>
+                    {
+                        e.Clear();
+                        e.SendKeys(access.Password);
+                    });
+                    var capcha = "";
+                    var capchaPath = "";
+                    Find(driver, "img", "class", "form-captcha-image js-form-captcha-image", e =>
+                    {
+                        capchaPath = GetScreenshotElement(driver, e, access.Login);
+                    });
+                    capcha = FreegateHelper.ImageToText(capchaPath);
+                    DoAction(driver, By.CssSelector($"input[name='captcha']"), e =>
+                    {
+                        e.Clear();
+                        e.SendKeys(capcha);
+                    });
+                    Find(driver, "button", "class", "button button-origin button-origin-green button-origin_large js-submit-button", x => JsClick(driver, x));
+                    Thread.Sleep(2000);
+                    if (driver.PageSource.Contains("Регистрация. Шаг 2"))
+                        break;
+                }
+                Find(driver, "button", "class", "button button-azure js-phone-checker-request-code", x => JsClick(driver, x));
+                for (int i = 0; i < 30; i++)
+                {
+                    Thread.Sleep(3000);
+                    var state = getState = OnlineSimHelper.GetState(getNum.tzid);
+                    ConsoleHelper.SendMessage($"Registration => Wait SMS, state = {state.response}");
+                    if (state.responseEnum == getStateState.TZ_NUM_ANSWER)
+                    {
+                        DoAction(driver, By.CssSelector($"input[id='phone-checker-code']"), e =>
+                        {
+                            e.Clear();
+                            e.SendKeys(state.msg);
+                        });
+                        break;
+                    }
+                }
+                Find(driver, "button", "class", "button button-origin button-origin_large button-origin-green js-registration-form-submit", x => JsClick(driver, x));
+                //Получаю смску
+                Thread.Sleep(2000);
+                //Подтверждаю
+            });
+            return access;
+        }
+
         public override bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel)
         {
             return Auth(driver, taskModel.Login, taskModel.Password);
@@ -104,7 +186,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                     var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
                     driver.Navigate().GoToUrl(activationLink);
-                    WaitExecute(driver);
+                    //WaitExecute(driver);
                 }
             }
             catch (Exception ex)
@@ -299,41 +381,6 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 JsClick(driver, button);
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-
-                //Get URL
-                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                //var href = a.GetAttribute("href");
-                //result = href;
-                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
-
-                //Confirmation
-
-                //FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
-                //WaitExecute(driver);
-                //ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
-
-                //FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
-                //WaitExecute(driver);
-                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-
-                //JsClick(driver, By.Id("service-premium"));
-                //WaitExecute(driver);
-                //JsClick(driver, By.Id("service-vip"));
-                //WaitExecute(driver);
-                //JsClick(driver, By.Id("service-highlight"));
-                //WaitExecute(driver);
-                //ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
-                ////Confirmation
-
-                //var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
-                //JsClick(driver, button);
-                //WaitExecute(driver);
-                //ConsoleHelper.SendMessage($"InstancePublication => Click continue");
-                ////Get URL
-                //var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
-                //var href = a.GetAttribute("href");
-                //result = href;
-                //ConsoleHelper.SendMessage($"InstancePublication => Get URL completed - {result}");
             }
             catch (Exception ex)
             {

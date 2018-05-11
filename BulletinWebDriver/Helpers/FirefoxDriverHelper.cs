@@ -16,7 +16,7 @@ namespace BulletinWebDriver.Helpers
 {
     public static class FirefoxHelper
     {
-        public static void ExecuteWithVisual(Action<FirefoxDriver> executeAction, ProxyCardCheckCache proxyCache = null, int Timeout = 20)
+        public static void ExecuteWithVisual(Action<FirefoxDriver> executeAction, ProxyCardCheckCache proxyCache = null, int Timeout = 20, bool withImages = false)
         {
             DCT.Execute(c =>
             {
@@ -36,8 +36,12 @@ namespace BulletinWebDriver.Helpers
                 options.Profile.SetPreference("privacy.popups.showBrowserMessage", false);
                 options.Profile.SetPreference("pdfjs.disabled", true);
 
-                options.Profile.SetPreference("permissions.default.image", 2);
-                options.Profile.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", "false");
+                if (!withImages)
+                {
+                    options.Profile.SetPreference("permissions.default.image", 2);
+                    options.Profile.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", "false");
+                }
+              
                 FirefoxDriverService service = FirefoxDriverService.CreateDefaultService();
                 service.SuppressInitialDiagnosticInformation = false;
                 service.HideCommandPromptWindow = true;
@@ -67,7 +71,7 @@ namespace BulletinWebDriver.Helpers
                 }
             }, continueExceptionMethod:(ex,c)=> { });
         }
-        public static void ExecuteOne(Action<FirefoxDriver> executeAction, ProxyCardCheckCache proxyCache = null, int Timeout = 10)
+        public static void ExecuteOne(Action<FirefoxDriver> executeAction, ProxyCardCheckCache proxyCache = null, int Timeout = 10, bool withImages = false)
         {
             DCT.Execute(c =>
             {
@@ -87,8 +91,12 @@ namespace BulletinWebDriver.Helpers
                 options.Profile.SetPreference("privacy.popups.showBrowserMessage", false);
                 options.Profile.SetPreference("pdfjs.disabled", true);
 
-                options.Profile.SetPreference("permissions.default.image", 2);
-                options.Profile.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", "false");
+                if (!withImages)
+                {
+                    options.Profile.SetPreference("permissions.default.image", 2);
+                    options.Profile.SetPreference("dom.ipc.plugins.enabled.libflashplayer.so", "false");
+                }
+
                 FirefoxDriverService service = FirefoxDriverService.CreateDefaultService();
                 service.SuppressInitialDiagnosticInformation = false;
                 service.HideCommandPromptWindow = true;

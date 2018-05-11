@@ -24,7 +24,9 @@ namespace BulletinWebDriver
             DCT.Context._SessionInfo.HashUID = "Engine";
             DCT.Context._SessionInfo.SessionUID = "Engine";
             ConsoleHelper.SendMessage($"Connect to {new HubServiceClient().Address}");
-
+#if DEBUG
+            //var num = OnlineSimHelper.CreateNumberAvito();
+#endif
 
             var command = "TaskExecute";
             if (args != null && args.Any())
