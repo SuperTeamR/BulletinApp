@@ -63,6 +63,7 @@ namespace HubService
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskAccessCheckCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskInstancePublicationCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskBulletinTemplateCollectorCache>(),
+              new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskRegistrationCache>(),
         };
 
         protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();

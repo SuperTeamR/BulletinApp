@@ -18,6 +18,8 @@ namespace BulletinBridge.Data
         [DataMember]
         public string Phone { get; set; }
         [DataMember]
+        public int PhoneTZID { get; set; }
+        [DataMember]
         public bool HasBlocked { get; set; }
         [DataMember]
         public string StateDesc { get; set; }
