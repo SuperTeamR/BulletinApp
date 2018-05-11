@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BulletinClient.Helpers;
+using Microsoft.Win32;
 
 namespace BulletinClient.ViewModels
 {
@@ -44,6 +45,7 @@ namespace BulletinClient.ViewModels
         public void Clear()
         {
             Item = null;
+            item.Value = null;
             RaisePropertyChanged(() => Item);
         }
         internal void Save()
@@ -53,13 +55,22 @@ namespace BulletinClient.ViewModels
         }
         private void AddAvito()
         {
-            AccessHelper.AddAvito((a) =>
+            
+            if (item.Value != null)
             {
-                item.Value = a.FirstOrDefault();
-                CreateItem = new AccessCache();
-                RaisePropertyChanged(() => Item);
-                ModalHelper.CloseDialog();
-            }, Item);
+                Save();
+            }
+            else
+            {
+                AccessHelper.AddAvito((a) =>
+                {
+                    item.Value = a.FirstOrDefault();
+                    CreateItem = new AccessCache();
+                    RaisePropertyChanged(() => Item);
+                    ModalHelper.CloseDialog();
+                }, Item);
+            }
+
         }
         #endregion
     }

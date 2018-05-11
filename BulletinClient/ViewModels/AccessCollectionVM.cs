@@ -69,6 +69,7 @@ namespace BulletinClient.ViewModels
         #region Method
         private void Add()
         {
+            SelectedObject = null;
             ModalHelper.OpenDialog(Card);
         }
 

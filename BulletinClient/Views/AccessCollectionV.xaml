@@ -46,15 +46,7 @@
                 <DataGridTextColumn Width="150" Header="Login" Binding="{Binding Login}"  />
                 <DataGridTextColumn Width="150" Header="Password" Binding="{Binding Password}"  />
                 <DataGridTextColumn Width="150" Header="Phone" Binding="{Binding Phone}"  />
-                <!--<DataGridTemplateColumn>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Add" Command="{Binding DataContext.CommandAdd,
-                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                                    Width="50" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
+                <DataGridTextColumn Width="50" Header="Board" Binding="{Binding BoardName}"  />
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
