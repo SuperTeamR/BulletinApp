@@ -124,7 +124,9 @@
     <Compile Include="HelperService\AccessHelper.cs" />
     <Compile Include="HelperService\BulletinHelper.cs" />
     <Compile Include="HelperService\HubServiceHelper.cs" />
+    <Compile Include="HelperService\InstanceHelper.cs" />
     <Compile Include="HelperService\MainServiceHelper.cs" />
+    <Compile Include="HelperService\TaskHelper.cs" />
     <Compile Include="HelperService\TemplateHelper.cs" />
     <Compile Include="Helpers\ClipboardHelper.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
@@ -135,6 +137,8 @@
     <Compile Include="ViewModels\BulletinCardVM.cs" />
     <Compile Include="ViewModels\BulletinCollectionVM.cs" />
     <Compile Include="ViewModels\BulletinCreateListVM.cs" />
+    <Compile Include="ViewModels\InstanceCardVM.cs" />
+    <Compile Include="ViewModels\InstanceCollectionVM.cs" />
     <Compile Include="ViewModels\LoginVM.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
@@ -164,7 +168,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\InstanceCardV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InstanceCollectionV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\LoginV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TaskCardV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TaskCollectionV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,6 +209,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\ClientService.cs" />
+    <Compile Include="ViewModels\TaskCardVM.cs" />
+    <Compile Include="ViewModels\TaskCollectionVM.cs" />
     <Compile Include="ViewModels\TemplateCardVM.cs" />
     <Compile Include="ViewModels\TemplateCollectionVM.cs" />
     <Compile Include="Views\AccessCardV.xaml.cs">
@@ -206,8 +228,20 @@
     <Compile Include="Views\BulletinCreateListV.xaml.cs">
       <DependentUpon>BulletinCreateListV.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\InstanceCardV.xaml.cs">
+      <DependentUpon>InstanceCardV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InstanceCollectionV.xaml.cs">
+      <DependentUpon>InstanceCollectionV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LoginV.xaml.cs">
       <DependentUpon>LoginV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskCardV.xaml.cs">
+      <DependentUpon>TaskCardV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TaskCollectionV.xaml.cs">
+      <DependentUpon>TaskCollectionV.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TemplateCardV.xaml.cs">
       <DependentUpon>TemplateCardV.xaml</DependentUpon>

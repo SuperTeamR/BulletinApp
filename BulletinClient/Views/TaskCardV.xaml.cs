@@ -1,5 +1,4 @@
-﻿using BulletinClient.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,20 +16,13 @@ using System.Windows.Shapes;
 namespace BulletinClient.Views
 {
     /// <summary>
-    /// Логика взаимодействия для BulletinCardV.xaml
+    /// Логика взаимодействия для TaskCardV.xaml
     /// </summary>
-    public partial class BulletinCardV : UserControl
+    public partial class TaskCardV : UserControl
     {
-        public BulletinCardV()
+        public TaskCardV()
         {
             InitializeComponent();
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var dc = DataContext as BulletinCardVM;
-            if(!dc.SkipTextChange)
-                dc.Save();
         }
     }
 }

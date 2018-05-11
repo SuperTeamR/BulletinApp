@@ -26,6 +26,12 @@ namespace BulletinClient.ViewModels
         public AccessCollectionVM accessCollectionView { get; set; }
         public BulletinCollectionVM BulletinCollectionView => bulletinCollectionView = bulletinCollectionView ?? new BulletinCollectionVM();
         public BulletinCollectionVM bulletinCollectionView { get; set; }
+
+        public TaskCollectionVM TaskCollectionView => taskCollectionView = taskCollectionView ?? new TaskCollectionVM();
+        public TaskCollectionVM taskCollectionView { get; set; }
+
+        public InstanceCollectionVM InstanceCollectionView => instanceCollectionView = instanceCollectionView ?? new InstanceCollectionVM();
+        public InstanceCollectionVM instanceCollectionView { get; set; }
         //public TemplateCollectionVM TemplateCollectionView =>
         //    templateCollectionView = templateCollectionView ?? new TemplateCollectionVM();
         //public TemplateCollectionVM templateCollectionView { get; set; }
