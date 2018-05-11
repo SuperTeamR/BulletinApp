@@ -30,4 +30,16 @@
     <DataTemplate DataType="{x:Type VM:TemplateCardVM}">
         <V:TemplateCardV />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:TaskCollectionVM}">
+        <V:TaskCollectionV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:TaskCardVM}">
+        <V:TaskCardV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:InstanceCollectionVM}">
+        <V:InstanceCollectionV />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:InstanceCardVM}">
+        <V:InstanceCardV />
+    </DataTemplate>
 </ResourceDictionary>

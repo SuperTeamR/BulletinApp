@@ -189,6 +189,8 @@ namespace BulletinHub.Entity.Data
             if (board != null)
                 arg1.Board = board.Name;
             arg1.Command = arg2.CommandEnum.ToString();
+            arg1.StateDesc = arg2.StateEnum.ToString();
+            arg1.TargetDate = arg2.TargetDate;
             return arg1;
         }
         #endregion
@@ -297,6 +299,9 @@ namespace BulletinHub.Entity.Data
                     entities = obj.Select(q => (Task)q).ToArray();
                 switch (code)
                 {
+                    case "All":
+                        result = BackTaskHelper.All();
+                        break;
                     case "Next":
                         result = new Task[] { BackTaskHelper.Next() };
                         break;

@@ -12,5 +12,7 @@ namespace BulletinBridge.Models
         public string Board { get; set; }
         public string Command { get; set; }
         public string Error { get; set; }
+        public DateTime? TargetDate { get; set; }
+        public string StateDesc { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using FessooFramework.Tools.DCT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BulletinHub.Helpers;
 
 namespace BulletinEngine.Entity.Data
 {
@@ -136,6 +137,7 @@ namespace BulletinEngine.Entity.Data
         public static BulletinInstanceCache ToCache2(BulletinInstance obj)
         {
             BulletinInstanceCache result = new BulletinInstanceCache();
+            result.Url = obj.Url;
             return result;
         }
         public static BulletinInstance ToEntity2(BulletinInstanceCache obj, BulletinInstance entity)
@@ -152,18 +154,18 @@ namespace BulletinEngine.Entity.Data
             var result = Enumerable.Empty<EntityObject>();
             DCT.Execute(d =>
             {
-                var bulletinModels = Enumerable.Empty<BulletinInstance>();
-                if (obj != null && obj.Any())
+                var entities = Enumerable.Empty<BulletinInstance>();
+                if (obj.Any())
+                    entities = obj.Select(q => (BulletinInstance)q).ToArray();
+                switch (code)
                 {
-                    bulletinModels = obj.Cast<BulletinInstance>().ToArray();
-
-                    switch (code)
-                    {
-                        case "Save":
-                            result = obj;
-                            d.SaveChanges();
-                            break;
-                    }
+                    case "Save":
+                        result = obj;
+                        d.SaveChanges();
+                        break;
+                    case "All":
+                        result = InstanceHelper.All();
+                        break;
                 }
             });
             return result;

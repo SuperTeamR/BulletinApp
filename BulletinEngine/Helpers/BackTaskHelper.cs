@@ -11,6 +11,16 @@ namespace BulletinHub.Tools
 {
     public static class BackTaskHelper
     {
+        #region Task queries
+
+        public static IEnumerable<Task> All()
+        {
+            var result = Enumerable.Empty<Task>();
+            BCT.Execute(d => { result = d.TempDB.Tasks.ToArray(); });
+            return result;
+        }
+
+        #endregion
         #region Task managment
         public static BulletinHub.Entity.Data.Task Next()
         {

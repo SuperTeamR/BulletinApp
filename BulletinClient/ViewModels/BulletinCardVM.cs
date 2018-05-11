@@ -43,6 +43,8 @@ namespace BulletinClient.ViewModels
 
         public bool CanPublicate => !Item.InPublicationProcess;
 
+        public bool SkipTextChange;
+
         public ICommand CommandAdd { get; private set; }
         public ICommand CommandPublicate { get; set; }
         public ICommand CommandClear { get; set; }
@@ -64,9 +66,11 @@ namespace BulletinClient.ViewModels
         #region Methods
         public void Update(BulletinCache selectedObject)
         {
+            SkipTextChange = true;
             Item = selectedObject;
             RaisePropertyChanged(() => Item);
             RaisePropertyChanged(() => CanPublicate);
+            SkipTextChange = false;
         }
         public void Clear()
         {
