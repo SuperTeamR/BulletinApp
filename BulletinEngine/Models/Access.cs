@@ -125,6 +125,7 @@ namespace BulletinEngine.Entity.Data
             result.Password = obj.Password;
             result.Phone = obj.Phone;
             result.HasBlocked = obj.HasBlocked;
+            result.StateDesc = obj.StateEnum.ToString();
             return result;
         }
         #endregion

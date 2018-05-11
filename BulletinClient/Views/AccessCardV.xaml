@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BulletinClient.Views"
+             Background="White"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
+    <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -22,36 +23,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="0" Grid.Column="2" >
-            <Button Content="Add" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
-            <Button Content="Activate" Command="{Binding CommandActivate}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
-            <Button Content="Open" Command="{Binding CommandOpen}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
-           
-        </StackPanel>
 
         <TextBlock Text="Access card" Margin="5" Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />
 
-        <TextBlock   Text="Доска"  Margin="5" Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <TextBox Margin="5" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.BoardName, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 TextChanged="TextBox_TextChanged"/>
-
         <TextBlock   Text="Логин"  Margin="5" Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
         <TextBox Margin="5" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Login, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 TextChanged="TextBox_TextChanged"/>       
+                 />       
 
         <TextBlock   Text="Пароль"  Margin="5" Grid.Row="4" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
         <TextBox Margin="5" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Password, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 TextChanged="TextBox_TextChanged"/>
+                 />
 
         <TextBlock   Text="Телефон"  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
         <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Phone, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 TextChanged="TextBox_TextChanged"/>
+                 />
 
-        <TextBlock   Text="Blocked"  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
-        <CheckBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" IsChecked="{Binding Item.HasBlocked, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 Checked="CheckBox_Checked" Unchecked="CheckBox_Checked"/>
-
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"  Grid.Row="7" Grid.Column="2" >
+            <Button Content="Save" Command="{Binding CommandAdd}"  Width="150" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
+        </StackPanel>
     </Grid>
 </UserControl>

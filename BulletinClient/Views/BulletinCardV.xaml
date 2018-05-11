@@ -85,7 +85,11 @@
 
         <TextBlock   Text="Заголовок"  Margin="5" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left"   FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
         <TextBox Margin="5" Grid.Row="5" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" MinWidth="600" Text="{Binding Item.Title, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"
-                 TextChanged="TextBox_TextChanged"/>
+                 TextChanged="TextBox_TextChanged">
+            <!--<acb:CommandBehaviorCollection.Behaviors>
+                <acb:BehaviorBinding Event="TextChanged"  Command="{Binding CommandChangeTypeRequest}"/>
+            </acb:CommandBehaviorCollection.Behaviors>-->
+        </TextBox>
 
         <TextBlock  Margin="5" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top"  HorizontalAlignment="Left"  Text="Описание"  FontSize="14" MinWidth="100" FontWeight="Medium" Foreground="DarkBlue"/>
         <TextBox Margin="5" Grid.Row="6" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" FontSize="14" MinWidth="600" MaxWidth="600" Text="{Binding Item.Description, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0,0,0,1"   MinLines="5" AcceptsReturn="True" TextChanged="TextBox_TextChanged"/>

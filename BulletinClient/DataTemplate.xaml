@@ -42,4 +42,7 @@
     <DataTemplate DataType="{x:Type VM:InstanceCardVM}">
         <V:InstanceCardV />
     </DataTemplate>
+    <DataTemplate DataType="{x:Type VM:ModalVM}">
+        <V:ModalV/>
+    </DataTemplate>
 </ResourceDictionary>

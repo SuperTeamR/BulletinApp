@@ -59,6 +59,9 @@
     <Reference Include="FessooFramework, Version=1.0.0.46, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FessooFramework.1.0.0.46\lib\net461\FessooFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
+    </Reference>
     <Reference Include="MoreLinq, Version=2.10.21623.0, Culture=neutral, PublicKeyToken=384d532d7e88985d, processorArchitecture=MSIL">
       <HintPath>..\packages\morelinq.2.10.0\lib\net40\MoreLinq.dll</HintPath>
     </Reference>
@@ -80,6 +83,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -132,6 +138,12 @@
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\CustomDataGrid.cs" />
     <Compile Include="Helpers\DataHelper.cs" />
+    <Compile Include="Helpers\ModalHelper.cs" />
+    <Compile Include="Tools\ACB\BehaviourBinding.cs" />
+    <Compile Include="Tools\ACB\CommandBehaviourBinding.cs" />
+    <Compile Include="Tools\ACB\CommandBehaviourCollection.cs" />
+    <Compile Include="Tools\ACB\EventHadlerGenerator.cs" />
+    <Compile Include="Tools\ACB\IExecutionStrategy.cs" />
     <Compile Include="ViewModels\AccessCardVM.cs" />
     <Compile Include="ViewModels\AccessCollectionVM.cs" />
     <Compile Include="ViewModels\BulletinCardVM.cs" />
@@ -180,6 +192,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\ModalV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TaskCardV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -209,6 +225,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\ClientService.cs" />
+    <Compile Include="ViewModels\ModalVM.cs" />
     <Compile Include="ViewModels\TaskCardVM.cs" />
     <Compile Include="ViewModels\TaskCollectionVM.cs" />
     <Compile Include="ViewModels\TemplateCardVM.cs" />
@@ -236,6 +253,9 @@
     </Compile>
     <Compile Include="Views\LoginV.xaml.cs">
       <DependentUpon>LoginV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ModalV.xaml.cs">
+      <DependentUpon>ModalV.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TaskCardV.xaml.cs">
       <DependentUpon>TaskCardV.xaml</DependentUpon>

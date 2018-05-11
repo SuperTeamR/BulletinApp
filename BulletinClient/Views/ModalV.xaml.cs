@@ -1,5 +1,4 @@
-﻿using BulletinClient.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,17 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BulletinClient.ViewModels;
 
 namespace BulletinClient.Views
 {
     /// <summary>
-    /// Логика взаимодействия для AccessCardV.xaml
+    /// Логика взаимодействия для ModalV.xaml
     /// </summary>
-    public partial class AccessCardV : UserControl
+    public partial class ModalV : UserControl
     {
-        public AccessCardV()
+        public ModalV()
         {
             InitializeComponent();
+        }
+
+        private void grid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var viewmodel = DataContext as ModalVM;
+            if (viewmodel != null)
+                viewmodel.CommandDialogClose.Execute(true);
+            //DialogsDispacher.ClearContentDialog();
         }
     }
 }

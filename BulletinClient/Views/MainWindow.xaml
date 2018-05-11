@@ -7,7 +7,13 @@
         mc:Ignorable="d"
          local:WindowEx.ShowIcon = "false"
         MinHeight="700" MinWidth="1000">
+    <Window.InputBindings>
+        <KeyBinding Key="Escape"
+                    Command="{Binding CommandModalWindowClose}" />
+    </Window.InputBindings>
     <Grid>
         <ContentControl Name="MainContent" Content="{Binding CurrentView}"/>
+        <ContentControl x:Name="DialogContent" Margin="0,0,0,0" Content="{Binding DialogView}" 
+                        Grid.ColumnSpan="50" Grid.RowSpan="50"/>
     </Grid>
 </Window>

@@ -19,6 +19,8 @@ namespace BulletinBridge.Data
         public string Phone { get; set; }
         [DataMember]
         public bool HasBlocked { get; set; }
+        [DataMember]
+        public string StateDesc { get; set; }
     }
 
     public enum AccessState

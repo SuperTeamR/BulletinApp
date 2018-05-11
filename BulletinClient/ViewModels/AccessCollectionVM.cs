@@ -7,6 +7,7 @@ using FessooFramework.Tools.Controllers;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using BulletinClient.Helpers;
 
 namespace BulletinClient.ViewModels
 {
@@ -28,6 +29,11 @@ namespace BulletinClient.ViewModels
         public ICommand CommandClear { get; private set; }
         public ICommand CommandRefresh { get; private set; }
         public ICommand CommandRemove { get; private set; }
+        public ICommand CommandActivate { get; set; }
+        public ICommand CommandOpen { get; set; }
+        public ICommand CommandUpdateObject { get; set; }
+        public ICommand CommandAdd { get; set; }
+        public ICommand CommandSelectAccess { get; set; }
         public AccessCache SelectedObject
         {
             get => SelectedObjectController.Value;
@@ -44,11 +50,33 @@ namespace BulletinClient.ViewModels
             CommandClear = new DelegateCommand(Clear);
             CommandRefresh = new DelegateCommand(Refresh);
             CommandRemove = new DelegateCommand(Remove);
+            CommandActivate = new DelegateCommand<AccessCache>(Activate);
+            CommandOpen = new DelegateCommand<AccessCache>(Open);
+            CommandUpdateObject = new DelegateCommand<AccessCache>(UpdateObject);
+            CommandAdd = new DelegateCommand(Add);
+            CommandSelectAccess = new DelegateCommand<AccessCache>(SelectAccess);
             Refresh();
             MyItems = new ObservableCollection<AccessCache>();
         }
+
+        private void SelectAccess(AccessCache obj)
+        {
+            Card.Update(obj);
+            ModalHelper.OpenDialog(Card);
+        }
+
         #endregion
         #region Method
+        private void Add()
+        {
+            ModalHelper.OpenDialog(Card);
+        }
+
+        private void UpdateObject(AccessCache obj)
+        {
+            AccessHelper.Save(() => { }, obj);
+        }
+
         private void Remove()
         {
             if (CheckSelected())
@@ -80,6 +108,19 @@ namespace BulletinClient.ViewModels
                 return false;
             }
             return true;
+        }
+
+        private void Activate(AccessCache cache)
+        {
+            AccessHelper.ActivateAccess(a =>
+            {
+                MessageBox.Show("Отправлена задача на активацию");
+            }, cache);
+        }
+
+        private void Open(AccessCache cache)
+        {
+            System.Diagnostics.Process.Start("http://www.avito.ru/profile");
         }
         #endregion
     }

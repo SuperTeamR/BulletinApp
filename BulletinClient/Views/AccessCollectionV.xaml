@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BulletinClient.Views"
+             xmlns:acb="clr-namespace:BulletinClient.Tools.ACB"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -13,20 +14,69 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="150"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*" MinWidth="150"/>
         </Grid.ColumnDefinitions>
         <!--<TextBlock Text="Доступы" Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />-->
         <StackPanel Orientation="Horizontal" Grid.Row="0">
             <Button Content="Refresh" Command="{Binding CommandRefresh}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
-            <Button Content="Clear" Command="{Binding CommandClear}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
-            <Button Content="Remove" Command="{Binding CommandRemove}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+            <!--<Button Content="Clear" Command="{Binding CommandClear}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />-->
+            <!--<Button Content="Remove" Command="{Binding CommandRemove}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />-->
+            <Button Content="Add" Command="{Binding CommandAdd}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
         </StackPanel>
-        <DataGrid IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedValue="{Binding SelectedObject}" ItemsSource="{Binding MyItems}" Grid.RowSpan="2">
+        <DataGrid Name="AccessTable" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedValue="{Binding SelectedObject}" ItemsSource="{Binding MyItems}" Grid.RowSpan="2">
+            <acb:CommandBehaviorCollection.Behaviors>
+                <acb:BehaviorBinding Event="SelectionChanged" Command="{Binding CommandSelectAccess}" CommandParameter="{Binding SelectedItem, ElementName=AccessTable}"   />
+            </acb:CommandBehaviorCollection.Behaviors>
             <DataGrid.Columns>
+                <DataGridTextColumn Width="150" Header="State" Binding="{Binding StateDesc}"  />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox  VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left" 
+                                       Command="{Binding DataContext.CommandUpdateObject,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                       CommandParameter="{Binding}"
+                                       IsChecked="{Binding HasBlocked, UpdateSourceTrigger=PropertyChanged}" 
+                                       BorderThickness="0,0,0,1"
+                                      />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Width="150" Header="Login" Binding="{Binding Login}"  />
+                <DataGridTextColumn Width="150" Header="Password" Binding="{Binding Password}"  />
+                <DataGridTextColumn Width="150" Header="Phone" Binding="{Binding Phone}"  />
+                <!--<DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Add" Command="{Binding DataContext.CommandAdd,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    Width="50" Height="30" Background="Black" Foreground="White" FontWeight="Medium"   />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>-->
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Activate" Command="{Binding DataContext.CommandActivate,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    CommandParameter="{Binding}"
+                                    Width="50" Height="30" Background="White" Foreground="Black" FontWeight="Medium"   />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Open" Command="{Binding DataContext.CommandOpen,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    CommandParameter="{Binding}"
+                                    Width="50" Height="30" Background="White" Foreground="Black" FontWeight="Medium"   />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <ContentControl Content="{Binding Card}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" />
+        <!--<ContentControl Content="{Binding Card}" Grid.Row="0" Grid.RowSpan="3" Grid.Column="1" />-->
     </Grid>
 </UserControl>
