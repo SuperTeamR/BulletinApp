@@ -16,6 +16,11 @@ namespace BulletinCommand.Helpers
 {
     static class StatisticsHelper
     {
+
+        /// <summary>
+        /// Собирает статистику по переадресации
+        /// </summary>
+        /// <param name="userId"></param>
         public static void GetCallsStatistics(Guid userId)
         {
             BCT.Execute(d =>
