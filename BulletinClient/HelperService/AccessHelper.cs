@@ -37,6 +37,11 @@ namespace BulletinClient.HelperService
         {
             HubServiceHelper.SendQueryCollection<AccessCache>(callback, "ActivateAccess", cache);
         }
+
+        internal static void GetAccessStatistics(Action<IEnumerable<AccessCache>> callback, AccessCache cache)
+        {
+            HubServiceHelper.SendQueryCollection<AccessCache>(callback, "GetAccessStatistics", cache);
+        }
         public static void Save(Action callback, AccessCache model)
         {
             DCT.Execute(data =>

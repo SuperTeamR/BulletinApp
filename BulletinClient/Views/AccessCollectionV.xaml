@@ -11,24 +11,114 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="150"/>
         </Grid.ColumnDefinitions>
         <!--<TextBlock Text="Доступы" Margin="5" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch"   FontSize="22" FontWeight="Medium" Foreground="DarkBlue" />-->
         <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <Button Content="Refresh" Command="{Binding CommandRefresh}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Center"
+                                    Foreground="Green"
+                                    Command="{Binding CommandRefresh}" 
+                                    Width="50" Height="30">
+                <TextBlock Text="refresh"
+                                    FontSize="24"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                <Button.ToolTip>
+                    <TextBlock FontSize="14" Text="Обновить данные"/>
+                </Button.ToolTip>
+            </Button>
+            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Center"
+                                    Foreground="Green"
+                                    Command="{Binding CommandAdd}" 
+                                    Width="50" Height="30">
+                <TextBlock Text="add"
+                                    FontSize="28"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                <Button.ToolTip>
+                    <TextBlock FontSize="14" Text="Добавить новый доступ"/>
+                </Button.ToolTip>
+            </Button>
             <!--<Button Content="Clear" Command="{Binding CommandClear}"  Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />-->
             <!--<Button Content="Remove" Command="{Binding CommandRemove}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />-->
-            <Button Content="Add" Command="{Binding CommandAdd}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />
+
+            <!--<Button Content="Add" Command="{Binding CommandAdd}" Width="80" Height="30" Background="Black" Foreground="White" FontWeight="Medium"  />-->
         </StackPanel>
-        <DataGrid Name="AccessTable" IsReadOnly="True" Grid.Row="1" AutoGenerateColumns="False" SelectedValue="{Binding SelectedObject}" ItemsSource="{Binding MyItems}" Grid.RowSpan="2">
+        <DataGrid Name="AccessTable" IsReadOnly="True" 
+                  Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  ItemsSource="{Binding MyItems}" 
+                  Grid.RowSpan="2"
+                  CanUserAddRows="False">
             <acb:CommandBehaviorCollection.Behaviors>
-                <acb:BehaviorBinding Event="SelectionChanged" Command="{Binding CommandSelectAccess}" CommandParameter="{Binding SelectedItem, ElementName=AccessTable}"   />
+                <!--<acb:BehaviorBinding Event="SelectionChanged" 
+                                     Command="{Binding CommandSelectAccess}" 
+                                     CommandParameter="{Binding SelectedItem, ElementName=AccessTable}"   />-->
             </acb:CommandBehaviorCollection.Behaviors>
             <DataGrid.Columns>
-                <DataGridTextColumn Width="150" Header="State" Binding="{Binding StateDesc}"  />
+                <DataGridTemplateColumn Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="Green"
+                                    Command="{Binding DataContext.CommandSelectAccess,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    CommandParameter="{Binding}"
+                                    Width="50" Height="30">
+                                <TextBlock Text="settings"
+                                    FontSize="20"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                                <Button.ToolTip>
+                                    <TextBlock FontSize="14" Text="Редактировать"/>
+                                </Button.ToolTip>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Width="150" Header="State" CanUserSort="True" SortMemberPath="StateDesc">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding StateDesc}" >
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding StateDesc}"
+                                                                Value="Enable">
+                                                <Setter Property="Background"
+                                                        Value="Green" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding StateDesc}"
+                                                                Value="Disable">
+                                                <Setter Property="Background"
+                                                        Value="Red" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding StateDesc}"
+                                                                Value="Created">
+                                                <Setter Property="Background"
+                                                        Value="Orange" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -47,23 +137,79 @@
                 <DataGridTextColumn Width="150" Header="Password" Binding="{Binding Password}"  />
                 <DataGridTextColumn Width="150" Header="Phone" Binding="{Binding Phone}"  />
                 <DataGridTextColumn Width="50" Header="Board" Binding="{Binding BoardName}"  />
+           
+                <DataGridTextColumn Width="50" Header="Views" Binding="{Binding Views}"  />
+                <DataGridTextColumn Width="50" Header="Calls" Binding="{Binding Calls}"  />
+                <DataGridTextColumn Width="80" Header="Messages" Binding="{Binding Messages}"  />
+
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Activate" Command="{Binding DataContext.CommandActivate,
+                            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="Green"
+                                    Command="{Binding DataContext.CommandActivate,
                                                           RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                     CommandParameter="{Binding}"
-                                    Width="50" Height="30" Background="White" Foreground="Black" FontWeight="Medium"   />
+                                    Width="50" Height="30">
+                                <TextBlock Text="check_circle"
+                                    FontSize="20"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                                <Button.ToolTip>
+                                    <TextBlock FontSize="14" Text="Активировать"/>
+                                </Button.ToolTip>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="Open" Command="{Binding DataContext.CommandOpen,
+
+                            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="Green"
+                                    Command="{Binding DataContext.CommandOpen,
                                                           RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                     CommandParameter="{Binding}"
-                                    Width="50" Height="30" Background="White" Foreground="Black" FontWeight="Medium"   />
+                                    Width="50" Height="30">
+                                <TextBlock Text="language"
+                                    FontSize="20"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                                <Button.ToolTip>
+                                    <TextBlock FontSize="14" Text="Открыть профиль"/>
+                                </Button.ToolTip>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button  
+                                    Background="Transparent"
+                                    BorderBrush="Transparent"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Center"
+                                    Foreground="Green"
+                                    Command="{Binding DataContext.CommandGetAccessStatistics,
+                                                          RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                    CommandParameter="{Binding}"
+                                    Width="50" Height="30">
+                                <TextBlock Text="get_app"
+                                    FontSize="20"
+                                    FontFamily="{StaticResource MaterialIcons}" 
+                                    Foreground="#199109"/>
+                                <Button.ToolTip>
+                                    <TextBlock FontSize="14" Text="Собрать статистику"/>
+                                </Button.ToolTip>
+                            </Button>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

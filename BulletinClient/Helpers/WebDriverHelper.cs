@@ -42,12 +42,8 @@ namespace BulletinClient.Helpers
         public static bool Auth(FirefoxDriver driver, string login, string password)
         {
             driver.Navigate().GoToUrl("https://www.avito.ru/rossiya#login?next=%2Fprofile");
-            WaitPage(driver, 30000, "Вход");
-            ConsoleHelper.SendMessage($"Auth => Start from {login}");
-            //WaitExecute(driver);
-            Find(driver, "a", "data-marker", "header/login-button", e => JsClick(driver, e));
             WaitPage(driver, 30000, "Войти");
-            ConsoleHelper.SendMessage($"Auth => Click from Enter");
+            ConsoleHelper.SendMessage($"Auth => Start from {login}");
             //WaitExecute(driver);
             Find(driver, "input", "data-marker", "login-form/login", e => e.SendKeys(login));
             Find(driver, "input", "data-marker", "login-form/password", e => e.SendKeys(password));

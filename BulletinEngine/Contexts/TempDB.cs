@@ -27,6 +27,7 @@ namespace BulletinHub.Contexts
     {
         public DbSet<BulletinHub.Entity.Data.Task> Tasks { get; set; }
         public DbSet<BulletinTemplate> BulletinTemplate { get; set; }
+        public DbSet<Call> Calls { get; set; }
 
         public TempDB()
         {
@@ -37,6 +38,7 @@ namespace BulletinHub.Contexts
         }
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Call>().Property(x => x.CallDate).HasColumnType("datetime2");
         }
         protected override void Dispose(bool disposing)
         {

@@ -30,29 +30,20 @@ namespace BulletinClient.Helpers
                 service.SuppressInitialDiagnosticInformation = false;
                 service.HideCommandPromptWindow = true;
 
-                using (var currentDriver = new FirefoxDriver(service, options, TimeSpan.FromSeconds(Timeout)))
+
+                try
                 {
-                    try
-                    {
-                        var manager = currentDriver.Manage();
-                        manager.Timeouts().ImplicitWait = TimeSpan.FromSeconds(Timeout);
-                        manager.Timeouts().PageLoad = TimeSpan.FromSeconds(Timeout);
-                        executeAction?.Invoke(currentDriver);
-                    }
-                    catch (Exception ex)
-                    {
-                        ConsoleHelper.SendMessage($"FIREFOXDRIVER CRASHED {Environment.NewLine} {ex.ToString()}");
-                    }
-                    try
-                    {
-                        //currentDriver.Close();
-                        //currentDriver.Quit();
-                    }
-                    catch (Exception ex)
-                    {
-                        ConsoleHelper.SendMessage($"FIREFOXDRIVER CLOSE AND QUIT CRASHED {Environment.NewLine} {ex.ToString()}");
-                    }
+                    var currentDriver = new FirefoxDriver(service, options, TimeSpan.FromSeconds(Timeout));
+                    var manager = currentDriver.Manage();
+                    manager.Timeouts().ImplicitWait = TimeSpan.FromSeconds(Timeout);
+                    manager.Timeouts().PageLoad = TimeSpan.FromSeconds(Timeout);
+                    executeAction?.Invoke(currentDriver);
                 }
+                catch (Exception ex)
+                {
+                    ConsoleHelper.SendMessage($"FIREFOXDRIVER CRASHED {Environment.NewLine} {ex.ToString()}");
+                }
+            
             }, continueExceptionMethod: (ex, c) => { });
         }
     }

@@ -59,6 +59,19 @@ namespace BulletinEngine.Entity.Data
         private static int GenerationCheckPeriod = 60 * 60 * 24;
 #endif
 
+        /// <summary>
+        /// Количество просмотров
+        /// </summary>
+        public int Views { get; set; }
+        /// <summary>
+        /// Количество звонков
+        /// </summary>
+        public int Calls { get; set; }
+        /// <summary>
+        /// Количество сообщений
+        /// </summary>
+        public int Messages { get; set; }
+
         #endregion
         #region Another methos
         public void SetGenerationCheck()
@@ -101,7 +114,7 @@ namespace BulletinEngine.Entity.Data
         #region Creators
         protected override IEnumerable<EntityObjectALMCreator<Access>> CreatorsService => new[]
         {
-            EntityObjectALMCreator<Access>.New<AccessCache>(ToCache, ToEntity, new Version(1,0,0,0))
+            EntityObjectALMCreator<Access>.New<AccessCache>(ToCache, ToEntity, new Version(1,0,0,0)),
         };
         private Access ToEntity(AccessCache cache, Access entity)
         {
@@ -110,6 +123,9 @@ namespace BulletinEngine.Entity.Data
             entity.Password = cache.Password;
             entity.Phone = cache.Phone;
             entity.HasBlocked = cache.HasBlocked;
+            entity.Views = cache.Views;
+            entity.Calls = cache.Calls;
+            entity.Messages = cache.Messages;
             return entity;
         }
         internal static AccessCache ToCache(Access obj)
@@ -126,6 +142,9 @@ namespace BulletinEngine.Entity.Data
             result.Phone = obj.Phone;
             result.HasBlocked = obj.HasBlocked;
             result.StateDesc = obj.StateEnum.ToString();
+            result.Views = obj.Views;
+            result.Calls = obj.Calls;
+            result.Messages = obj.Messages;
             return result;
         }
         #endregion
@@ -170,6 +189,9 @@ namespace BulletinEngine.Entity.Data
                 {
                     dbAccess.Login = access.Login;
                     dbAccess.Password = access.Password;
+                    dbAccess.Views = access.Views;
+                    dbAccess.Calls = access.Calls;
+                    dbAccess.Messages = access.Messages;
                     d.SaveChanges();
                 }
                 result = new TDataModel[] { access as TDataModel };
@@ -198,6 +220,9 @@ namespace BulletinEngine.Entity.Data
                         break;
                     case "ActivateAccess":
                         AccessHelper.ActivateAccess(entities.FirstOrDefault());
+                        break;
+                    case "GetAccessStatistics":
+                        AccessHelper.GetAccessStatistics(entities.FirstOrDefault());
                         break;
                     case "Remove":
                         AccessHelper.Remove(entities);

@@ -49,6 +49,11 @@ namespace BulletinEngine.Entity.Data
         /// <value> The URL. </value>
         ///-------------------------------------------------------------------------------------------------
         public string Url { get; set; }
+
+        /// <summary>
+        /// Количество просмотров
+        /// </summary>
+        public int Views { get; set; }
         #endregion
 
         #region ALM -- Definition
@@ -138,11 +143,13 @@ namespace BulletinEngine.Entity.Data
         {
             BulletinInstanceCache result = new BulletinInstanceCache();
             result.Url = obj.Url;
+            result.Views = obj.Views;
             return result;
         }
         public static BulletinInstance ToEntity2(BulletinInstanceCache obj, BulletinInstance entity)
         {
             entity.Url = obj.Url;
+            entity.Views = obj.Views;
             return entity;
         }
         #endregion
@@ -162,6 +169,9 @@ namespace BulletinEngine.Entity.Data
                     case "Save":
                         result = obj;
                         d.SaveChanges();
+                        break;
+                    case "GetInstanceStatistics":
+                        InstanceHelper.GetInstanceStatistics(entities.FirstOrDefault());
                         break;
                     case "All":
                         result = InstanceHelper.All();

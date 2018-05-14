@@ -40,6 +40,7 @@ namespace BulletinEngine.Entity.Data
 #else
         private static int GenerationCheckPeriod =  60 * 60 * 24;
 #endif
+        public int Views { get; set; }
 
         #endregion
         #region Another methos

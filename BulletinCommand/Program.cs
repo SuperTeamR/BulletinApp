@@ -44,6 +44,15 @@ namespace BulletinCommand
                             var r2 = BackTaskHelper.Next();
                             r2 = r2;
                             break;
+                        case "RunStatisticsTasks":
+                            StatisticsHelper.RunUserStatisticsTask(new Guid("43461B22-1BC4-4584-8DB8-FA930CB331C5"));
+                            break;
+                        case "ComputeStatisticsTasks":
+                            StatisticsHelper.ComputeUserStatistics(new Guid("43461B22-1BC4-4584-8DB8-FA930CB331C5"));
+                            break;
+                        case "GetCalls":
+                            StatisticsHelper.GetCallsStatistics(new Guid("43461B22-1BC4-4584-8DB8-FA930CB331C5"));
+                            break;
                         case "help":
                             Console.WriteLine(Help);
                             break;

@@ -83,10 +83,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\SimData.cs" />
     <Compile Include="Extensions\WebElementExtensions.cs" />
     <Compile Include="Helpers\BulletinCollector.cs" />
     <Compile Include="Helpers\FirefoxDriverHelper.cs" />
     <Compile Include="Helpers\GenerationHelpers.cs" />
+    <Compile Include="Helpers\StatisticsHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

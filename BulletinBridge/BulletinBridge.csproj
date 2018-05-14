@@ -82,6 +82,7 @@
     <Compile Include="Models\BulletinPackage.cs" />
     <Compile Include="Models\BulletinSheetCache.cs" />
     <Compile Include="Models\BulletinTemplateCache.cs" />
+    <Compile Include="Models\CallCache.cs" />
     <Compile Include="Models\CategoryTree.cs" />
     <Compile Include="Models\FieldPackage.cs" />
     <Compile Include="Models\GroupPackage.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Models\TaskInstancePublicationCache.cs" />
     <Compile Include="Models\TaskAccessCheckCache.cs" />
     <Compile Include="Models\TaskCache.cs" />
+    <Compile Include="Models\TaskInstanceStatistics.cs" />
     <Compile Include="Models\TaskRegistrationCache.cs" />
     <Compile Include="Models\_TaskCache_old.cs" />
     <Compile Include="Models\UserSettingsCache.cs" />

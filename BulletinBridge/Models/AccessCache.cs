@@ -7,6 +7,7 @@ namespace BulletinBridge.Data
     [DataContract]
     public class AccessCache : CacheObject
     {
+
         [DataMember]
         public Guid BoardId { get; set; }
         [DataMember]
@@ -23,6 +24,12 @@ namespace BulletinBridge.Data
         public bool HasBlocked { get; set; }
         [DataMember]
         public string StateDesc { get; set; }
+        [DataMember]
+        public int Views { get; set; }
+        [DataMember]
+        public int Calls { get; set; }
+        [DataMember]
+        public int Messages { get; set; }
     }
 
     public enum AccessState

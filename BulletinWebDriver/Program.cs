@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading;
 using BulletinBridge.Models;
 using BulletinWebDriver.Containers.BoardRealizations;
+using BulletinWebDriver.ServiceHelper;
+using BulletinBridge.Data;
 
 namespace BulletinWebDriver
 {
@@ -46,17 +48,14 @@ namespace BulletinWebDriver
                                 Thread.Sleep(5000);
                             break;
                         case "TestActivate":
-                            var avito = new Avito();
-                            var task2 = new TaskAccessCheckCache
-                            {
-                                Login = "kirill.shleif@mail.ru",
-                                Password = "OnlineHelp59"
-                            };
-                            FirefoxHelper.ExecuteWithVisual(browser =>
-                            {
-                                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
-                                avito.ActivateBulletins(browser, task2);
-                            }, null, 100);
+                            TestActivate();
+                            break;
+
+                        case "TestGetStatistics":
+                            TestGetStatistics();
+                            break;
+                        case "TestInstanceStatistics":
+                            TestInstanceStatistics();
                             break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");
@@ -75,91 +74,65 @@ namespace BulletinWebDriver
             //    Console.ReadLine();
             //});
         }
-        //static void TestConnection()
-        //{
-        //    //WebDriver.NavigatePage("http://yandex.ru");
 
+        static void TestActivate()
+        {
+            var avito = new Avito();
+            var task = new TaskAccessCheckCache
+            {
+                Login = "kirill.shleif@mail.ru",
+                Password = "OnlineHelp59"
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                avito.ActivateBulletins(browser, task);
+            }, null, 100);
+        }
+        static void TestGetStatistics()
+        {
+            var avito = new Avito();
+            var task = new TaskAccessCheckCache
+            {
+                AccessId = new Guid("BBC4B038-7309-4299-BB59-D8F0119EB7B5"),
+                Login = "kirill.shleif@mail.ru",
+                Password = "OnlineHelp59"
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                var stat = avito.GetAccessStatistics(browser, task);
+                if (stat != null)
+                {
+                    var access = AccessHelper.GetAccess(task.AccessId);
+                    access.Views = stat.Views;
+                    access.Messages = stat.Messages;
+                    access.Calls = stat.Calls;
+                    AccessHelper.Save(access);
+                }
+            }, null, 100);
+        }
 
-        //    WebDriver.NavigatePage("https://www.avito.ru/profile/login?next=%2Fprofile");
-        //    if (WebDriver.GetTitle().Contains("Доступ с вашего IP-адреса временно ограничен"))
-        //    {
-        //        WebDriver.RestartDriver();
-        //        throw new Exception("Блокировка по IP - требуется смена прокси");
-        //    }
-        //    WebDriver.Find("input", "data-marker", "login-form/login", e => e.SendKeys("Slava.Shleif@gmail.com"));
-        //    WebDriver.Find("input", "data-marker", "login-form/password", e => e.SendKeys("OnlineHelp59"));
-        //    WebDriver.Find("button", "data-marker", "login-form/submit", e => WebDriver.JsClick(e));
-        //}
+        static void TestInstanceStatistics()
+        {
+            var avito = new Avito();
+            var task = new TaskInstanceStatisticsCache
+            {
+                InstanceId = new Guid("8BB27650-462E-497E-B9A5-044AA1C66FAD"),
+                Url = "https://www.avito.ru/podolsk/telefony/iphone_6s_64gb_seryy_kosmos_1259355638",
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                var stat = avito.GetInstanceStatistics(browser, task);
+                if (stat != null)
+                {
+                    var instance = BulletinInstanceHelper.Get(task.InstanceId);
+                    instance.Views = stat.Value;
+                    BulletinInstanceHelper.Save(instance);
+                }
+            }, null, 100);
+        }
 
-        //static void TestProxies()
-        //{
-        //    DCT.ExecuteAsync(d =>
-        //    {
-        //        var count = 0;
-        //        while (true)
-        //        {
-        //            var nextProxy = CollectorModels.Service.ProxyClientHelper.Next();
-        //            if (nextProxy == null)
-        //            {
-        //                Console.WriteLine("Checked proxy is null");
-        //                continue;
-        //            }
-        //            Console.WriteLine($"Proxy {count}|Avito:{nextProxy.Avito}|Https:{nextProxy.Https}|Http:{nextProxy.Http}|Google:{nextProxy.Google}|Ping:{nextProxy.PingLast}|={nextProxy.Address}:{nextProxy.Port}");
-        //            count++;
-        //        }
-        //    });
-        //}
-
-        //static void TestClick()
-        //{
-        //    DCT.Execute(d =>
-        //    {
-        //        WebDriver.IsDisableProxy = true;
-        //        WebDriver.GetTimeouts().PageLoad = new TimeSpan(0, 0, 0, 20);
-
-        //        Auth();
-
-        //        var url = "https://www.avito.ru/podolsk/telefony/iphone_6s_16gb_space_gray_1411832298";
-        //        WebDriver.NavigatePage(Path.Combine(url, "edit"));
-
-        //        var element = WebDriver.FindMany(By.ClassName("packages-tab-name")).FirstOrDefault(q => q.Text == "Без пакета");
-        //        var internalActions = new Actions(WebDriver.driver);
-        //        internalActions.MoveToElement(element);
-        //        ((IJavaScriptExecutor)WebDriver.driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-
-        //        element = WebDriver.FindMany(By.ClassName("packages-tab-name")).FirstOrDefault(q => q.Text == "Без пакета");
-        //        internalActions.Click(element).Build().Perform();
-        //    });
-        //}
-        //static bool Auth()
-        //{
-        //    var result = false;
-        //    DCT.Execute(d =>
-        //    {
-        //        WebDriver.NavigatePage("https://www.avito.ru/profile/login?next=%2Fprofile");
-        //        if (WebDriver.GetTitle().Contains("Доступ с вашего IP-адреса временно ограничен")
-        //            || WebDriver.GetTitle().Contains("Доступ временно заблокирован"))
-        //        {
-        //            WebDriver.RestartDriver();
-        //            throw new Exception("Блокировка по IP - требуется смена прокси");
-        //        }
-        //        WebDriver.Find("input", "data-marker", "login-form/login", e => e.SendKeys("Slava.Shleif@gmail.com"));
-        //        WebDriver.Find("input", "data-marker", "login-form/password", e => e.SendKeys("OnlineHelp59"));
-        //        WebDriver.Find("button", "data-marker", "login-form/submit", e => WebDriver.JsClick(e));
-        //        Thread.Sleep(2000);
-
-        //        var a = WebDriver.FindMany(By.TagName("a")).FirstOrDefault(q => q.Text == "Мои объявления");
-        //        if (a != null)
-        //            result = true;
-        //    }, continueExceptionMethod: (d, e) =>
-        //    {
-        //        result = Auth();
-        //    });
-        //    if (!result)
-        //    {
-        //        result = Auth();
-        //    }
-        //    return result;
-        //}
     }
 }

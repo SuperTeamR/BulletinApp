@@ -29,6 +29,8 @@ namespace BulletinHub.Entity.Data
         BulletinTemplateCollector = 3,
         ActivateAccess = 4,
         Registration = 5,
+        AccessStatistics = 6,
+        InstanceStatistics = 7,
 
         //Obsolute
         Creation = 55,

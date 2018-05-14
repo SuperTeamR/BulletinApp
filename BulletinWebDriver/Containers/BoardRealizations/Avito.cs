@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BulletinBridge.Data;
+using BulletinWebDriver.Tools;
 
 namespace BulletinWebDriver.Containers.BoardRealizations
 {
@@ -62,6 +63,92 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         }
         #endregion
         #region Realization
+
+        public override AccessStatistics GetAccessStatistics(FirefoxDriver driver, TaskAccessCheckCache taskModel)
+        {
+            AccessStatistics result = null;
+            try
+            {
+                if (!Auth(driver, taskModel.Login, taskModel.Password))
+                    return null;
+
+                //Сбор просмотров
+                var totalViews = 0;
+                var rawViews = new List<string>();
+                var nextPagePattern = "(Следующая страница)";
+                var viewPattern = "class=\"profile-item-views-count-icon[\\s\\S\\r\\n]*?(\\d+)";
+                var count = 1;
+                var hasNextPage = true;
+                while (hasNextPage)
+                {
+                    count++;
+                    var html = driver.PageSource;
+                    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
+
+                    var matches = RegexHelper.Execute(viewPattern, html).ToArray();
+                    if (matches.Any())
+                        rawViews.AddRange(matches.Select(q => q.Groups[1].Value))
+    ;
+
+                    if (hasNextPage)
+                    {
+                        driver.Navigate().GoToUrl($"http://www.avito.ru/profile/items/active/rossiya?p={count}&s=4");
+                        WaitPage(driver, 30000, $"www.avito.ru/profile/items/active/rossiya?p={count}&s=4");
+                    }
+                }
+                foreach (var rawView in rawViews)
+                {
+                    var success = Int32.TryParse(rawView, out var viewCount);
+
+                    if (success)
+                        totalViews += viewCount;
+                }
+
+                //Сбор сообщений
+                driver.Navigate().GoToUrl($"http://www.avito.ru/profile/messenger");
+                WaitPage(driver, 30000, $"www.avito.ru/profile/messenger");
+                var pageSource = driver.PageSource;
+
+
+                var totalMessages = 0;
+                var messagePattern = "(messenger-channel-context)";
+                var messageMatches = RegexHelper.Execute(messagePattern, pageSource).ToArray();
+                totalMessages = messageMatches.Count();
+
+
+                var stat = new AccessStatistics();
+                stat.Views = totalViews;
+                stat.Messages = totalMessages;
+                result = stat;
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;            
+
+        }
+
+        public override int? GetInstanceStatistics(FirefoxDriver driver, TaskInstanceStatisticsCache taskModel)
+        {
+            int? result = null;
+            try
+            {
+                var viewPattern = "class=\"title-info-views[\\s\\S\\r\\n]*?}\">[\\s\\S\\r\\n]*?(\\d+)";
+                driver.Navigate().GoToUrl(taskModel.Url);
+                WaitPage(driver, 30000, taskModel.Url);
+                var pageSource = driver.PageSource;
+                var rawView = RegexHelper.GetValue(viewPattern, pageSource);
+                var success = Int32.TryParse(rawView, out var viewCount);
+                if (success)
+                    result = viewCount;
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+
+        }
+
         public override AccessCache Registration(FirefoxDriver driver, AccessCache access)
         {
             var result = access;

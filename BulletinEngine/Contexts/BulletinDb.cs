@@ -1,5 +1,6 @@
 ﻿using BulletinEngine.Entity.Data;
 using BulletinHub.Entity.Data;
+using BulletinHub.Models;
 using FessooFramework.Tools.Helpers;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
@@ -39,6 +40,7 @@ namespace BulletinEngine.Contexts
         public DbSet<GroupedCategory> GroupedCategories { get; set; }
         public DbSet<BulletinField> BulletinFields { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
+        public DbSet<UserStatistics> UserStatistics { get; set; }
 
         public BulletinDb()
         {

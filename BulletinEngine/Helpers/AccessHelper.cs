@@ -18,6 +18,14 @@ namespace BulletinEngine.Helpers
             });
         }
 
+        public static void GetAccessStatistics(Access access)
+        {
+            BCT.Execute(d =>
+            {
+                TaskHelper.CreateAccessStatistics(access);
+            });
+        }
+        
         public static Access GetNextAccess(Guid ClientId, Guid BoardId, Guid BulletinId)
         {
             Access result = null;

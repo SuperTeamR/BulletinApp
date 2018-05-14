@@ -3,6 +3,7 @@ using BulletinBridge.Models;
 using BulletinWebDriver.Core;
 using BulletinWebDriver.Helpers;
 using BulletinWebDriver.ServiceHelper;
+using BulletinWebDriver.Tools;
 using CollectorModels;
 using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Helpers;
@@ -228,10 +229,37 @@ namespace BulletinWebDriver.Containers
 #if RELEASE
                         });
 #endif
-#if DEBUG_REMOTE
+#if DEBUG_REMOTE || DEBUG
+                            
                         }, hasProxy: false);
 #endif
 
+                        break;
+                    case "AccessStatistics":
+                        executeCommand<TaskAccessCheckCache>(task, (a, b) =>
+                        {
+                            var stat = GetAccessStatistics(a, b);
+                            if(stat != null)
+                            {
+                                var access = AccessHelper.GetAccess(b.AccessId);
+                                access.Views = stat.Views;
+                                access.Messages = stat.Messages;
+                                access.Calls = stat.Calls;
+                                AccessHelper.Save(access);
+                            }
+                        }, false);
+                        break;
+                    case "InstanceStatistics":
+                        executeCommand<TaskInstanceStatisticsCache>(task, (a, b) =>
+                        {
+                            var stat = GetInstanceStatistics(a, b);
+                            if (stat != null)
+                            {
+                                var instance = BulletinInstanceHelper.Get(b.InstanceId);
+                                instance.Views = stat.Value;
+                                BulletinInstanceHelper.Save(instance);
+                            }
+                        }, false);
                         break;
                     case "BulletinTemplateCollector":
                         executeCommand<TaskBulletinTemplateCollectorCache>(task, (a, b) =>
@@ -364,6 +392,8 @@ namespace BulletinWebDriver.Containers
         public abstract void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel);
         public abstract IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel);
+        public abstract AccessStatistics GetAccessStatistics(FirefoxDriver driver, TaskAccessCheckCache taskModel);
+        public abstract int? GetInstanceStatistics(FirefoxDriver driver, TaskInstanceStatisticsCache taskModel);
         #endregion
         #region DriverTools
         public IWebElement FindElementSafe(IWebDriver driver, By by)

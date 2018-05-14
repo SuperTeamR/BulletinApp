@@ -58,6 +58,30 @@ namespace BulletinHub.Helpers
             });
         }
 
+        public static void CreateAccessStatistics(Access access)
+        {
+            Create(TaskCommand.AccessStatistics, a =>
+            {
+                //Обязательные
+                a.BoardId = access.BoardId;
+                a.UserId = access.UserId;
+
+                a.AccessId = access.Id;
+            });
+        }
+
+        public static void CreateInstanceStatistics(Guid userId, BulletinInstance instance)
+        {
+            Create(TaskCommand.InstanceStatistics, a =>
+            {
+                //Обязательные
+                a.BoardId = instance.BoardId;
+                a.UserId = userId;
+
+                a.InstanceId = instance.Id;
+            });
+        }
+
         public static void CreateInstancePublication(Guid userId, BulletinInstance instance, DateTime publicationDate)
         {
             Create(TaskCommand.InstancePublication, a =>

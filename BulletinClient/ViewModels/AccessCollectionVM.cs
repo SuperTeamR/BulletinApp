@@ -34,6 +34,7 @@ namespace BulletinClient.ViewModels
         public ICommand CommandUpdateObject { get; set; }
         public ICommand CommandAdd { get; set; }
         public ICommand CommandSelectAccess { get; set; }
+        public ICommand CommandGetAccessStatistics { get; set; }
         public AccessCache SelectedObject
         {
             get => SelectedObjectController.Value;
@@ -51,6 +52,7 @@ namespace BulletinClient.ViewModels
             CommandRefresh = new DelegateCommand(Refresh);
             CommandRemove = new DelegateCommand(Remove);
             CommandActivate = new DelegateCommand<AccessCache>(Activate);
+            CommandGetAccessStatistics = new DelegateCommand<AccessCache>(GetAccessStatistics);
             CommandOpen = new DelegateCommand<AccessCache>(Open);
             CommandUpdateObject = new DelegateCommand<AccessCache>(UpdateObject);
             CommandAdd = new DelegateCommand(Add);
@@ -59,9 +61,9 @@ namespace BulletinClient.ViewModels
             MyItems = new ObservableCollection<AccessCache>();
         }
 
-        private void SelectAccess(AccessCache obj)
+        public void SelectAccess(AccessCache cache)
         {
-            Card.Update(obj);
+            Card.Update(cache);
             ModalHelper.OpenDialog(Card);
         }
 
@@ -125,6 +127,14 @@ namespace BulletinClient.ViewModels
             {
                 BoardHelper.Auth(b, cache.Login, cache.Password);
             }, 20, true);
+        }
+
+        private void GetAccessStatistics(AccessCache cache)
+        {
+            AccessHelper.GetAccessStatistics(a =>
+            {
+                MessageBox.Show("Отправлен задачу на сбор статистики");
+            }, cache);
         }
         #endregion
     }
