@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using BulletinBridge.Data;
 using BulletinBridge.Models;
 using BulletinClient.Core;
+using BulletinClient.Helpers;
 using BulletinClient.HelperService;
 using FessooFramework.Objects.Delegate;
 using FessooFramework.Objects.ViewModel;
@@ -39,15 +42,15 @@ namespace BulletinClient.ViewModels
         public TemplateCardVM Card => card = card ?? new TemplateCardVM();
         public TemplateCardVM card { get; set; }
         public Action<BulletinTemplateCache> UseAsTemplateAction { get; set; }
-
+        public string SearchPattern { get; set; }
         #endregion
         #region Constructor
         public TemplateCollectionVM()
         {
-            CommandRefresh = new DelegateCommand(Refresh);
+            CommandRefresh = new DelegateCommand(() => Refresh());
             CommandUseAsTemplate = new DelegateCommand(UseAsTemplate);
-            Refresh();
             MyItems = new ObservableCollection<BulletinTemplateCache>();
+            Refresh();
         }
         #endregion
         #region Method
@@ -59,10 +62,25 @@ namespace BulletinClient.ViewModels
                 DCT.ExecuteMainThread(c =>
                 {
                     MyItems = new ObservableCollection<BulletinTemplateCache>(a);
-                    RaisePropertyChanged(() => MyItems);
+                    Filter(SearchPattern);
                 });
             });
         }
+
+         void Filter(string pattern = null)
+        {
+            if(!string.IsNullOrEmpty(pattern))
+            {
+                var temp = MyItems.FilterByPattern(pattern);
+                MyItems = new ObservableCollection<BulletinTemplateCache>(temp);
+            }
+            else
+            {
+                MyItems = new ObservableCollection<BulletinTemplateCache>(MyItems);
+            }
+            RaisePropertyChanged(() => MyItems);
+        }
+
         private void UseAsTemplate()
         {
             if (SelectedObject != null)
@@ -70,6 +88,15 @@ namespace BulletinClient.ViewModels
                 UseAsTemplateAction?.Invoke(SelectedObject);
             }
         }
+
+
+        public BulletinTemplateCache GetAutoTemplate()
+        {
+            var template = MyItems.FirstOrDefault();
+            return template;
+        }
+
+        
 
         #endregion
 

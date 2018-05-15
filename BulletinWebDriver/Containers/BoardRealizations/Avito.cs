@@ -281,6 +281,29 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             }
         }
 
+        public override void ActivateBulletin(FirefoxDriver driver, TaskInstanceActivationCache taskModel)
+        {
+            try
+            {
+                var inactivePage = @"www.avito.ru/profile/items/inactive";
+
+                if (!Auth(driver, taskModel.Login, taskModel.Password))
+                    return;
+                WaitPage(driver, 3000, inactivePage);
+                WaitExecute(driver);
+
+                var idPattern = ".*?_(\\d+)$";
+                var id = RegexHelper.GetValue(idPattern, taskModel.Url);
+
+                //https://www.avito.ru/account/pay_fee?item_id=1717723420&vas_from=item_self_user
+                var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
+                driver.Navigate().GoToUrl(activationLink);
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
         public override string InstancePublication(FirefoxDriver driver, TaskInstancePublicationCache taskModel)
         {
             string result = null;
@@ -451,7 +474,18 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     Find(driver, "input", "name", "fees[eula]", c => JsClick(driver, c));
                 }
 
-                FindTagByTextContains(driver, "span", "Быстрая продажа", e => JsClick(driver, e));
+                try
+                {
+                    WaitPage(driver, 10000, "Продолжить с пакетом «Быстрая продажа»");
+                    FindTagByTextContains(driver, "span", "Быстрая продажа", e => JsClick(driver, e));
+                }
+                catch (Exception ex)
+                {
+
+                    var r5 = ex;
+                    ConsoleHelper.SendMessage($"InstancePublication => Error:{r5}");
+                }
+               
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
 
@@ -468,6 +502,39 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 JsClick(driver, button);
                 WaitExecute(driver);
                 ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+
+                //Забираем идентификатор
+                var idPattern = "itemId=(\\d+)";
+                var pageSource = driver.PageSource;
+                var id = RegexHelper.GetValue(idPattern, pageSource);
+
+                //Переходим на страницу профиля и забираем полный url по идентификатору
+                var inactivePage = @"www.avito.ru/profile/items/inactive";
+                driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p=1&s=4");
+                WaitPage(driver, 3000, inactivePage);
+                WaitExecute(driver);
+                var nextPagePattern = "(Следующая страница)";
+                var urlPattern = $"a name=\"item_{id}\" href=\"(.*?)\"";
+                var pages = 1;
+                var hasNextPage = true;
+                while (hasNextPage)
+                {
+                    pages++;
+                    var html = driver.PageSource;
+                    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
+
+                    var match = RegexHelper.GetValue(urlPattern, html);
+                    if (!string.IsNullOrEmpty(match))
+                    {
+                        result = @"https://www.avito.ru" + match;
+                        break;
+                    }
+                    if (hasNextPage)
+                    {
+                        driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p={pages}&s=4");
+                        WaitPage(driver, 30000, inactivePage + $"/rossiya?p={pages}&s=4");
+                    }
+                }
             }
             catch (Exception ex)
             {

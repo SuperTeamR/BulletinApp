@@ -50,7 +50,9 @@ namespace BulletinWebDriver
                         case "TestActivate":
                             TestActivate();
                             break;
-
+                        case "TestInstanceActivate":
+                            TestInstanceActivate();
+                            break;
                         case "TestGetStatistics":
                             TestGetStatistics();
                             break;
@@ -87,6 +89,21 @@ namespace BulletinWebDriver
             {
                 browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
                 avito.ActivateBulletins(browser, task);
+            }, null, 100);
+        }
+        static void TestInstanceActivate()
+        {
+            var avito = new Avito();
+            var task = new TaskInstanceActivationCache
+            {
+                Login = "Kazah.Shleif_Novg@mail.ru",
+                Password = "OnlineHelp59",
+                Url = @"https://www.avito.ru/podolsk/telefony/apple_iphone_6_16gb_zolotoy_1717723420"
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                avito.ActivateBulletin(browser, task);
             }, null, 100);
         }
         static void TestGetStatistics()

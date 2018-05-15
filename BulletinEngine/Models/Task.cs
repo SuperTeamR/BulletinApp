@@ -31,6 +31,7 @@ namespace BulletinHub.Entity.Data
         Registration = 5,
         AccessStatistics = 6,
         InstanceStatistics = 7,
+        ActivateInstance = 8,
 
         //Obsolute
         Creation = 55,
@@ -105,7 +106,9 @@ namespace BulletinHub.Entity.Data
              EntityObjectALMCreator<Task>.New<TaskCache>(ToCache2, ToEntity2, new Version(1,0,0,0)),
              EntityObjectALMCreator<Task>.New<TaskAccessCheckCache>(ToCache3, ToEntityDefault, new Version(1,0,0,0)),
              EntityObjectALMCreator<Task>.New<TaskInstancePublicationCache>(ToCache4, ToEntityDefault, new Version(1,0,0,0)),
-             EntityObjectALMCreator<Task>.New<TaskBulletinTemplateCollectorCache>(ToCache5, ToEntityDefault, new Version(1,0,0,0)),  EntityObjectALMCreator<Task>.New<TaskRegistrationCache>(ToCache6, ToEntityDefault, new Version(1,0,0,0))
+             EntityObjectALMCreator<Task>.New<TaskBulletinTemplateCollectorCache>(ToCache5, ToEntityDefault, new Version(1,0,0,0)),
+             EntityObjectALMCreator<Task>.New<TaskRegistrationCache>(ToCache6, ToEntityDefault, new Version(1,0,0,0)),
+             EntityObjectALMCreator<Task>.New<TaskInstanceActivationCache>(ToCache7, ToEntityDefault, new Version(1,0,0,0))
         };
         #region Old
         public static TaskCache_old ToCache(Data.Task obj)
@@ -285,6 +288,22 @@ namespace BulletinHub.Entity.Data
                 access.Login = access.Login;
                 access.Password = access.Password;
             }
+            return arg1;
+        }
+        #endregion
+        #region Task InstanceActivationCache
+        private TaskInstanceActivationCache ToCache7(Task arg2)
+        {
+            var arg1 = new TaskInstanceActivationCache();
+            var access = BCT.Context.BulletinDb.Accesses.Find(arg2.AccessId.Value);
+            if (access != null)
+            {
+                arg1.Login = access.Login;
+                arg1.Password = access.Password;
+            }
+            var instance = BCT.Context.BulletinDb.BulletinInstances.Find(arg2.InstanceId.Value);
+            if (instance != null)
+                arg1.Url = instance.Url;
             return arg1;
         }
         #endregion

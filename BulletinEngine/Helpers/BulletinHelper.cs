@@ -45,12 +45,63 @@ namespace BulletinHub.Helpers
                         if (access == null)
                             continue;
                         instance.AccessId = access.Id;
+                        instance.StateEnum = instance.StateEnum;
                         c.SaveChanges();
                         TaskHelper.CreateInstancePublication(bulletin.UserId, instance, datePublish);
                     }
                 }
             });
         }
+
+
+        public static void BulletinAutoPublication(Bulletin bulletin)
+        {
+            BCT.Execute(c =>
+            {
+                var tasks = c.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).ToArray();
+                if (tasks != null && tasks.Any())
+                    TaskHelper.Remove(tasks);
+                var instances = BulletinHelper.CreateInstance(bulletin);
+                if (instances.Any())
+                {
+                    bulletin.SetGenerationCheck();
+                    var datePublish = DateTime.Now;
+                    if (bulletin.DatePublication != null)
+                    {
+                        datePublish = bulletin.DatePublication.Value;
+                    }
+                    else
+                    {
+                        var datePublishs = c.TempDB.Tasks.Where(q => q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).Select(q => q.TargetDate).ToArray();
+                        datePublishs = datePublishs.Where(q => q.HasValue).ToArray();
+                        if (datePublishs.Any())
+                        {
+                            var max = datePublishs.Max().Value;
+                            if (datePublish > DateTime.Now)
+                                datePublish = max;
+                        }
+                        datePublish = datePublish.AddMinutes(5);
+                    }
+                    foreach (var instance in instances)
+                    {
+                        var access = AccessHelper.GetNextAccess(bulletin.UserId, instance.BoardId, instance.BulletinId);
+                        if (access == null)
+                            continue;
+                        instance.AccessId = access.Id;
+                        instance.StateEnum = instance.StateEnum;
+                        c.SaveChanges();
+                        TaskHelper.CreateInstancePublication(bulletin.UserId, instance, datePublish);
+                        var now = DateTime.Now;
+                        var activationDate = now.Date.AddDays(1);
+                        activationDate.Date.Subtract(now);
+                        TaskHelper.CreateActivateInstance(bulletin.UserId, instance, activationDate);
+                    }
+                }
+            });
+        }
+
+
+
         /// <summary>
         /// Создаёт базовую инстанцию без распределения по доступу
         /// </summary>

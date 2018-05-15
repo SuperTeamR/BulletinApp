@@ -144,6 +144,7 @@
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\FirefoxHelper.cs" />
     <Compile Include="Helpers\ModalHelper.cs" />
+    <Compile Include="Helpers\TemplateFilterHelper.cs" />
     <Compile Include="Helpers\WebDriverHelper.cs" />
     <Compile Include="Tools\ACB\BehaviourBinding.cs" />
     <Compile Include="Tools\ACB\CommandBehaviourBinding.cs" />

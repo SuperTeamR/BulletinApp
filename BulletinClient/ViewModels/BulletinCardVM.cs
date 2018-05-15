@@ -48,6 +48,7 @@ namespace BulletinClient.ViewModels
         public ICommand CommandAdd { get; private set; }
         public ICommand CommandPublicate { get; set; }
         public ICommand CommandClear { get; set; }
+        public ICommand CommandAutoPublicate { get; set; }
         #endregion
         #region Constructor
         public BulletinCardVM()
@@ -61,7 +62,10 @@ namespace BulletinClient.ViewModels
             CommandAdd = new DelegateCommand(AddAvito);
             CommandPublicate = new DelegateCommand(Publicate);
             CommandClear = new DelegateCommand(Clear);
+            CommandAutoPublicate = new DelegateCommand(AutoPublicate);
         }
+
+
         #endregion
         #region Methods
         public void Update(BulletinCache selectedObject)
@@ -70,6 +74,9 @@ namespace BulletinClient.ViewModels
             Item = selectedObject;
             RaisePropertyChanged(() => Item);
             RaisePropertyChanged(() => CanPublicate);
+            TemplateCollectionView.SearchPattern = Item.Title;
+            TemplateCollectionView.Refresh();
+           
             SkipTextChange = false;
         }
         public void Clear()
@@ -77,6 +84,8 @@ namespace BulletinClient.ViewModels
             Item = null;
             RaisePropertyChanged(() => Item);
             RaisePropertyChanged(() => CanPublicate);
+            TemplateCollectionView.SearchPattern = null;
+            TemplateCollectionView.Refresh();
         }
         internal void Save()
         {
@@ -120,6 +129,26 @@ namespace BulletinClient.ViewModels
             });
         }
 
+        private void AutoPublicate()
+        {
+            DCT.ExecuteAsync(d =>
+            {
+                if (!CanPublicate)
+                {
+                    MessageBox.Show("Объявление уже было отправлено на публикацию");
+                    return;
+                }
+                var template = TemplateCollectionView.GetAutoTemplate();
+                AddAvitoWithTemplate(template);
+                BulletinHelper.AutoPublicate(a =>
+                {
+                    Item.InPublicationProcess = true;
+                    MessageBox.Show("Объявление отправлено на публикацию");
+                    RaisePropertyChanged(() => CanPublicate);
+                }, Item);
+            });
+        }
+
         private void AddAvito()
         {
             SetSignature();
@@ -150,7 +179,7 @@ namespace BulletinClient.ViewModels
                 bulletin.Images = template.Images;
             }
 
-            TemplateHelper.MarkAsUsed(templateCollectionView.Refresh, template);
+            TemplateHelper.MarkAsUsed(() => templateCollectionView.Refresh(), template);
             RaisePropertyChanged(() => Item);
         }
 
@@ -158,6 +187,7 @@ namespace BulletinClient.ViewModels
         {
             var collection = new TemplateCollectionVM();
             collection.UseAsTemplateAction = AddAvitoWithTemplate;
+
             return collection;
         }
 

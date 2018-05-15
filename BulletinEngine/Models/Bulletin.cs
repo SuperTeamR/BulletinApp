@@ -241,6 +241,9 @@ namespace BulletinEngine.Entity.Data
                     case "Publicate":
                         BulletinHelper.BulletinPublicate(entities.FirstOrDefault());
                         break;
+                    case "AutoPublicate":
+                        BulletinHelper.BulletinAutoPublication(entities.FirstOrDefault());
+                        break;
                     default:
                         break;
                 }

@@ -50,6 +50,10 @@ namespace BulletinClient.HelperService
         {
             HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "Publicate", cache);
         }
+        public static void AutoPublicate(Action<IEnumerable<BulletinCache>> callback, BulletinCache cache)
+        {
+            HubServiceHelper.SendQueryCollection<BulletinCache>(callback, "AutoPublicate", cache);
+        }
         public static void Edit(Action<IEnumerable<BulletinCache>> callback, BulletinCache model)
         {
             HubServiceHelper.SendQueryCollection(callback, "Edit", model);
