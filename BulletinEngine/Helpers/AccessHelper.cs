@@ -45,6 +45,25 @@ namespace BulletinEngine.Helpers
             return result;
         }
 
+        public static Access GetFreeAccess(Guid clientId, Guid boardId, Guid bulletinId)
+        {
+            Access result = null;
+            BCT.Execute(c =>
+            {
+                var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == clientId && q.BoardId == boardId && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Created || q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
+                foreach (var access in accesses)
+                {
+                    var count = c.BulletinDb.BulletinInstances.Count(q => q.BoardId == boardId && q.AccessId == access.Id);
+                    if(count < 3)
+                    {
+                        result = access;
+                        access.SetLastPublication();
+                    }
+                }
+            });
+            return result;
+        }
+
         public static IEnumerable<Access> All()
         {
             var result = Enumerable.Empty<Access>();
