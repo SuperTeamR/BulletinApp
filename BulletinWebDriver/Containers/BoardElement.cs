@@ -217,7 +217,7 @@ namespace BulletinWebDriver.Containers
                         executeCommand<TaskAccessCheckCache>(task, ActivateBulletins, false);
                         break;
                     case "ActivateInstance":
-                        executeCommand<TaskInstanceActivationCache>(task, ActivateBulletin, false);
+                        executeCommand<TaskInstanceActivationCache>(task, ActivateBulletin, true);
                         break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
@@ -230,7 +230,7 @@ namespace BulletinWebDriver.Containers
                                 BulletinInstanceHelper.Save(instance);
                             }
 #if RELEASE
-                        });
+                        }, hasProxy: false);
 #endif
 #if DEBUG_REMOTE || DEBUG
                             

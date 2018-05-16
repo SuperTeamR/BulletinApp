@@ -16,7 +16,7 @@ namespace TaskManager
            ComputeStatisticsTasks -login StorePhone - запускает пересчет статистики в БД по логину юзера
            GetCalls -login StorePhone - получает звонки
            AutoPublicate -id 438B3DF4-2F5E-423C-938E-03C1E11AABBE - публикует существующий буллетин по Guid с активацией ночью
-           AutoPublicate -login StorePhone -title IPhone 32gb Black - публикует существующий буллетин по Guid с активацией ночью
+           AutoPublicate -login SuperKazah -brand IPhone -model 7+ 128gb - публикует буллетин на базе шаблона с активацией ночью
             ";
 
         static void Main(string[] args)
@@ -36,8 +36,12 @@ namespace TaskManager
             var login = FindParameter("login", parameters);
             //-id
             var id = FindParameter("id", parameters);
-            //-title
-            var title = FindParameter("title", parameters);
+            //-brand
+            var brand = FindParameter("brand", parameters);
+            //-model
+            var model = FindParameter("model", parameters);
+            //-modifier
+            var modifier = FindParameter("modifier", parameters);
 
             Console.Write(command + " " + parameters);
             BCT.Execute(d =>
@@ -59,9 +63,9 @@ namespace TaskManager
                         break;
                     case "AutoPublicate":
                         if(string.IsNullOrEmpty(id))
-                            TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(login, title);
+                            TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(login, brand, model, modifier);
                         else
-                            TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(new Guid(id));
+                            TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(new Guid(id), brand, model, modifier);
                         break;
                 }
             });

@@ -16,7 +16,7 @@ namespace TaskManager.Helpers
     {
         static string[] forbiddenWords = new[]
        {
-            "запчасти",
+            "запчасти", "магазин"
         };
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace TaskManager.Helpers
         /// </summary>
         /// <param name="userLogin"></param>
         /// <param name="title"></param>
-        public static void AutoPublicateBulletin(string userLogin, string title)
+        public static void AutoPublicateBulletin(string userLogin, string brand, string model, string modifier)
         {
             BCT.Execute(d =>
             {
@@ -38,10 +38,10 @@ namespace TaskManager.Helpers
                 var userId = user.Id;
 
                 //Находим подходящий шаблон
-                var template = ChooseTemplate(title);
-                if(template == null)
+                var template = ChooseTemplate(brand, model, modifier);
+                if (template == null)
                 {
-                    ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Нет подходящего шаблона для Title:{title}");
+                    ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Нет подходящего шаблона для {brand}");
                     return;
                 }
                 //Добавляем новый буллетин в БД
@@ -49,8 +49,8 @@ namespace TaskManager.Helpers
                 string cardCategory2 = "Телефоны";
                 string cardCategory3 = "iPhone";
                 var groupHash = StringToSha256String(cardCategory1, cardCategory2, cardCategory3, null, null);
-                var bulletin = AddAvitoByTemplate(userId, template, groupHash);
-                if(bulletin == null)
+                var bulletin = AddAvitoByTemplate(userId, template, brand, model, modifier, groupHash);
+                if (bulletin == null)
                 {
                     ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Ошибка при создании буллетина");
                     return;
@@ -64,32 +64,35 @@ namespace TaskManager.Helpers
         /// Накидываем шаблон на существующий буллетин, запускаем задачи на публикацию и активацию
         /// </summary>
         /// <param name="bulletinId"></param>
-        public static void AutoPublicateBulletin(Guid bulletinId)
+        public static void AutoPublicateBulletin(Guid bulletinId, string brand, string model, string modifier)
         {
             BCT.Execute(d =>
             {
                 var bulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
                 if (bulletin == null) return;
 
-                ChooseTemplate(bulletin);
+                ChooseTemplate(bulletin, brand, model, modifier);
                 CreatePublicationTasks(bulletin);
             });
         }
 
 
-        static Bulletin AddAvitoByTemplate(Guid userId, BulletinTemplate template, string groupHash)
+        static Bulletin AddAvitoByTemplate(Guid userId, BulletinTemplate template, string brand, string model, string modifier, string groupHash)
         {
             var result = default(Bulletin);
             BCT.Execute(d =>
             {
                 var group = BCT.Context.BulletinDb.Groups.FirstOrDefault(q => q.Hash == groupHash);
-                if(group == null)
+                if (group == null)
                 {
                     ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Группа с хэшем:{groupHash} не найдена");
                     return;
                 }
 
                 result = new Bulletin();
+                result.Brand = brand;
+                result.Model = model;
+                result.Modifier = modifier;
                 result.GroupId = group.Id;
                 result.Title = template.Title;
                 result.Description = template.Description;
@@ -103,20 +106,37 @@ namespace TaskManager.Helpers
             return result;
         }
 
-        static BulletinTemplate ChooseTemplate(string pattern)
+        static BulletinTemplate ChooseTemplate(string brand, string model, string modifier)
         {
             var result = default(BulletinTemplate);
             BCT.Execute(d =>
             {
-                var templates = d.TempDB.BulletinTemplate.Where(q => q.IsIndividualSeller && q.State != (int)DefaultState.Disable).ToArray();
+                var templates = d.TempDB.BulletinTemplate.Where(q => q.IsIndividualSeller && q.State != (int)DefaultState.Disable
+                && q.Category4 != "Запчасти").ToArray();
                 // Исключаем шаблоны с запрещенными словами
                 var temp = templates.Where(q => forbiddenWords.All(x => !q.Description.ToLower().Contains(x.ToLower()))
                 && forbiddenWords.All(x => !q.Title.Contains(x))).ToArray();
 
-                // Фильтруем шаблоны по словам в тайтле
-                var words = pattern.ToLower().Split(' ');
-                result = temp.Where(q => words.All(x => q.Title.ToLower().Contains(x))).FirstOrDefault();
-                if(result != null)
+                var modelParams = model.Replace("+", "").Split().ToList();
+                if (model.Contains("+"))
+                    modelParams.Add("+");
+
+                var modifierParams = Enumerable.Empty<string>(); 
+                if(modifier != null)
+                {
+                    modifierParams = modifier.Split();
+                }
+                //Фильтруем шаблоны по бренду, модели и модификаторам (цвет и т.д.)
+                var allMatches = temp.Where(q =>
+                q.Title.ToLower().Contains(brand.ToLower())
+                && modelParams.All(x =>
+                   (x == "+" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
+                || (x == "plus" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
+                || q.Title.ToLower().Split(' ', '/', ',').Any(qq => qq == x))
+                && modifierParams.All(x => q.Title.ToLower().Contains(x)));
+
+                result = allMatches.FirstOrDefault();
+                if (result != null)
                 {
                     result.StateEnum = DefaultState.Disable;
                     d.SaveChanges();
@@ -125,20 +145,28 @@ namespace TaskManager.Helpers
             return result;
         }
 
-        static void ChooseTemplate(Bulletin bulletin)
+        static void ChooseTemplate(Bulletin bulletin, string brand, string model, string modifier)
         {
             BCT.Execute(d =>
             {
-                var chosenTemplate = ChooseTemplate(bulletin.Title);
-                if(chosenTemplate != null)
+                var chosenBrand = brand ?? bulletin.Brand;
+                var chosenModel = model ?? bulletin.Model;
+                var chosenModifier = modifier ?? bulletin.Modifier;
+                var chosenTemplate = ChooseTemplate(chosenBrand, chosenModel, chosenModifier);
+                if (chosenTemplate == null)
                 {
-                    bulletin.Title = chosenTemplate.Title;
-                    bulletin.Description = chosenTemplate.Description;
-                    bulletin.Images = chosenTemplate.Images;
-                    bulletin.StateEnum = bulletin.StateEnum;
-
-                    d.SaveChanges();
+                    ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Нет подходящего шаблона для Title:{chosenBrand}");
+                    return;
                 }
+                bulletin.Title = chosenTemplate.Title;
+                bulletin.Description = chosenTemplate.Description;
+                bulletin.Images = chosenTemplate.Images;
+                if (brand != null) bulletin.Brand = brand;
+                if (model != null) bulletin.Model = model;
+                if (modifier != null) bulletin.Modifier = modifier;
+
+                bulletin.StateEnum = bulletin.StateEnum;
+                d.SaveChanges();
             });
         }
 
@@ -163,7 +191,7 @@ namespace TaskManager.Helpers
                             ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Не найден свободный доступ для буллетина {bulletin.Id}");
                             continue;
                         }
-                            
+
                         instance.AccessId = access.Id;
                         instance.StateEnum = instance.StateEnum;
                         d.SaveChanges();
