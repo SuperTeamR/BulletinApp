@@ -17,6 +17,8 @@ namespace TaskManager
            GetCalls -login StorePhone - получает звонки
            AutoPublicate -id 438B3DF4-2F5E-423C-938E-03C1E11AABBE - публикует существующий буллетин по Guid с активацией ночью
            AutoPublicate -login SuperKazah -brand IPhone -model 7+ 128gb - публикует буллетин на базе шаблона с активацией ночью
+           CreateBulletin -login MegaArthur -brand IPhone -model 7+ 128gb - создает новый буллетин
+           NextInstances -login MegaArthur - публикация новых инстанций для буллетинов
             ";
 
         static void Main(string[] args)
@@ -43,6 +45,9 @@ namespace TaskManager
             //-modifier
             var modifier = FindParameter("modifier", parameters);
 
+
+            var name = NameHelper.GetNewMail(new Guid("9CD371BA-1F68-479C-8CE6-4C19D1CD648F"));
+
             Console.Write(command + " " + parameters);
             BCT.Execute(d =>
             {
@@ -66,6 +71,13 @@ namespace TaskManager
                             TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(login, brand, model, modifier);
                         else
                             TaskManager.Helpers.BulletinHelper.AutoPublicateBulletin(new Guid(id), brand, model, modifier);
+                        break;
+                    case "NextInstances":
+                        if (!string.IsNullOrEmpty(login))
+                            AutoHelper.NextInstances(login);
+                        break;
+                    case "CreateBulletin":
+                        TaskManager.Helpers.BulletinHelper.CreateBulletin(login, brand, model, modifier);
                         break;
                 }
             });

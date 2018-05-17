@@ -294,9 +294,10 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 var idPattern = ".*?_(\\d+)$";
                 var id = RegexHelper.GetValue(idPattern, taskModel.Url);
-
+                ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                 //https://www.avito.ru/account/pay_fee?item_id=1717723420&vas_from=item_self_user
                 var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
+
                 driver.Navigate().GoToUrl(activationLink);
             }
             catch (Exception ex)

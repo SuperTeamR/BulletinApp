@@ -53,13 +53,21 @@ namespace BulletinEngine.Helpers
                 var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == clientId && q.BoardId == boardId && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Created || q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
                 foreach (var access in accesses)
                 {
+                    if (c.BulletinDb.BulletinInstances.Any(q => q.BoardId == boardId && q.BulletinId == bulletinId && q.AccessId == access.Id))
+                        continue;
                     var count = c.BulletinDb.BulletinInstances.Count(q => q.BoardId == boardId && q.AccessId == access.Id);
                     if(count < 3)
                     {
                         result = access;
                         access.SetLastPublication();
                     }
+                    else if(count >= 3 && !access.HasBlocked)
+                    {
+                        access.HasBlocked = true;
+                        access.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
+                    }
                 }
+                c.SaveChanges();
             });
             return result;
         }
@@ -73,7 +81,7 @@ namespace BulletinEngine.Helpers
             });
             return result;
         }
-        internal static Access AddAvito(Access access)
+        public static Access AddAvito(Access access)
         {
             BCT.Execute(c =>
             {

@@ -217,7 +217,7 @@ namespace BulletinWebDriver.Containers
                         executeCommand<TaskAccessCheckCache>(task, ActivateBulletins, false);
                         break;
                     case "ActivateInstance":
-                        executeCommand<TaskInstanceActivationCache>(task, ActivateBulletin, true);
+                        executeCommand<TaskInstanceActivationCache>(task, ActivateBulletin, false);
                         break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>

@@ -110,7 +110,7 @@ namespace BulletinHub.Helpers
             });
         }
 
-        internal static void CreateAccessRegistration(Access access)
+        public static void CreateAccessRegistration(Access access)
         {
             Create(TaskCommand.Registration, a =>
             {

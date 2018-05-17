@@ -16,7 +16,7 @@ namespace TaskManager.Helpers
     {
         static string[] forbiddenWords = new[]
        {
-            "запчасти", "магазин"
+            "запчасти", "магазин", "распродажа", "царапин", "сломан"
         };
 
         /// <summary>
@@ -26,6 +26,18 @@ namespace TaskManager.Helpers
         /// <param name="title"></param>
         public static void AutoPublicateBulletin(string userLogin, string brand, string model, string modifier)
         {
+            BCT.Execute(d =>
+            {
+                var bulletin = CreateBulletin(userLogin, brand, model, modifier);
+                if (bulletin == null) return;
+                //Запускаем задачи на публикацию и активацию
+                CreatePublicationTasks(bulletin);
+            });
+        }
+
+        public static Bulletin CreateBulletin(string userLogin, string brand, string model, string modifier)
+        {
+            var bulletin = default(Bulletin);
             BCT.Execute(d =>
             {
                 //Находим пользователя
@@ -49,22 +61,21 @@ namespace TaskManager.Helpers
                 string cardCategory2 = "Телефоны";
                 string cardCategory3 = "iPhone";
                 var groupHash = StringToSha256String(cardCategory1, cardCategory2, cardCategory3, null, null);
-                var bulletin = AddAvitoByTemplate(userId, template, brand, model, modifier, groupHash);
+                bulletin = AddAvitoByTemplate(userId, template, brand, model, modifier, groupHash);
                 if (bulletin == null)
                 {
                     ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Ошибка при создании буллетина");
                     return;
                 }
-                //Запускаем задачи на публикацию и активацию
-                CreatePublicationTasks(bulletin);
             });
+            return bulletin;
         }
 
         /// <summary>
         /// Накидываем шаблон на существующий буллетин, запускаем задачи на публикацию и активацию
         /// </summary>
         /// <param name="bulletinId"></param>
-        public static void AutoPublicateBulletin(Guid bulletinId, string brand, string model, string modifier)
+        public static void AutoPublicateBulletin(Guid bulletinId, string brand = null, string model = null, string modifier = null)
         {
             BCT.Execute(d =>
             {
@@ -117,7 +128,7 @@ namespace TaskManager.Helpers
                 var temp = templates.Where(q => forbiddenWords.All(x => !q.Description.ToLower().Contains(x.ToLower()))
                 && forbiddenWords.All(x => !q.Title.Contains(x))).ToArray();
 
-                var modelParams = model.Replace("+", "").Split().ToList();
+                var modelParams = model.ToLower().Replace("+", "").Split().ToList();
                 if (model.Contains("+"))
                     modelParams.Add("+");
 
@@ -182,7 +193,8 @@ namespace TaskManager.Helpers
                 {
                     bulletin.SetGenerationCheck();
                     var datePublish = DateTime.Now;
-
+                   
+                    var hasPublication = false;
                     foreach (var instance in instances)
                     {
                         var access = BulletinEngine.Helpers.AccessHelper.GetFreeAccess(bulletin.UserId, instance.BoardId, instance.BulletinId);
@@ -199,7 +211,15 @@ namespace TaskManager.Helpers
                         var now = DateTime.Now;
                         var activationDate = now.Date.AddDays(1);
                         activationDate.Date.Subtract(now);
+                        activationDate = activationDate.AddHours(3);
                         TaskHelper.CreateActivateInstance(bulletin.UserId, instance, activationDate);
+                        hasPublication = true;
+                    }
+                    if(hasPublication)
+                    {
+                        bulletin.DatePublication = datePublish;
+                        bulletin.StateEnum = bulletin.StateEnum;
+                        d.SaveChanges();
                     }
                 }
             });

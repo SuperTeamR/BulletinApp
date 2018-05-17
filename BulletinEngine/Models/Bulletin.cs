@@ -82,6 +82,9 @@ namespace BulletinEngine.Entity.Data
             arg1.GenerationCheckLast = arg2.GenerationCheckLast;
             arg1.GenerationCheckNext = arg2.GenerationCheckNext;
             arg1.DatePublication = arg2.DatePublication;
+            arg1.Brand = arg2.Brand;
+            arg1.Model = arg2.Model;
+            arg1.Modifier = arg2.Modifier;
 
             return arg1;
         }
