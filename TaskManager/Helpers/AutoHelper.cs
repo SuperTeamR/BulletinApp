@@ -111,6 +111,7 @@ namespace TaskManager.Helpers
                     };
                     newAccess.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
                     d.SaveChanges();
+                    newAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Id == newAccess.Id);
                     newAccess.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
                     d.SaveChanges();
                     TaskHelper.CreateAccessRegistration(newAccess);

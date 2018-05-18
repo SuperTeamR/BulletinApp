@@ -1,4 +1,5 @@
 ﻿using BulletinEngine.Core;
+using BulletinEngine.Entity.Data;
 using BulletinHub.Helpers;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,7 @@ namespace TaskManager
             //-modifier
             var modifier = FindParameter("modifier", parameters);
 
-
-            var name = NameHelper.GetNewMail(new Guid("9CD371BA-1F68-479C-8CE6-4C19D1CD648F"));
-
+            
             Console.Write(command + " " + parameters);
             BCT.Execute(d =>
             {
@@ -79,6 +78,9 @@ namespace TaskManager
                     case "CreateBulletin":
                         TaskManager.Helpers.BulletinHelper.CreateBulletin(login, brand, model, modifier);
                         break;
+                    case "AccessCreation":
+                        CreateAccess();
+                        break;
                 }
             });
         }
@@ -87,6 +89,23 @@ namespace TaskManager
         {
             var pattern = $".*?-{parameter} (.*?)($| -.*?)";
             return RegexHelper.GetValue(pattern, str);
+        }
+
+        static void CreateAccess()
+        {
+            BCT.Execute(d =>
+            {
+                var access = new Access();
+                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
+                d.SaveChanges();
+
+                var bulletin = new Bulletin();
+                bulletin.StateEnum = BulletinState.Created;
+                d.SaveChanges();
+                bulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletin.Id);
+                bulletin.StateEnum = BulletinState.Edited;
+                d.SaveChanges();
+            });
         }
     }
 }
