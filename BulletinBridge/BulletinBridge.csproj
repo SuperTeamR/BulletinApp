@@ -87,6 +87,7 @@
     <Compile Include="Models\FieldPackage.cs" />
     <Compile Include="Models\GroupPackage.cs" />
     <Compile Include="Models\GroupSignature.cs" />
+    <Compile Include="Models\MessageCache.cs" />
     <Compile Include="Models\OptionTag.cs" />
     <Compile Include="Models\TabState.cs" />
     <Compile Include="Models\TaskBulletinTemplateCollectorCache.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Models\TaskAccessCheckCache.cs" />
     <Compile Include="Models\TaskCache.cs" />
     <Compile Include="Models\TaskInstanceStatistics.cs" />
+    <Compile Include="Models\TaskMessageCollectorCache.cs" />
     <Compile Include="Models\TaskRegistrationCache.cs" />
     <Compile Include="Models\_TaskCache_old.cs" />
     <Compile Include="Models\UserSettingsCache.cs" />

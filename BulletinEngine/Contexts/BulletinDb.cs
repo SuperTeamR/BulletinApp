@@ -41,6 +41,7 @@ namespace BulletinEngine.Contexts
         public DbSet<BulletinField> BulletinFields { get; set; }
         public DbSet<UserSettings> UserSettings { get; set; }
         public DbSet<UserStatistics> UserStatistics { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public BulletinDb()
         {
@@ -65,6 +66,8 @@ namespace BulletinEngine.Contexts
             modelBuilder.Entity<BulletinHub.Entity.Data.Task>().Property(x => x.TargetDate).HasColumnType("datetime2");
             modelBuilder.Entity<UserSettings>().Property(x => x.LastTimeGeneration).HasColumnType("datetime2");
             modelBuilder.Entity<UserSettings>().Property(x => x.NextTaskGeneration).HasColumnType("datetime2");
+            modelBuilder.Entity<Message>().Property(x => x.PublicationDate).HasColumnType("datetime2");
+            modelBuilder.Entity<Access>().Property(x => x.LastMessage).HasColumnType("datetime2");
         }
         protected override void Dispose(bool disposing)
         {

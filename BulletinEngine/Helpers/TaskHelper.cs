@@ -71,6 +71,18 @@ namespace BulletinHub.Helpers
             });
         }
 
+        public static void CreateCollectMessages(Guid userId, Access access)
+        {
+            Create(TaskCommand.CollectMessages, a =>
+            {
+                //Обязательные
+                a.BoardId = access.BoardId;
+                a.UserId = userId;
+
+                a.AccessId = access.Id;
+            });
+        }
+
         public static void CreateAccessStatistics(Access access)
         {
             Create(TaskCommand.AccessStatistics, a =>

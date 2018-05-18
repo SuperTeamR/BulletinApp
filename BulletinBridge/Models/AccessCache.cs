@@ -30,6 +30,8 @@ namespace BulletinBridge.Data
         public int Calls { get; set; }
         [DataMember]
         public int Messages { get; set; }
+        [DataMember]
+        public DateTime? LastMessage { get; set; }
     }
 
     public enum AccessState

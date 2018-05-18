@@ -207,6 +207,19 @@ namespace BulletinWebDriver.Containers
                 ConsoleHelper.SendMessage($"Task {UID}.{task.Command} started");
                 switch (task.Command)
                 {
+                    case "CollectMessages":
+                        executeCommand<TaskMessageCollectorCache>(task, (a, b) =>
+                        {
+                            var messages = CollectMessages(a, b);
+                            if (messages.Any())
+                            {
+                                var access = AccessHelper.GetAccess(b.AccessId);
+                                access.LastMessage = messages.Max(q => q.PublicationDate);
+                                AccessHelper.Save(access);
+                                MessageServiceHelper.Save(messages);
+                            }
+                        }, false);
+                        break;
                     case "Registration":
                         registration(task);
                         break;
@@ -233,7 +246,7 @@ namespace BulletinWebDriver.Containers
                         }, hasProxy: false);
 #endif
 #if DEBUG_REMOTE || DEBUG
-                            
+
                         }, hasProxy: false);
 #endif
 
@@ -242,7 +255,7 @@ namespace BulletinWebDriver.Containers
                         executeCommand<TaskAccessCheckCache>(task, (a, b) =>
                         {
                             var stat = GetAccessStatistics(a, b);
-                            if(stat != null)
+                            if (stat != null)
                             {
                                 var access = AccessHelper.GetAccess(b.AccessId);
                                 access.Views = stat.Views;
@@ -315,8 +328,8 @@ namespace BulletinWebDriver.Containers
                 DriverTaskHelper.Complete(task);
             }
         }
-#endregion
-#region Default
+        #endregion
+        #region Default
         protected void ToHome(FirefoxDriver driver)
         {
             try
@@ -330,8 +343,8 @@ namespace BulletinWebDriver.Containers
             }
         }
         public abstract bool Auth(FirefoxDriver driver, string login, string password);
-#endregion
-#region Check access state 
+        #endregion
+        #region Check access state 
         private void checkAccess(TaskCache task)
         {
             DCT.Execute(c =>
@@ -361,8 +374,8 @@ namespace BulletinWebDriver.Containers
             });
         }
         public abstract bool CheckAccess(FirefoxDriver driver, TaskAccessCheckCache taskModel);
-#endregion
-#region Registration 
+        #endregion
+        #region Registration 
         private void registration(TaskCache task)
         {
             DCT.Execute(c =>
@@ -374,7 +387,7 @@ namespace BulletinWebDriver.Containers
                 {
                     access = AccessHelper.GetAccess(t.AccessId);
                     access = Registration(b, access);
-                }, false, withImage:true);
+                }, false, withImage: true);
                 AccessHelper.Save(access);
                 ConsoleHelper.SendMessage($"Registration from {access.Login} completed. Phone{access.Phone}");
             }, continueExceptionMethod: (c, ex) =>
@@ -390,8 +403,9 @@ namespace BulletinWebDriver.Containers
         /// <param name="taskModel"></param>
         /// <returns></returns>
         public abstract AccessCache Registration(FirefoxDriver driver, AccessCache access);
-#endregion
-#region -- Steps
+        #endregion
+        #region -- Steps
+        public abstract IEnumerable<MessageCache> CollectMessages(FirefoxDriver driver, TaskMessageCollectorCache taskModel);
         public abstract void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract void ActivateBulletin(FirefoxDriver driver, TaskInstanceActivationCache taskModel);
 
@@ -399,8 +413,8 @@ namespace BulletinWebDriver.Containers
         public abstract IEnumerable<BulletinTemplateCache> BulletinTemplateCollector(FirefoxDriver driver, TaskBulletinTemplateCollectorCache taskModel);
         public abstract AccessStatistics GetAccessStatistics(FirefoxDriver driver, TaskAccessCheckCache taskModel);
         public abstract int? GetInstanceStatistics(FirefoxDriver driver, TaskInstanceStatisticsCache taskModel);
-#endregion
-#region DriverTools
+        #endregion
+        #region DriverTools
         public IWebElement FindElementSafe(IWebDriver driver, By by)
         {
             try
@@ -541,6 +555,6 @@ namespace BulletinWebDriver.Containers
             });
             return result;
         }
-#endregion
+        #endregion
     }
 }

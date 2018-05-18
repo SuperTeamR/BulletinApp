@@ -59,6 +59,9 @@ namespace BulletinWebDriver
                         case "TestInstanceStatistics":
                             TestInstanceStatistics();
                             break;
+                        case "TestCollectMessages":
+                            TestCollectMessages();
+                            break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");
                             Console.ReadLine();
@@ -126,6 +129,29 @@ namespace BulletinWebDriver
                     access.Messages = stat.Messages;
                     access.Calls = stat.Calls;
                     AccessHelper.Save(access);
+                }
+            }, null, 100);
+        }
+
+        static void TestCollectMessages()
+        {
+            var avito = new Avito();
+            var task = new TaskMessageCollectorCache
+            {
+                AccessId = new Guid("BBC4B038-7309-4299-BB59-D8F0119EB7B5"),
+                Login = "slava.shleif@mail.ru",
+                Password = "OnlineHelp59"
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                var msgs = avito.CollectMessages(browser, task);
+                if (msgs.Any())
+                {
+                    var access = AccessHelper.GetAccess(task.AccessId);
+                    access.LastMessage = msgs.Max(q => q.PublicationDate);
+                    AccessHelper.Save(access);
+                    MessageServiceHelper.Save(msgs);
                 }
             }, null, 100);
         }

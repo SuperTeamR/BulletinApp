@@ -56,6 +56,7 @@ namespace HubService
             new DataServiceConfiguration<Access, AccessCache>(),
             new DataServiceConfiguration<Bulletin, BulletinPackage>(),
             new DataServiceConfiguration<Bulletin, BulletinCache>(),
+            new DataServiceConfiguration<Message, MessageCache>(),
             new DataServiceConfiguration<BulletinInstance, BulletinInstanceCache>(),
              new DataServiceConfiguration<BulletinTemplate, BulletinTemplateCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskCache_old>(),
@@ -65,6 +66,7 @@ namespace HubService
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskInstancePublicationCache>(),
             new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskBulletinTemplateCollectorCache>(),
               new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskRegistrationCache>(),
+              new DataServiceConfiguration<BulletinHub.Entity.Data.Task, TaskMessageCollectorCache>(),
         };
 
         protected override IEnumerable<ServiceRequestConfigBase> CustomConfigurations => Enumerable.Empty<ServiceRequestConfigBase>();

@@ -171,6 +171,10 @@
     <Compile Include="Migrations\201805161314465_BulletinDb_22.Designer.cs">
       <DependentUpon>201805161314465_BulletinDb_22.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805181146484_BulletinDb_23.cs" />
+    <Compile Include="Migrations\201805181146484_BulletinDb_23.Designer.cs">
+      <DependentUpon>201805181146484_BulletinDb_23.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Board.cs" />
@@ -184,6 +188,7 @@
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupedCategory.cs" />
     <Compile Include="Models\GroupedField.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\SelectOption.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\UserGroup.cs" />
@@ -331,6 +336,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805161314465_BulletinDb_22.resx">
       <DependentUpon>201805161314465_BulletinDb_22.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805181146484_BulletinDb_23.resx">
+      <DependentUpon>201805181146484_BulletinDb_23.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

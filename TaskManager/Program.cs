@@ -78,8 +78,9 @@ namespace TaskManager
                     case "CreateBulletin":
                         TaskManager.Helpers.BulletinHelper.CreateBulletin(login, brand, model, modifier);
                         break;
-                    case "AccessCreation":
-                        CreateAccess();
+                    case "CollectMessages":
+                        if (!string.IsNullOrEmpty(login))
+                            MessageHelper.RunCollectingMessages(login);
                         break;
                 }
             });
@@ -89,23 +90,6 @@ namespace TaskManager
         {
             var pattern = $".*?-{parameter} (.*?)($| -.*?)";
             return RegexHelper.GetValue(pattern, str);
-        }
-
-        static void CreateAccess()
-        {
-            BCT.Execute(d =>
-            {
-                var access = new Access();
-                access.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
-                d.SaveChanges();
-
-                var bulletin = new Bulletin();
-                bulletin.StateEnum = BulletinState.Created;
-                d.SaveChanges();
-                bulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletin.Id);
-                bulletin.StateEnum = BulletinState.Edited;
-                d.SaveChanges();
-            });
         }
     }
 }

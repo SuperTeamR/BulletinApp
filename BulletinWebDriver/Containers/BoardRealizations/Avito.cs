@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BulletinBridge.Data;
 using BulletinWebDriver.Tools;
+using BulletinWebDriver.ServiceHelper;
 
 namespace BulletinWebDriver.Containers.BoardRealizations
 {
@@ -64,6 +65,53 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         #endregion
         #region Realization
 
+        public override IEnumerable<MessageCache> CollectMessages(FirefoxDriver driver, TaskMessageCollectorCache taskModel)
+        {
+            var result = Enumerable.Empty<MessageCache>();
+            try
+            {
+                if (!Auth(driver, taskModel.Login, taskModel.Password))
+                    return result;
+
+                //Сбор сообщений
+                var messages = new List<MessageCache>();
+                driver.Navigate().GoToUrl($"http://www.avito.ru/profile/messenger");
+                WaitPage(driver, 10000, $"www.avito.ru/profile/messenger");
+                var pageSource = driver.PageSource;
+
+                var commonPattern = "class=\"messenger-channel([\\s\\S\\r\\n]*?messenger-channel-text-overflow[\\s\\S\\r\\n]*?)</div>";
+                var datetimePattern = "class=\"messenger-channel-datetime\"[\\s\\S\\r\\n]*?datetime=\"(.*?)\"";
+                var textPattern = "messenger-channel-text-overflow[\\s\\S\\r\\n]*?<span>(.*?)</span>";
+                var textPattern2 = "messenger-channel-text-overflow[\\s\\S\\r\\n]*?<!-- react-text: \\d+ -->(.*?)<!-";
+
+                var matches = RegexHelper.Execute(commonPattern, pageSource);
+                foreach(var match in matches)
+                {
+                    var messageSource = match.Value;
+
+                    var datetimeStr = RegexHelper.GetValue(datetimePattern, messageSource);
+                    var datetime = DateTime.Parse(datetimeStr);
+                    if (taskModel.LastMessage != null && datetime < taskModel.LastMessage) continue;
+
+                    var text = RegexHelper.GetValue(textPattern, messageSource);
+                    if (string.IsNullOrEmpty(text))
+                        text = RegexHelper.GetValue(textPattern2, messageSource);
+                    var cache = new MessageCache();
+                    cache.AccessId = taskModel.AccessId;
+                    cache.Text = text;
+                    cache.PublicationDate = datetime;
+
+                    messages.Add(cache);
+                }
+
+                result = messages;
+            }
+            catch (Exception ex)
+            {
+            }
+            return result;
+        }
+
         public override AccessStatistics GetAccessStatistics(FirefoxDriver driver, TaskAccessCheckCache taskModel)
         {
             AccessStatistics result = null;
@@ -87,8 +135,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                     var matches = RegexHelper.Execute(viewPattern, html).ToArray();
                     if (matches.Any())
-                        rawViews.AddRange(matches.Select(q => q.Groups[1].Value))
-    ;
+                        rawViews.AddRange(matches.Select(q => q.Groups[1].Value));
 
                     if (hasNextPage)
                     {
@@ -226,6 +273,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 //Получаю смску
                 Thread.Sleep(2000);
                 //Подтверждаю
+                AccessHelper.Enable(access.Id);
             });
             return access;
         }

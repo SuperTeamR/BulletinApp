@@ -103,6 +103,7 @@
     <Compile Include="ServiceHelper\AccessHelper.cs" />
     <Compile Include="ServiceHelper\BulletinInstanceHelper.cs" />
     <Compile Include="ServiceHelper\BulletinTemplateHelper.cs" />
+    <Compile Include="ServiceHelper\MessageServiceHelper.cs" />
     <Compile Include="Tools\AccessStatistics.cs" />
     <Compile Include="Tools\BoardIds.cs" />
     <Compile Include="Boostrapper.cs" />

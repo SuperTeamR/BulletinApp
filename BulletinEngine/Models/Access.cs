@@ -72,6 +72,11 @@ namespace BulletinEngine.Entity.Data
         /// </summary>
         public int Messages { get; set; }
 
+        /// <summary>
+        /// Дата последнего сообщения
+        /// </summary>
+        public DateTime? LastMessage { get; set; }
+
         #endregion
         #region Another methos
         public void SetGenerationCheck()
@@ -107,6 +112,7 @@ namespace BulletinEngine.Entity.Data
             arg1.GenerationCheckLast = arg2.GenerationCheckLast;
             arg1.GenerationCheckNext = arg2.GenerationCheckNext;
             arg1.LastPublication = arg2.LastPublication;
+            arg1.LastMessage = arg1.LastMessage;
             return arg1;
         }
         #endregion
@@ -126,6 +132,7 @@ namespace BulletinEngine.Entity.Data
             entity.Views = cache.Views;
             entity.Calls = cache.Calls;
             entity.Messages = cache.Messages;
+            entity.LastMessage = cache.LastMessage;
             return entity;
         }
         internal static AccessCache ToCache(Access obj)
@@ -145,6 +152,7 @@ namespace BulletinEngine.Entity.Data
             result.Views = obj.Views;
             result.Calls = obj.Calls;
             result.Messages = obj.Messages;
+            result.LastMessage = obj.LastMessage;
             return result;
         }
         #endregion
@@ -192,6 +200,7 @@ namespace BulletinEngine.Entity.Data
                     dbAccess.Views = access.Views;
                     dbAccess.Calls = access.Calls;
                     dbAccess.Messages = access.Messages;
+                    dbAccess.LastMessage = access.LastMessage;
                     d.SaveChanges();
                 }
                 result = new TDataModel[] { access as TDataModel };
