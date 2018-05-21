@@ -67,7 +67,7 @@ namespace TaskManager.Helpers
                 if (user == null) return;
                 var userId = user.Id;
                 // Создаем задачи на сбор статистики с аккаунтов
-                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.StateEnum != FessooFramework.Objects.Data.DefaultState.Disable).ToArray();
+                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.State != (int)FessooFramework.Objects.Data.DefaultState.Created).ToArray();
                 foreach (var access in accesses)
                     TaskHelper.CreateAccessStatistics(access);
 
@@ -96,6 +96,7 @@ namespace TaskManager.Helpers
                 var userId = user.Id;
 
                 var bulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).ToArray();
+                var bulletinIds = bulletins.Select(q => q.Id).ToArray();
                 foreach (var bulletin in bulletins)
                 {
                     var bulletinViews = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == bulletin.Id).Sum(q => q.Views);
@@ -104,10 +105,13 @@ namespace TaskManager.Helpers
                 }
                 d.SaveChanges();
 
-                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.State != (int)FessooFramework.Objects.Data.DefaultState.Disable).ToArray();
+                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.State != (int)FessooFramework.Objects.Data.DefaultState.Created).ToArray();
                 var totalViews = accesses.Sum(q => q.Views);
                 var totalMessages = accesses.Sum(q => q.Messages);
                 var totalCalls = accesses.Sum(q => q.Calls);
+                var totalBulletins = bulletins.Count();
+                var totalInstances = d.BulletinDb.BulletinInstances.Count(q => bulletinIds.Any(qq => qq == q.BulletinId));
+
 
                 var userStat = d.BulletinDb.UserStatistics.FirstOrDefault(q => q.UserId == userId);
                 if (userStat == null)
@@ -118,11 +122,46 @@ namespace TaskManager.Helpers
                 userStat.TotalViews = totalViews;
                 userStat.TotalMessages = totalMessages;
                 userStat.TotalCalls = totalCalls;
+                userStat.TotalProducts = totalBulletins;
+                userStat.TotalInstances = totalInstances;
                 userStat.StateEnum = FessooFramework.Objects.Data.DefaultState.Enable;
 
                 d.SaveChanges();
             });
             return result;
         }
+
+
+        public struct ProductCount
+        {
+            public int BulletinCount { get; set; }
+            public int InstanceCount { get; set; }
+        }
+
+        public static ProductCount GetProductStatisticsByPeriod(Guid userId, DateTime from, DateTime until)
+        {
+            var result = default(ProductCount);
+            BCT.Execute(d =>
+            {
+                var bulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).ToArray();
+                var bulletinIds = bulletins.Select(q => q.Id);
+
+                var instances = d.BulletinDb.BulletinInstances.Where(q => q.Url != null
+                    && q.ActivationDate != null
+                    && bulletinIds.Any(qq => qq == q.BulletinId)
+                    && q.ActivationDate >= from && q.ActivationDate <= until);
+
+                var bulletinCount = instances.GroupBy(q => q.BulletinId).Count();
+                var instanceCount = instances.Count();
+
+                result = new ProductCount
+                {
+                    BulletinCount = bulletinCount,
+                    InstanceCount = instanceCount
+                };
+            });
+            return result;
+        }
+
     }
 }

@@ -71,6 +71,8 @@
   <ItemGroup>
     <Compile Include="Helpers\AutoHelper.cs" />
     <Compile Include="Helpers\BulletinHelper.cs" />
+    <Compile Include="Helpers\EmailHelper.cs" />
+    <Compile Include="Helpers\EmailTemplateHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
     <Compile Include="Helpers\NameHelper.cs" />
     <Compile Include="Helpers\StatisticsHelper.cs" />

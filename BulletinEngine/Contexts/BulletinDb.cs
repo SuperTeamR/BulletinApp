@@ -68,6 +68,7 @@ namespace BulletinEngine.Contexts
             modelBuilder.Entity<UserSettings>().Property(x => x.NextTaskGeneration).HasColumnType("datetime2");
             modelBuilder.Entity<Message>().Property(x => x.PublicationDate).HasColumnType("datetime2");
             modelBuilder.Entity<Access>().Property(x => x.LastMessage).HasColumnType("datetime2");
+            modelBuilder.Entity<BulletinInstance>().Property(x => x.ActivationDate).HasColumnType("datetime2");
         }
         protected override void Dispose(bool disposing)
         {

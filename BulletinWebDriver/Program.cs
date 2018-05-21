@@ -138,8 +138,8 @@ namespace BulletinWebDriver
             var avito = new Avito();
             var task = new TaskMessageCollectorCache
             {
-                AccessId = new Guid("BBC4B038-7309-4299-BB59-D8F0119EB7B5"),
-                Login = "slava.shleif@mail.ru",
+                AccessId = new Guid("7D4D06F2-8C3A-4E7B-82A2-A815427BB7A2"),
+                Login = "sasha.shleif@mail.ru",
                 Password = "OnlineHelp59"
             };
             FirefoxHelper.ExecuteWithVisual(browser =>

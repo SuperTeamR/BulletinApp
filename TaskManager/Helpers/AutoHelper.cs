@@ -71,7 +71,7 @@ namespace TaskManager.Helpers
                 foreach (var board in boards)
                 {
                     var needPlaces = defaultCapacity;
-                    var boardAccesses = d.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == userId && q.BoardId == board.Id && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Created || q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
+                    var boardAccesses = d.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == userId && q.BoardId == board.Id && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
 
                     foreach (var access in boardAccesses)
                     {
@@ -83,7 +83,7 @@ namespace TaskManager.Helpers
                         else if (needPlaces >= occupiedPlaces && !access.HasBlocked)
                         {
                             access.HasBlocked = true;
-                            access.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
+                            access.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
                         }
                     }
                     d.SaveChanges();
@@ -110,9 +110,6 @@ namespace TaskManager.Helpers
                         UserId = userId,
                     };
                     newAccess.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
-                    d.SaveChanges();
-                    newAccess = d.BulletinDb.Accesses.FirstOrDefault(q => q.Id == newAccess.Id);
-                    newAccess.StateEnum = FessooFramework.Objects.Data.DefaultState.Disable;
                     d.SaveChanges();
                     TaskHelper.CreateAccessRegistration(newAccess);
                 }

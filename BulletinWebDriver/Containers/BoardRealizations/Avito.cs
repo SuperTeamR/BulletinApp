@@ -96,6 +96,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     var text = RegexHelper.GetValue(textPattern, messageSource);
                     if (string.IsNullOrEmpty(text))
                         text = RegexHelper.GetValue(textPattern2, messageSource);
+                    if (string.IsNullOrEmpty(text))
+                        text = messageSource;
                     var cache = new MessageCache();
                     cache.AccessId = taskModel.AccessId;
                     cache.Text = text;

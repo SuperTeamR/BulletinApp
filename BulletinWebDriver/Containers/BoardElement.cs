@@ -218,7 +218,7 @@ namespace BulletinWebDriver.Containers
                                 AccessHelper.Save(access);
                                 MessageServiceHelper.Save(messages);
                             }
-                        }, false);
+                        }, true);
                         break;
                     case "Registration":
                         registration(task);
@@ -230,7 +230,13 @@ namespace BulletinWebDriver.Containers
                         executeCommand<TaskAccessCheckCache>(task, ActivateBulletins, false);
                         break;
                     case "ActivateInstance":
-                        executeCommand<TaskInstanceActivationCache>(task, ActivateBulletin, false);
+                        executeCommand<TaskInstanceActivationCache>(task, (a, b) => 
+                        {
+                            ActivateBulletin(a, b);
+                            var instance = BulletinInstanceHelper.Get(b.InstanceId);
+                            instance.ActivationDate = DateTime.Now;
+                            BulletinInstanceHelper.Save(instance);
+                        }, false);
                         break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>

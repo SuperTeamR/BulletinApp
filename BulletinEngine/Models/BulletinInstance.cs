@@ -54,6 +54,11 @@ namespace BulletinEngine.Entity.Data
         /// Количество просмотров
         /// </summary>
         public int Views { get; set; }
+
+        /// <summary>
+        /// Дата активации
+        /// </summary>
+        public DateTime? ActivationDate { get; set; }
         #endregion
 
         #region ALM -- Definition
@@ -150,6 +155,7 @@ namespace BulletinEngine.Entity.Data
         {
             entity.Url = obj.Url;
             entity.Views = obj.Views;
+            entity.ActivationDate = obj.ActivationDate;
             return entity;
         }
         #endregion

@@ -28,6 +28,7 @@ namespace BulletinHub.Contexts
         public DbSet<BulletinHub.Entity.Data.Task> Tasks { get; set; }
         public DbSet<BulletinTemplate> BulletinTemplate { get; set; }
         public DbSet<Call> Calls { get; set; }
+        public DbSet<Email> Emails { get; set; }
 
         public TempDB()
         {

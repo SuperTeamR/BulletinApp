@@ -24,6 +24,16 @@ namespace BulletinHub.Models
         /// </summary>
         public int TotalMessages { get; set; }
 
+        /// <summary>
+        /// Общее количество продуктов
+        /// </summary>
+        public int TotalProducts { get; set; }
+
+        /// <summary>
+        /// Общее количество инстанций
+        /// </summary>
+        public int TotalInstances { get; set; }
+
         #endregion
 
         #region ALM -- Definition

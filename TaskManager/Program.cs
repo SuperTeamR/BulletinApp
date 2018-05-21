@@ -82,6 +82,11 @@ namespace TaskManager
                         if (!string.IsNullOrEmpty(login))
                             MessageHelper.RunCollectingMessages(login);
                         break;
+                    case "SendStatistics":
+                        if (!string.IsNullOrEmpty(login))
+                            EmailHelper.SendStatistics(login);
+                        break;
+                    
                 }
             });
         }

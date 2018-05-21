@@ -175,6 +175,18 @@
     <Compile Include="Migrations\201805181146484_BulletinDb_23.Designer.cs">
       <DependentUpon>201805181146484_BulletinDb_23.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805211121579_BulletinDb_24.cs" />
+    <Compile Include="Migrations\201805211121579_BulletinDb_24.Designer.cs">
+      <DependentUpon>201805211121579_BulletinDb_24.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805211123576_TempDb_7.cs" />
+    <Compile Include="Migrations\201805211123576_TempDb_7.Designer.cs">
+      <DependentUpon>201805211123576_TempDb_7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805211433595_BulletinDb_25.cs" />
+    <Compile Include="Migrations\201805211433595_BulletinDb_25.Designer.cs">
+      <DependentUpon>201805211433595_BulletinDb_25.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Access.cs" />
     <Compile Include="Models\Application.cs" />
     <Compile Include="Models\Board.cs" />
@@ -184,6 +196,7 @@
     <Compile Include="Models\BulletinTemplate.cs" />
     <Compile Include="Models\Call.cs" />
     <Compile Include="Models\CategoryTemplate.cs" />
+    <Compile Include="Models\Email.cs" />
     <Compile Include="Models\FieldTemplate.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\GroupedCategory.cs" />
@@ -339,6 +352,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805181146484_BulletinDb_23.resx">
       <DependentUpon>201805181146484_BulletinDb_23.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805211121579_BulletinDb_24.resx">
+      <DependentUpon>201805211121579_BulletinDb_24.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805211123576_TempDb_7.resx">
+      <DependentUpon>201805211123576_TempDb_7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805211433595_BulletinDb_25.resx">
+      <DependentUpon>201805211433595_BulletinDb_25.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

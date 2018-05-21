@@ -1,4 +1,5 @@
 ﻿using FessooFramework.Objects.Data;
+using System;
 
 namespace BulletinBridge.Data
 {
@@ -6,6 +7,7 @@ namespace BulletinBridge.Data
     {
         public string Url { get; set; }
         public int Views { get; set; }
+        public DateTime? ActivationDate { get; set; }
 
         public BulletinInstanceCache()
         {

@@ -305,7 +305,11 @@ namespace BulletinHub.Entity.Data
             }
             var instance = BCT.Context.BulletinDb.BulletinInstances.Find(arg2.InstanceId.Value);
             if (instance != null)
+            {
                 arg1.Url = instance.Url;
+                arg1.InstanceId = instance.Id;
+            }
+                
             return arg1;
         }
         #endregion
