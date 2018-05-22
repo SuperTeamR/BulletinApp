@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AccessTaskHelper.cs" />
     <Compile Include="Helpers\AutoHelper.cs" />
     <Compile Include="Helpers\BulletinHelper.cs" />
     <Compile Include="Helpers\EmailHelper.cs" />

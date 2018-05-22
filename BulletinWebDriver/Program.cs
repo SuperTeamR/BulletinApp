@@ -62,6 +62,9 @@ namespace BulletinWebDriver
                         case "TestCollectMessages":
                             TestCollectMessages();
                             break;
+                        case "TestForwardNumber":
+                            TestForwardNumber();
+                            break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");
                             Console.ReadLine();
@@ -175,6 +178,25 @@ namespace BulletinWebDriver
                     BulletinInstanceHelper.Save(instance);
                 }
             }, null, 100);
+        }
+
+
+        static void TestForwardNumber()
+        {
+            var avito = new Avito();
+            var accessCache = new AccessCache
+            {
+                IsForwarding = true,
+                Login = "Valera.Shleif.Classic@mail.ru",
+                Password = "OnlineHelp59",
+            };
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                avito.Registration(browser, accessCache);
+            }, null, 100, true);
+            //const string forwardNumber = "9264200230";
+            //OnlineSimHelper.GetForward(forwardNumber);
         }
 
     }

@@ -18,6 +18,7 @@ namespace BulletinHub.Entity.Data
         public int TaskGenerationPeriod { get; set; }
         public DateTime? LastTimeGeneration { get; set; }
         public DateTime? NextTaskGeneration { get; set; }
+        public bool EnableForwarding { get; set; }
         #endregion
 
         #region ALM -- Definition
@@ -34,6 +35,7 @@ namespace BulletinHub.Entity.Data
             oldObj.LastTimeGeneration = newObj.LastTimeGeneration;
             oldObj.NextTaskGeneration = newObj.NextTaskGeneration;
             oldObj.UserId = newObj.UserId;
+            oldObj.EnableForwarding = newObj.EnableForwarding;
 
             return oldObj;
         }

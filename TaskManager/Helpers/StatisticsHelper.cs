@@ -149,7 +149,7 @@ namespace TaskManager.Helpers
                 var instances = d.BulletinDb.BulletinInstances.Where(q => q.Url != null
                     && q.ActivationDate != null
                     && bulletinIds.Any(qq => qq == q.BulletinId)
-                    && q.ActivationDate >= from && q.ActivationDate <= until);
+                    && q.ActivationDate >= from && q.ActivationDate <= until).ToArray();
 
                 var bulletinCount = instances.GroupBy(q => q.BulletinId).Count();
                 var instanceCount = instances.Count();

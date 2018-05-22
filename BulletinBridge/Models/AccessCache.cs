@@ -32,6 +32,8 @@ namespace BulletinBridge.Data
         public int Messages { get; set; }
         [DataMember]
         public DateTime? LastMessage { get; set; }
+        [DataMember]
+        public bool IsForwarding { get; set; }
     }
 
     public enum AccessState

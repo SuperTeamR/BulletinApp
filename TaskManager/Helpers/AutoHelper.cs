@@ -96,23 +96,12 @@ namespace TaskManager.Helpers
         {
             BCT.Execute(d =>
             {
+                var forwardingEnabled = false;
+                var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
+                if (userSettings != null && userSettings.EnableForwarding)
+                    forwardingEnabled = true;
                 for (var i = 0; i < needAccounts; i++)
-                {
-                    var newLogin = NameHelper.GetNewMail(userId);
-                    ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Регистрация аккаунта {newLogin}");
-                    var password = "OnlineHelp59";
-                    var board = d.BulletinDb.Boards.FirstOrDefault(q => q.Name == "Avito");
-                    var newAccess = new Access
-                    {
-                        BoardId = board.Id,
-                        Login = newLogin,
-                        Password = password,
-                        UserId = userId,
-                    };
-                    newAccess.StateEnum = FessooFramework.Objects.Data.DefaultState.Created;
-                    d.SaveChanges();
-                    TaskHelper.CreateAccessRegistration(newAccess);
-                }
+                    AccessTaskHelper.CreateAccess(userId, forwardingEnabled);
             });
         }
 

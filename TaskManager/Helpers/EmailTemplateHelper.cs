@@ -76,9 +76,9 @@ namespace TaskManager.Helpers
                 var title = title_UserStatistics
                     .Replace("{Timeperiod}", now.Date.ToShortDateString());
 
-                var productYesterday = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-1), now.Date);
-                var productWeek = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-7), now.Date);
-                var productMonth = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-30), now.Date);
+                var productYesterday = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-1), now);
+                var productWeek = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-7), now);
+                var productMonth = StatisticsHelper.GetProductStatisticsByPeriod(user.Id, now.Date.AddDays(-30), now);
 
                 var table = table_UserStatistics
                     .Replace("{ProductDay}", productYesterday.BulletinCount.ToString())

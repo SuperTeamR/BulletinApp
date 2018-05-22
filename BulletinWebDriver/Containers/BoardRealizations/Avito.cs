@@ -198,13 +198,20 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
         }
 
+        const string forwardNumber = "9264200230";
+
         public override AccessCache Registration(FirefoxDriver driver, AccessCache access)
         {
             var result = access;
             DCT.Execute(c =>
             {
-                var getNum = OnlineSimHelper.GetNum(ServiceType.avito);
-                var getState = OnlineSimHelper.GetState(getNum.tzid);
+                var tzid = -1;
+                if (access.IsForwarding)
+                    tzid = OnlineSimHelper.GetForward(forwardNumber).tzid;
+                else
+                    tzid = OnlineSimHelper.GetNum(ServiceType.avito).tzid;
+
+                var getState = OnlineSimHelper.GetState(tzid);
                 access.Phone = getState.number;
                 access.PhoneTZID = getState.tzid;
 
@@ -259,7 +266,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 for (int i = 0; i < 30; i++)
                 {
                     Thread.Sleep(3000);
-                    var state = getState = OnlineSimHelper.GetState(getNum.tzid);
+                    var state = getState = OnlineSimHelper.GetState(tzid);
                     ConsoleHelper.SendMessage($"Registration => Wait SMS, state = {state.response}");
                     if (state.responseEnum == getStateState.TZ_NUM_ANSWER)
                     {

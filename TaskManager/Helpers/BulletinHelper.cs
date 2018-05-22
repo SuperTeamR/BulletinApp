@@ -24,18 +24,18 @@ namespace TaskManager.Helpers
         /// </summary>
         /// <param name="userLogin"></param>
         /// <param name="title"></param>
-        public static void AutoPublicateBulletin(string userLogin, string brand, string model, string modifier)
+        public static void AutoPublicateBulletin(string userLogin, string brand, string model, string modifier, string price)
         {
             BCT.Execute(d =>
             {
-                var bulletin = CreateBulletin(userLogin, brand, model, modifier);
+                var bulletin = CreateBulletin(userLogin, brand, model, modifier, price);
                 if (bulletin == null) return;
                 //Запускаем задачи на публикацию и активацию
                 CreatePublicationTasks(bulletin);
             });
         }
 
-        public static Bulletin CreateBulletin(string userLogin, string brand, string model, string modifier)
+        public static Bulletin CreateBulletin(string userLogin, string brand, string model, string modifier, string price)
         {
             var bulletin = default(Bulletin);
             BCT.Execute(d =>
@@ -61,7 +61,7 @@ namespace TaskManager.Helpers
                 string cardCategory2 = "Телефоны";
                 string cardCategory3 = "iPhone";
                 var groupHash = StringToSha256String(cardCategory1, cardCategory2, cardCategory3, null, null);
-                bulletin = AddAvitoByTemplate(userId, template, brand, model, modifier, groupHash);
+                bulletin = AddAvitoByTemplate(userId, template, brand, model, modifier, price, groupHash);
                 if (bulletin == null)
                 {
                     ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Ошибка при создании буллетина");
@@ -75,7 +75,7 @@ namespace TaskManager.Helpers
         /// Накидываем шаблон на существующий буллетин, запускаем задачи на публикацию и активацию
         /// </summary>
         /// <param name="bulletinId"></param>
-        public static void AutoPublicateBulletin(Guid bulletinId, string brand = null, string model = null, string modifier = null)
+        public static void AutoPublicateBulletin(Guid bulletinId, string brand = null, string model = null, string modifier = null, string price = null)
         {
             BCT.Execute(d =>
             {
@@ -88,7 +88,7 @@ namespace TaskManager.Helpers
         }
 
 
-        static Bulletin AddAvitoByTemplate(Guid userId, BulletinTemplate template, string brand, string model, string modifier, string groupHash)
+        static Bulletin AddAvitoByTemplate(Guid userId, BulletinTemplate template, string brand, string model, string modifier, string price, string groupHash)
         {
             var result = default(Bulletin);
             BCT.Execute(d =>
@@ -107,7 +107,7 @@ namespace TaskManager.Helpers
                 result.GroupId = group.Id;
                 result.Title = template.Title;
                 result.Description = template.Description;
-                result.Price = template.Price.ToString();
+                result.Price = price;
                 result.Images = template.Images;
                 result.UserId = userId;
                 result.StateEnum = BulletinState.Created;
@@ -116,6 +116,24 @@ namespace TaskManager.Helpers
             });
             return result;
         }
+
+
+        static List<KeyValuePair<string, string>> aliases = new List<KeyValuePair<string, string>>
+        {
+           new KeyValuePair<string, string>("белый","white"),
+           new KeyValuePair<string, string>( "white","белый"),
+           new KeyValuePair<string, string>("серебристый","silver"),
+           new KeyValuePair<string, string>( "silver","серебристый" ),
+           new KeyValuePair<string, string>("золотой","gold"),
+           new KeyValuePair<string, string>("gold","золотой"),
+           new KeyValuePair<string, string>("черный","black"),
+           new KeyValuePair<string, string>("серый","gray" ),
+           new KeyValuePair<string, string>("серый","grey"),
+           new KeyValuePair<string, string>("gray","серый"),
+           new KeyValuePair<string, string>("grey","серый"),
+           new KeyValuePair<string, string>("розовый","rose"),
+           new KeyValuePair<string, string>("rose","розовый"),
+        };
 
         static BulletinTemplate ChooseTemplate(string brand, string model, string modifier)
         {
@@ -132,11 +150,17 @@ namespace TaskManager.Helpers
                 if (model.Contains("+"))
                     modelParams.Add("+");
 
-                var modifierParams = Enumerable.Empty<string>(); 
+                var modifierParams = Enumerable.Empty<string>().ToList(); 
                 if(modifier != null)
                 {
-                    modifierParams = modifier.Split();
+                    modifierParams = modifier.Split('/').ToList();
                 }
+                var aliasesForModifier = aliases.Where(q => modifierParams.Any(qq => qq == q.Key)).ToArray();
+                if(aliasesForModifier.Any())
+                {
+                    modifierParams.AddRange(aliasesForModifier.Select(q => q.Value));
+                }
+
                 //Фильтруем шаблоны по бренду, модели и модификаторам (цвет и т.д.)
                 var allMatches = temp.Where(q =>
                 q.Title.ToLower().Contains(brand.ToLower())
@@ -144,7 +168,7 @@ namespace TaskManager.Helpers
                    (x == "+" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
                 || (x == "plus" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
                 || q.Title.ToLower().Split(' ', '/', ',').Any(qq => qq == x))
-                && modifierParams.All(x => q.Title.ToLower().Contains(x)));
+                && modifierParams.Any(x => q.Title.ToLower().Contains(x)));
 
                 result = allMatches.FirstOrDefault();
                 if (result != null)
@@ -163,6 +187,7 @@ namespace TaskManager.Helpers
                 var chosenBrand = brand ?? bulletin.Brand;
                 var chosenModel = model ?? bulletin.Model;
                 var chosenModifier = modifier ?? bulletin.Modifier;
+                var chosenPrice = bulletin.Price;
                 var chosenTemplate = ChooseTemplate(chosenBrand, chosenModel, chosenModifier);
                 if (chosenTemplate == null)
                 {

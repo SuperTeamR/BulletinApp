@@ -35,6 +35,13 @@ namespace BulletinWebDriver.Helpers
             DCT.Execute(c => result = GetRequest<getNumResponse>($"https://onlinesim.ru/api/getNum.php?apikey=f02eb880d7930c4a6eec0b39bb893e36&service={service.ToString()}"));
             return result;
         }
+        internal static getForwardResponse GetForward(string number)
+        {
+            getForwardResponse result = null;
+            DCT.Execute(c => result = GetRequest<getForwardResponse>($"https://onlinesim.ru/api/getForward.php?apikey=f02eb880d7930c4a6eec0b39bb893e36&forward_numbers[]={number}&service=unlimited_sms"));
+            return result;
+        }
+
         internal static getStatResponse GetState(int tzid)
         {
             getStatResponse[] result = null;
@@ -96,6 +103,36 @@ namespace BulletinWebDriver.Helpers
         gmail,
         yandex,
     }
+
+    #region getForward
+    [DataContract]
+    public class getForwardResponse
+    {
+        [DataMember]
+        public string response { get; set; }
+        public getForwardState responseEnum { get => EnumHelper.GetValue<getForwardState>(response); }
+        [DataMember]
+        public int tzid;
+
+    }
+    public enum getForwardState
+    {
+        None = 0,
+        Successfull = 1,
+        ERROR_NUMBERS_PARAMS = 2,
+        EXCEEDED_CONCURRENT_OPERATIONS = 3,
+        NO_NUMBER = 3,
+        TIME_INTERVAL_ERROR = 4,
+        INTERVAL_CONCURRENT_REQUESTS_ERROR = 5,
+        TRY_AGAIN_LATER = 6,
+        NO_FORWARD_FOR_DEFFER = 7,
+        NO_NUMBER_FOR_FORWARD = 8,
+        DUPLICATE_OPERATION = 9,
+    }
+
+    #endregion
+
+
     #region getNum
     [DataContract]
     public class getNumResponse
@@ -144,7 +181,7 @@ namespace BulletinWebDriver.Helpers
         [DataMember]
         public string forward_status { get; set; }
         [DataMember]
-        public string forward_number { get; set; }
+        public string[] forward_number { get; set; }
         [DataMember]
         public string country { get; set; }
     }
