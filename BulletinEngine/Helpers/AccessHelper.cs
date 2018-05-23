@@ -56,8 +56,10 @@ namespace BulletinEngine.Helpers
                 {
                     if (c.BulletinDb.BulletinInstances.Any(q => q.BoardId == boardId && q.BulletinId == bulletinId && q.AccessId == access.Id && q.Url != null))
                         continue;
-                    var otherBulletinIds = c.BulletinDb.BulletinInstances.Where(q => q.BoardId == boardId && q.AccessId == access.Id && q.Url != null).ToArray();
-                    if (c.BulletinDb.Bulletins.Any(q => q.Brand == bulletin.Brand && q.Model == bulletin.Model && q.Modifier == bulletin.Modifier))
+
+                    var otherBulletinIds = c.BulletinDb.BulletinInstances.Where(q => q.BoardId == boardId && q.AccessId == access.Id && q.Url != null).Select(q => q.BulletinId).ToArray();
+                    var otherBulletins = c.BulletinDb.Bulletins.Where(q => otherBulletinIds.Any(qq => qq == q.Id));
+                    if (otherBulletins.Any(q => q.Brand == bulletin.Brand && q.Model == bulletin.Model && q.Modifier == bulletin.Modifier))
                         continue;
 
                     var count = c.BulletinDb.BulletinInstances.Count(q => q.BoardId == boardId && q.AccessId == access.Id);
