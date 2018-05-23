@@ -397,13 +397,13 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     var category5 = false;
 
                     //SetCategory first
-                    JsClick(driver, By.CssSelector($"input[title='Животные']"));
+                    FindTagByTextContains(driver, "button", "Животные", e => JsClick(driver, e));
                     ConsoleHelper.SendMessage($"InstancePublication => Set default category 'Животные'");
                     WaitPage(driver, 10000, taskModel.Category1);
                     //SetCategory
                     if (!string.IsNullOrWhiteSpace(taskModel.Category1))
                     {
-                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category1}']"));
+                        FindTagByTextContains(driver, "button", taskModel.Category1, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category2))
                         {
                             ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
@@ -414,7 +414,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         category1 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category2))
                     {
-                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category2}']"));
+                        FindTagByTextContains(driver, "button", taskModel.Category2, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category3))
                         {
                             ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
@@ -425,7 +425,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         category2 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category3))
                     {
-                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category3}']"));
+                        FindTagByTextContains(driver, "button", taskModel.Category3, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category4))
                         {
                             ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
@@ -436,7 +436,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         category3 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category4))
                     {
-                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category4}']"));
+                        FindTagByTextContains(driver, "button", taskModel.Category4, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category5))
                         {
                             ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
@@ -447,7 +447,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         category4 = true;
                     if (!string.IsNullOrWhiteSpace(taskModel.Category5))
                     {
-                        JsClick(driver, By.CssSelector($"input[title='{taskModel.Category5}']"));
+                        FindTagByTextContains(driver, "button", taskModel.Category5, e => JsClick(driver, e));
                         ConsoleHelper.SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
                         category5 = true;
                     }

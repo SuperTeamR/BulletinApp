@@ -29,9 +29,10 @@ namespace TaskManager
 
             Console.Write("Command> ");
 #if DEBUG
-            var commands = CreateTestCommands();
-            foreach(var command in commands)
-                HandleArgs(command);
+            //var commands = CreateTestCommands();
+            //foreach(var command in commands)
+            //    HandleArgs(command);
+            HandleArgs(args);
 
 #else
          HandleArgs(args);

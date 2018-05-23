@@ -51,10 +51,15 @@ namespace BulletinEngine.Helpers
             BCT.Execute(c =>
             {
                 var accesses = c.BulletinDb.Accesses.Where(q => !q.HasBlocked).Where(q => q.UserId == clientId && q.BoardId == boardId && (q.State == (int)FessooFramework.Objects.Data.DefaultState.Enable)).OrderBy(q => q.LastPublication).ToArray();
+                var bulletin = c.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
                 foreach (var access in accesses)
                 {
                     if (c.BulletinDb.BulletinInstances.Any(q => q.BoardId == boardId && q.BulletinId == bulletinId && q.AccessId == access.Id && q.Url != null))
                         continue;
+                    var otherBulletinIds = c.BulletinDb.BulletinInstances.Where(q => q.BoardId == boardId && q.AccessId == access.Id && q.Url != null).ToArray();
+                    if (c.BulletinDb.Bulletins.Any(q => q.Brand == bulletin.Brand && q.Model == bulletin.Model && q.Modifier == bulletin.Modifier))
+                        continue;
+
                     var count = c.BulletinDb.BulletinInstances.Count(q => q.BoardId == boardId && q.AccessId == access.Id);
                     if(count < 3)
                     {
