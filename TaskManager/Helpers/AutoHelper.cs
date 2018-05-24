@@ -100,6 +100,12 @@ namespace TaskManager.Helpers
                 var userSettings = d.BulletinDb.UserSettings.FirstOrDefault(q => q.UserId == userId);
                 if (userSettings != null && userSettings.EnableForwarding)
                     forwardingEnabled = true;
+
+                var accessInTasks = d.TempDB.Tasks.Where(q => q.State == 0 && q.AccessId != null).Select(q => q.AccessId).ToArray();
+                var accessCountInTasks = d.BulletinDb.Accesses.Count(q => q.UserId == userId && accessInTasks.Any(qq => qq == q.Id));
+                needAccounts -= accessCountInTasks;
+                if (needAccounts <= 0) return;
+
                 for (var i = 0; i < needAccounts; i++)
                     AccessTaskHelper.CreateAccess(userId, forwardingEnabled);
             });

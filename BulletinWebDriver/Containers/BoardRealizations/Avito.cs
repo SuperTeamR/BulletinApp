@@ -206,14 +206,27 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             DCT.Execute(c =>
             {
                 var tzid = -1;
-                if (access.IsForwarding)
-                    tzid = OnlineSimHelper.GetForward(forwardNumber).tzid;
-                else
-                    tzid = OnlineSimHelper.GetNum(ServiceType.avito).tzid;
 
+                if (access.IsForwarding)
+                {
+                    ConsoleHelper.SendMessage($"Registration => Wait ForwardNumber");
+                    tzid = OnlineSimHelper.GetForward(forwardNumber).tzid;
+                }
+                else
+                {
+                    ConsoleHelper.SendMessage($"Registration => Wait Number");
+                    tzid = OnlineSimHelper.GetNum(ServiceType.avito).tzid;
+                }
+                ConsoleHelper.SendMessage($"Registration => tzid: {tzid}");
                 var getState = OnlineSimHelper.GetState(tzid);
+                if(getState == null)
+                {
+                    ConsoleHelper.SendMessage($"Registration => GetState is null. Abort operation");
+                    return;
+                }
                 access.Phone = getState.number;
                 access.PhoneTZID = getState.tzid;
+                ConsoleHelper.SendMessage($"Registration => Phone: {access.Phone}");
 
                 WaitExecute(driver);
                 //Перехожу в регистрацию

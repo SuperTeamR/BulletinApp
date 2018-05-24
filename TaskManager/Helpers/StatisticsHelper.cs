@@ -29,6 +29,7 @@ namespace TaskManager.Helpers
                 var request = WebRequest.Create("https://onlinesim.ru/api/forwardingList.php?apikey=f02eb880d7930c4a6eec0b39bb893e36");
                 request.Timeout = 5000;
                 request.ContentType = "application/json";
+
                 using (var response = (HttpWebResponse)request.GetResponse())
                 {
                     using (var reader = new StreamReader(response.GetResponseStream()))
@@ -99,7 +100,7 @@ namespace TaskManager.Helpers
                 var bulletinIds = bulletins.Select(q => q.Id).ToArray();
                 foreach (var bulletin in bulletins)
                 {
-                    var bulletinViews = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == bulletin.Id).Sum(q => q.Views);
+                    var bulletinViews = d.BulletinDb.BulletinInstances.Where(q => q.BulletinId == bulletin.Id).ToArray().Sum(q => q.Views);
                     bulletin.Views = bulletinViews;
                     bulletin.StateEnum = bulletin.StateEnum;
                 }
