@@ -15,6 +15,8 @@ using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -241,7 +243,7 @@ namespace BulletinWebDriver.Containers
                             var instance = BulletinInstanceHelper.Get(b.InstanceId);
                             instance.ActivationDate = DateTime.Now;
                             BulletinInstanceHelper.Save(instance);
-                        }, false);
+                        }, hasProxy: false, withImage: true);
                         break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
@@ -254,11 +256,11 @@ namespace BulletinWebDriver.Containers
                                 BulletinInstanceHelper.Save(instance);
                             }
 #if RELEASE
-                        }, hasProxy: false);
+                        }, hasProxy: true, withImage: true);
 #endif
 #if DEBUG_REMOTE || DEBUG
 
-                        }, hasProxy: false);
+                        }, hasProxy: false, withImage: true);
 #endif
 
                         break;
@@ -328,8 +330,11 @@ namespace BulletinWebDriver.Containers
 #if DEBUG && !DEBUG_REMOTE
        FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
-#if RELEASE || DEBUG_REMOTE
+#if DEBUG_REMOTE
                 FirefoxHelper.ExecuteWithVisual(browser =>
+#endif
+#if RELEASE
+                FirefoxHelper.ExecuteOne(browser =>
 #endif
                 {
                     ToHome(browser);
@@ -464,6 +469,37 @@ namespace BulletinWebDriver.Containers
             { return false; }
             return true;
         }
+        protected bool Has(FirefoxDriver driver, string tag, string attribute, string value)
+        {
+            var result = false;
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElements(By.TagName(tag)).FirstOrDefault(q => q.GetAttribute(attribute) == value);
+                result = element != null;
+            });
+            return result;
+        }
+        protected bool HasContains(FirefoxDriver driver, string tag, string attribute, string value)
+        {
+            var result = false;
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElements(By.TagName(tag)).FirstOrDefault(q => q.GetAttribute(attribute).Contains(value));
+                result = element != null;
+            });
+            return result;
+        }
+        protected void FindContains(FirefoxDriver driver, string tag, string attribute, string value, Action<IWebElement> action)
+        {
+            DCT.Execute(d =>
+            {
+                var element = driver.FindElements(By.TagName(tag)).FirstOrDefault(q => q.GetAttribute(attribute).Contains(value));
+                if (element != null && action != null)
+                {
+                    action(element);
+                }
+            });
+        }
         protected void Find(FirefoxDriver driver, string tag, string attribute, string value, Action<IWebElement> action)
         {
             DCT.Execute(d =>
@@ -559,10 +595,33 @@ namespace BulletinWebDriver.Containers
         public string GetScreenshotElement(FirefoxDriver driver, IWebElement element, string fileName)
         {
             var result = ImageHelper.TempPath + $"{fileName}.jpg";
+
             DCT.Execute(d =>
             {
+                if(!Directory.Exists(ImageHelper.TempPath))
+                {
+                    Directory.CreateDirectory(ImageHelper.TempPath);
+                }
                 Screenshot screenshot = ((ITakesScreenshot)element).GetScreenshot();
                 screenshot.SaveAsFile(result);
+            });
+            return result;
+        }
+        public string GetScreenshotElementWithOffset(FirefoxDriver driver, IWebElement element, string fileName, Point offset)
+        {
+            var result = ImageHelper.TempPath + $"{fileName}.jpg";
+
+            DCT.Execute(d =>
+            {
+                if (!Directory.Exists(ImageHelper.TempPath))
+                {
+                    Directory.CreateDirectory(ImageHelper.TempPath);
+                }
+                var fullPageBytes = ((ITakesScreenshot)driver).GetScreenshot().AsByteArray;
+                var screenshot = new System.Drawing.Bitmap(new System.IO.MemoryStream(fullPageBytes));
+                System.Drawing.Rectangle croppedImage = new System.Drawing.Rectangle(element.Location.X + offset.X, element.Location.Y + offset.Y, element.Size.Width, element.Size.Height);
+                screenshot = screenshot.Clone(croppedImage, screenshot.PixelFormat);
+                screenshot.Save(result);
             });
             return result;
         }

@@ -23,7 +23,7 @@ namespace BulletinWebDriver.Helpers
             var api = new ImageToText
             {
                 ClientKey = APIKey,
-                FilePath = img
+                FilePath = img,
             };
 
             if (!api.CreateTask())
@@ -262,6 +262,7 @@ namespace BulletinWebDriver.Helpers
         public int Math { private get; set; }
         public int MinLength { private get; set; }
         public int MaxLength { private get; set; }
+        public int Timeout { private get; set; }
 
         public override JObject GetPostData()
         {

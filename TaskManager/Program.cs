@@ -30,7 +30,7 @@ namespace TaskManager
             Console.Write("Command> ");
 #if DEBUG
             //var commands = CreateTestCommands();
-            //foreach(var command in commands)
+            //foreach (var command in commands)
             //    HandleArgs(command);
             HandleArgs(args);
 
@@ -54,41 +54,52 @@ namespace TaskManager
 
         static IEnumerable<string[]> CreateTestCommands()
         {
+
+            #region StorePhone2
+            //var list = new List<string>
+            //{
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 5 16gb -modifier белый -price 7000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 5 16gb -modifier черный -price 8000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 4s 16gb -modifier белый -price 4500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 4s 16gb -modifier черный -price 4500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier белый -price 7500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier золотой -price 8500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier черный -price 8500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 16gb -modifier золотой -price 10500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 16gb -modifier черный -price 10500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier золотой -price 12000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier черный -price 12000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier белый/серебристый -price 13000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier золотой -price 13000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier черный/серый -price 13000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier розовый -price 12500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier черный/серый -price 12000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 32gb -modifier золотой -price 13000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier черный/серый -price 12000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier розовый -price 15500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier черный/серый -price 15500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier белый/серебристый -price 15000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier золотой -price 15000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier черный/серый -price 15000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 128gb -modifier черный/серый -price 17000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 6s+ 16gb -modifier белый/серебристый -price 15000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier золотой -price 23000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 7 128gb -modifier черный/серый -price 25000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier розовый -price 23000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier черный/серый -price 23000",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier черный -price 12500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier золотой -price 12500",
+            //    "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier розовый -price 12500",
+            //};
+            #endregion
+            #region MegaArthur2
             var list = new List<string>
             {
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 5 16gb -modifier белый -price 7000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 5 16gb -modifier черный -price 8000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 4s 16gb -modifier белый -price 4500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 4s 16gb -modifier черный -price 4500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier белый -price 7500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier золотой -price 8500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 5s 16gb -modifier черный -price 8500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 16gb -modifier золотой -price 10500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 16gb -modifier черный -price 10500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier золотой -price 12000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier черный -price 12000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier белый/серебристый -price 13000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier золотой -price 13000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6 64gb -modifier черный/серый -price 13000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier розовый -price 12500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier черный/серый -price 12000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 32gb -modifier золотой -price 13000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier черный/серый -price 12000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier розовый -price 15500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 16gb -modifier черный/серый -price 15500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier белый/серебристый -price 15000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier золотой -price 15000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 64gb -modifier черный/серый -price 15000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s 128gb -modifier черный/серый -price 17000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 6s+ 16gb -modifier белый/серебристый -price 15000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier золотой -price 23000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 7 128gb -modifier черный/серый -price 25000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier розовый -price 23000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model 7 32gb -modifier черный/серый -price 23000",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier черный -price 12500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier золотой -price 12500",
-                "CreateBulletin -login StorePhone2 -brand IPhone -model SE 64gb -modifier розовый -price 12500",
+                //"CreateBulletin -login MegaArthur2 -brand IPhone -model 6 64gb -price 7000",
+                //"CreateBulletin -login MegaArthur2 -brand IPhone -model 7 32gb -price 8000",
+                "CreateBulletin -login MegaArthur2 -brand IPhone -model SE -price 4500",
             };
+            #endregion
 
             return list.Select(q => q.Split());
         }

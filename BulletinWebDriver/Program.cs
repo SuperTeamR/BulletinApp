@@ -47,6 +47,9 @@ namespace BulletinWebDriver
                             else
                                 Thread.Sleep(5000);
                             break;
+                        case "TestRegistration":
+                            TestRegistration();
+                            break;
                         case "TestActivate":
                             TestActivate();
                             break;
@@ -81,6 +84,19 @@ namespace BulletinWebDriver
 
             //    Console.ReadLine();
             //});
+        }
+
+        static void TestRegistration()
+        {
+            var avito = new Avito();
+
+            var login = "Mammalogical.Meredith.Aiporlani_0@mail.ru";
+            var password = "OnlineHelp59";
+            FirefoxHelper.ExecuteWithVisual(browser =>
+            {
+                browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                avito.Auth(browser, login, password);
+            }, null, 100, true);
         }
 
         static void TestActivate()

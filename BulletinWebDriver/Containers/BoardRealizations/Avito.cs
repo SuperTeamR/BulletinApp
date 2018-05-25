@@ -42,15 +42,50 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             WaitPage(driver, 30000, "Войти");
             ConsoleHelper.SendMessage($"Auth => Click from Enter");
             WaitExecute(driver);
-            Find(driver, "input", "data-marker", "login-form/login", e => e.SendKeys(login));
-            Find(driver, "input", "data-marker", "login-form/password", e => e.SendKeys(password));
-            WaitExecute(driver);
-            ConsoleHelper.SendMessage($"Auth => Set login and password");
-            Find(driver, "button", "data-marker", "login-form/submit", e => JsClick(driver, e));
+
+            var authResult = false;
             var exceptionStrings = new string[] { "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет", "Доступ заблокирован", "Текст с картинки" };
-            WaitPage(driver, 30000, exceptionStrings);
-            var authResult = driver.Title.Contains("Личный кабинет");
+
+            for (int i = 0; i < 30; i++)
+            {
+                Find(driver, "input", "data-marker", "login-form/login",
+                    e => {
+                        e.Clear();
+                        e.SendKeys(login);
+                    });
+                Find(driver, "input", "data-marker", "login-form/password",
+                    e =>
+                    {
+                        e.Clear();
+                        e.SendKeys(password);
+                    });
+                if(HasContains(driver, "div", "class", "captcha-root"))
+                {
+                    var capcha = "";
+                    var capchaPath = "";
+                    FindContains(driver, "div", "class", "captcha-image", e =>
+                    {
+                        capchaPath = GetScreenshotElementWithOffset(driver, e, login, new System.Drawing.Point(-1, -e.Size.Height - 5));
+                    });
+
+                    capcha = FreegateHelper.ImageToText(capchaPath);
+                    DoAction(driver, By.CssSelector($"input[placeholder='Текст с картинки']"), e =>
+                    {
+                        e.Clear();
+                        e.SendKeys(capcha);
+                    });
+                }
+
+                Find(driver, "button", "data-marker", "login-form/submit", e => JsClick(driver, e));
+             
+                WaitPage(driver, 30000, exceptionStrings);
+                authResult = driver.Title.Contains("Личный кабинет");
+                if (authResult)
+                    break;
+                Thread.Sleep(2000);
+            }
             ConsoleHelper.SendMessage($"Auth => Complete, auth is {authResult}");
+            
             if (authResult)
             {
                 return true;
@@ -251,7 +286,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     e.SendKeys(phone);
                 });
               
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 30; i++)
                 {
                     DoAction(driver, By.CssSelector($"input[name='password']"), e =>
                     {
@@ -275,6 +310,14 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     if (driver.PageSource.Contains("Регистрация. Шаг 2"))
                         break;
                 }
+
+                if (!driver.PageSource.Contains("Регистрация. Шаг 2"))
+                {
+                    ConsoleHelper.SendWarning("Registration => Captcha is not resolved");
+                    AccessHelper.Disable(access.Id);
+                    return;
+                }
+
                 Find(driver, "button", "class", "button button-azure js-phone-checker-request-code", x => JsClick(driver, x));
                 for (int i = 0; i < 30; i++)
                 {
