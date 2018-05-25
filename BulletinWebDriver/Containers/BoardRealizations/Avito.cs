@@ -307,6 +307,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         }
 
         public override void ActivateBulletins(FirefoxDriver driver, TaskAccessCheckCache taskModel)
+
         {
             try
             {
@@ -369,6 +370,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
 
                 driver.Navigate().GoToUrl(activationLink);
+                WaitExecute(driver);
             }
             catch (Exception ex)
             {

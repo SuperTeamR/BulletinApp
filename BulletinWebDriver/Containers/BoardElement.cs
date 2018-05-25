@@ -232,6 +232,11 @@ namespace BulletinWebDriver.Containers
                     case "ActivateInstance":
                         executeCommand<TaskInstanceActivationCache>(task, (a, b) => 
                         {
+                            if(b.Url == null)
+                            {
+                                ConsoleHelper.SendMessage("ActivateInstance => URL is Empty");
+                                return;
+                            }
                             ActivateBulletin(a, b);
                             var instance = BulletinInstanceHelper.Get(b.InstanceId);
                             instance.ActivationDate = DateTime.Now;

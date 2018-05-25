@@ -111,7 +111,7 @@ namespace TaskManager.Helpers
                 var totalMessages = accesses.Sum(q => q.Messages);
                 var totalCalls = accesses.Sum(q => q.Calls);
                 var totalBulletins = bulletins.Count();
-                var totalInstances = d.BulletinDb.BulletinInstances.Count(q => bulletinIds.Any(qq => qq == q.BulletinId));
+                var totalInstances = d.BulletinDb.BulletinInstances.Count(q => q.Url != null && q.ActivationDate != null && bulletinIds.Any(qq => qq == q.BulletinId));
 
 
                 var userStat = d.BulletinDb.UserStatistics.FirstOrDefault(q => q.UserId == userId);
