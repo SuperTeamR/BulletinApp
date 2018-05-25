@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XlsIntegration", "XlsIntegration\XlsIntegration.csproj", "{0BFAD6DB-04B0-4DAD-80A1-895CF59480E4}"
 EndProject
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestBulletinCollector", "TestBulletinCollector\TestBulletinCollector.csproj", "{D1856996-E491-4B7E-94B3-890F87864FA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManager", "TaskManager\TaskManager.csproj", "{F99DE662-2F34-4C75-BBD6-8011C141FE94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BulletinUpdate", "BulletinUpdate\BulletinUpdate.csproj", "{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -282,6 +284,24 @@ Global
 		{F99DE662-2F34-4C75-BBD6-8011C141FE94}.Release|x64.Build.0 = Release|Any CPU
 		{F99DE662-2F34-4C75-BBD6-8011C141FE94}.Release|x86.ActiveCfg = Release|Any CPU
 		{F99DE662-2F34-4C75-BBD6-8011C141FE94}.Release|x86.Build.0 = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|x64.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Debug|x86.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|Any CPU.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|x64.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|x64.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|x86.ActiveCfg = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.DebugRemote|x86.Build.0 = Debug|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|x64.ActiveCfg = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|x64.Build.0 = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|x86.ActiveCfg = Release|Any CPU
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -300,6 +320,7 @@ Global
 		{56591C58-0509-40FF-AA6A-5965A43BFB5C} = {41B575BA-862A-4E6E-A50C-8FADF8A24167}
 		{D1856996-E491-4B7E-94B3-890F87864FA1} = {1BF2B17F-FFF2-4207-8443-303AC97BC10B}
 		{F99DE662-2F34-4C75-BBD6-8011C141FE94} = {41B575BA-862A-4E6E-A50C-8FADF8A24167}
+		{C8CFC60D-2418-4A73-BC93-CFFAF9C73E73} = {E3EFE9B5-D892-42A9-91A2-00A2ADF0D016}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A69438C-04C5-46BA-AD05-8B572AA8DF24}
