@@ -14,5 +14,6 @@ namespace BulletinBridge.Models
         public string Error { get; set; }
         public DateTime? TargetDate { get; set; }
         public string StateDesc { get; set; }
+        public string LastStep { get; set; }
     }
 }

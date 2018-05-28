@@ -51,6 +51,7 @@ namespace BulletinWebDriver.Helpers
                     try
                     {
                         var manager = currentDriver.Manage();
+                        manager.Window.Minimize();
                         manager.Timeouts().ImplicitWait = TimeSpan.FromSeconds(Timeout);
                         manager.Timeouts().PageLoad = TimeSpan.FromSeconds(Timeout);
                         executeAction?.Invoke(currentDriver);

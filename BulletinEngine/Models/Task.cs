@@ -60,6 +60,8 @@ namespace BulletinHub.Entity.Data
         }
         [Obsolete]
         public string TargetType { get; set; }
+        
+        public string LastStep { get; set; }
 
         #endregion
 
@@ -96,6 +98,7 @@ namespace BulletinHub.Entity.Data
             arg1.CompletedDate = arg2.CompletedDate;
             arg1.ErrorDescription = arg2.ErrorDescription;
             arg1.BoardId = arg2.BoardId;
+            arg1.LastStep = arg2.LastStep;
             return arg1;
         }
         #endregion
@@ -186,6 +189,7 @@ namespace BulletinHub.Entity.Data
         private Task ToEntity2(TaskCache arg1, Task arg2)
         {
             arg2.ErrorDescription = arg1.Error;
+            arg2.LastStep = arg1.LastStep;
             return arg2;
         }
 

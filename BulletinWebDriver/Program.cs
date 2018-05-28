@@ -13,6 +13,7 @@ using BulletinBridge.Models;
 using BulletinWebDriver.Containers.BoardRealizations;
 using BulletinWebDriver.ServiceHelper;
 using BulletinBridge.Data;
+using CollectorModels;
 
 namespace BulletinWebDriver
 {
@@ -68,6 +69,9 @@ namespace BulletinWebDriver
                         case "TestForwardNumber":
                             TestForwardNumber();
                             break;
+                        case "TestProxy":
+                            TestProxy();
+                            break;
                         default:
                             ConsoleHelper.SendMessage("Not found command");
                             Console.ReadLine();
@@ -90,7 +94,7 @@ namespace BulletinWebDriver
         {
             var avito = new Avito();
 
-            var login = "Mammalogical.Meredith.Aiporlani_0@mail.ru";
+            var login = "Mammalogical.Meredith.Aiporlani_2@mail.ru";
             var password = "OnlineHelp59";
             FirefoxHelper.ExecuteWithVisual(browser =>
             {
@@ -214,6 +218,34 @@ namespace BulletinWebDriver
             //const string forwardNumber = "9264200230";
             //OnlineSimHelper.GetForward(forwardNumber);
         }
-
+        static void TestProxy()
+        {
+            var avito = new Avito();
+            var login = "Beguiled.Julian.Schuman_7@mail.ru";
+            var password = "OnlineHelp59";
+            var url = "https://www.avito.ru";
+            var ipExceptionsString = new[] { "Доступ с вашего IP-адреса временно ограничен", "Доступ временно заблокирован", "Ошибка при установлении защищённого соединения" };
+            var successCount = 0;
+            for(var i = 0; i < 100; i++)
+            {
+                ProxyCardCheckCache proxy = ProxyHelper.GetProxy(url, ipExceptionsString, 1000);
+                if (proxy == null)
+                {
+                    ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
+                    //throw new Exception("Command execute crash and stoped, proxy not found or service not available");
+                }
+                else
+                {
+                    FirefoxHelper.ExecuteWithVisual(browser =>
+                    {
+                        browser.Navigate().GoToUrl("https://www.avito.ru/moskva/bytovaya_elektronika");
+                        var success = avito.Auth(browser, login, password);
+                        if (success)
+                            successCount++;
+                    }, proxy, 50, true);
+                }
+            }
+            ConsoleHelper.SendException($"Success count is {successCount}");
+        }
     }
 }

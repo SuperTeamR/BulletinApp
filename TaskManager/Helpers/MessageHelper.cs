@@ -1,5 +1,6 @@
 ﻿using BulletinEngine.Core;
 using BulletinHub.Helpers;
+using FessooFramework.Objects.Data;
 using FessooFramework.Tools.Helpers;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace TaskManager.Helpers
                 }
                 var userId = user.Id;
 
-                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId).ToArray();
+                var accesses = d.BulletinDb.Accesses.Where(q => q.UserId == userId && q.State != (int)DefaultState.Created).ToArray();
 
                 foreach(var access in accesses)
                     TaskHelper.CreateCollectMessages(userId, access);

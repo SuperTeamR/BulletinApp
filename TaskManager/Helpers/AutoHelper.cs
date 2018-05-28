@@ -1,6 +1,7 @@
 ﻿using BulletinEngine.Core;
 using BulletinEngine.Entity.Data;
 using BulletinEngine.Helpers;
+using BulletinHub.Entity.Data;
 using BulletinHub.Helpers;
 using FessooFramework.Tools.Helpers;
 using System;
@@ -101,7 +102,7 @@ namespace TaskManager.Helpers
                 if (userSettings != null && userSettings.EnableForwarding)
                     forwardingEnabled = true;
 
-                var accessInTasks = d.TempDB.Tasks.Where(q => q.State == 0 && q.AccessId != null).Select(q => q.AccessId).ToArray();
+                var accessInTasks = d.TempDB.Tasks.Where(q => q.State == 0 && q.UserId == userId && q.Command == (int)TaskCommand.Registration).Select(q => q.AccessId).ToArray();
                 var accessCountInTasks = d.BulletinDb.Accesses.Count(q => q.UserId == userId && accessInTasks.Any(qq => qq == q.Id));
                 needAccounts -= accessCountInTasks;
                 if (needAccounts <= 0) return;

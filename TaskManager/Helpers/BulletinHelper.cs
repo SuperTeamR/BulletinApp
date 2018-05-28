@@ -206,6 +206,8 @@ namespace TaskManager.Helpers
             });
         }
 
+        static Dictionary<Guid, DateTime> accessPublicationTime = new Dictionary<Guid, DateTime>();
+
         static void CreatePublicationTasks(Bulletin bulletin)
         {
             BCT.Execute(d =>
@@ -229,15 +231,26 @@ namespace TaskManager.Helpers
                             continue;
                         }
 
+                        if(accessPublicationTime.ContainsKey(access.Id))
+                        {
+                            var lastTime = accessPublicationTime[access.Id];
+                            datePublish = lastTime.AddMinutes(30);
+                            accessPublicationTime[access.Id] = datePublish;
+                        }
+                        else
+                        {
+                            accessPublicationTime.Add(access.Id, datePublish);
+                        }
+
                         instance.AccessId = access.Id;
                         instance.StateEnum = instance.StateEnum;
                         d.SaveChanges();
                         TaskHelper.CreateInstancePublication(bulletin.UserId, instance, datePublish);
-                        var now = DateTime.Now;
-                        var activationDate = now.Date.AddDays(1);
-                        activationDate.Date.Subtract(now);
-                        activationDate = activationDate.AddHours(3);
-                        TaskHelper.CreateActivateInstance(bulletin.UserId, instance, activationDate);
+                        //var now = DateTime.Now;
+                        //var activationDate = now.Date.AddDays(1);
+                        //activationDate.Date.Subtract(now);
+                        //activationDate = activationDate.AddHours(3);
+                        //TaskHelper.CreateActivateInstance(bulletin.UserId, instance, activationDate);
                         hasPublication = true;
                     }
                     if(hasPublication)

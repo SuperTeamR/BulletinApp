@@ -36,11 +36,11 @@ namespace BulletinWebDriver.Containers.BoardRealizations
         #region Default
         public override bool Auth(FirefoxDriver driver, string login, string password)
         {
-            ConsoleHelper.SendMessage($"Auth => Start from {login}");
+            SendMessage($"Auth => Start from {login}");
             WaitExecute(driver);
             Find(driver, "a", "data-marker", "header/login-button", e => JsClick(driver, e));
             WaitPage(driver, 30000, "Войти");
-            ConsoleHelper.SendMessage($"Auth => Click from Enter");
+            SendMessage($"Auth => Click from Enter");
             WaitExecute(driver);
 
             var authResult = false;
@@ -84,7 +84,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     break;
                 Thread.Sleep(2000);
             }
-            ConsoleHelper.SendMessage($"Auth => Complete, auth is {authResult}");
+            SendMessage($"Auth => Complete, auth is {authResult}");
             
             if (authResult)
             {
@@ -93,7 +93,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             foreach (var str in exceptionStrings)
             {
                 if (driver.PageSource.Contains(str))
-                    ConsoleHelper.SendMessage($"Auth => Error - {str}");
+                    SendMessage($"Auth => Error - {str}");
             }
             return false;
         }
@@ -244,24 +244,24 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 if (access.IsForwarding)
                 {
-                    ConsoleHelper.SendMessage($"Registration => Wait ForwardNumber");
+                    SendMessage($"Registration => Wait ForwardNumber");
                     tzid = OnlineSimHelper.GetForward(forwardNumber).tzid;
                 }
                 else
                 {
-                    ConsoleHelper.SendMessage($"Registration => Wait Number");
+                    SendMessage($"Registration => Wait Number");
                     tzid = OnlineSimHelper.GetNum(ServiceType.avito).tzid;
                 }
-                ConsoleHelper.SendMessage($"Registration => tzid: {tzid}");
+                SendMessage($"Registration => tzid: {tzid}");
                 var getState = OnlineSimHelper.GetState(tzid);
                 if(getState == null)
                 {
-                    ConsoleHelper.SendMessage($"Registration => GetState is null. Abort operation");
+                    SendMessage($"Registration => GetState is null. Abort operation");
                     return;
                 }
                 access.Phone = getState.number;
                 access.PhoneTZID = getState.tzid;
-                ConsoleHelper.SendMessage($"Registration => Phone: {access.Phone}");
+                SendMessage($"Registration => Phone: {access.Phone}");
 
                 WaitExecute(driver);
                 //Перехожу в регистрацию
@@ -305,7 +305,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         e.Clear();
                         e.SendKeys(capcha);
                     });
-                    Find(driver, "button", "class", "button button-origin button-origin-green button-origin_large js-submit-button", x => JsClick(driver, x));
+                    FindTagByTextContains(driver, "button", "Зарегистрироваться", x => JsClick(driver, x));
                     Thread.Sleep(2000);
                     if (driver.PageSource.Contains("Регистрация. Шаг 2"))
                         break;
@@ -313,7 +313,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 if (!driver.PageSource.Contains("Регистрация. Шаг 2"))
                 {
-                    ConsoleHelper.SendWarning("Registration => Captcha is not resolved");
+                    SendMessage("Registration => Captcha is not resolved");
                     AccessHelper.Disable(access.Id);
                     return;
                 }
@@ -323,7 +323,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 {
                     Thread.Sleep(3000);
                     var state = getState = OnlineSimHelper.GetState(tzid);
-                    ConsoleHelper.SendMessage($"Registration => Wait SMS, state = {state.response}");
+                    SendMessage($"Registration => Wait SMS, state = {state.response}");
                     if (state.responseEnum == getStateState.TZ_NUM_ANSWER)
                     {
                         DoAction(driver, By.CssSelector($"input[id='phone-checker-code']"), e =>
@@ -384,7 +384,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 }
                 foreach (var id in ids)
                 {
-                    ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
+                    SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                     var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
                     driver.Navigate().GoToUrl(activationLink);
                     //WaitExecute(driver);
@@ -408,7 +408,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 var idPattern = ".*?_(\\d+)$";
                 var id = RegexHelper.GetValue(idPattern, taskModel.Url);
-                ConsoleHelper.SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
+                SendMessage($"ActivateBulletins => Trying to activate bulletin with Id {id}");
                 //https://www.avito.ru/account/pay_fee?item_id=1717723420&vas_from=item_self_user
                 var activationLink = @"http://www.avito.ru/packages/put_free_package?item_id=" + id;
 
@@ -427,20 +427,20 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             {
                 if (!Auth(driver, taskModel.Login, taskModel.Password))
                     return result;
-                ConsoleHelper.SendMessage($"InstancePublication => Started from task {taskModel.Id}. Instance {taskModel.InstanceId}");
+                SendMessage($"InstancePublication => Started from task {taskModel.Id}. Instance {taskModel.InstanceId}");
                 WaitPage(driver, 30000, "www.avito.ru/additem");
                 WaitExecute(driver);
 
                 WaitPage(driver, 30000, "header-button-add-item");
 
                 FindTagByTextContains(driver, "a", "Подать объявление", e => JsClick(driver, e));
-                ConsoleHelper.SendMessage($"InstancePublication => Click from Add button");
+                SendMessage($"InstancePublication => Click from Add button");
 
                 WaitPage(driver, 30000, "Выберите категорию");
                 WaitExecute(driver);
                 WaitPage(driver, 30000, "Животные");
 
-                ConsoleHelper.SendMessage($"InstancePublication => Page from add bulletin loaded");
+                SendMessage($"InstancePublication => Page from add bulletin loaded");
 
                 var setCategory = false;
                 var oldImplicitWait = driver.Manage().Timeouts().ImplicitWait;
@@ -456,7 +456,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                     //SetCategory first
                     FindTagByTextContains(driver, "button", "Животные", e => JsClick(driver, e));
-                    ConsoleHelper.SendMessage($"InstancePublication => Set default category 'Животные'");
+                    SendMessage($"InstancePublication => Set default category 'Животные'");
                     WaitPage(driver, 10000, taskModel.Category1);
                     //SetCategory
                     if (!string.IsNullOrWhiteSpace(taskModel.Category1))
@@ -464,7 +464,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         FindTagByTextContains(driver, "button", taskModel.Category1, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category2))
                         {
-                            ConsoleHelper.SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
+                            SendMessage($"InstancePublication => Set category 1 {taskModel.Category1}");
                             category1 = true;
                         };
                     }
@@ -475,7 +475,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         FindTagByTextContains(driver, "button", taskModel.Category2, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category3))
                         {
-                            ConsoleHelper.SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
+                            SendMessage($"InstancePublication => Set category 2 {taskModel.Category2}");
                             category2 = true;
                         }
                     }
@@ -486,7 +486,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         FindTagByTextContains(driver, "button", taskModel.Category3, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category4))
                         {
-                            ConsoleHelper.SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
+                            SendMessage($"InstancePublication => Set category 3 {taskModel.Category3}");
                             category3 = true;
                         }
                     }
@@ -497,7 +497,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         FindTagByTextContains(driver, "button", taskModel.Category4, e => JsClick(driver, e));
                         if (WaitPage(driver, 10000, taskModel.Category5))
                         {
-                            ConsoleHelper.SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
+                            SendMessage($"InstancePublication => Set category 4 {taskModel.Category4}");
                             category4 = true;
                         }
                     }
@@ -506,7 +506,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     if (!string.IsNullOrWhiteSpace(taskModel.Category5))
                     {
                         FindTagByTextContains(driver, "button", taskModel.Category5, e => JsClick(driver, e));
-                        ConsoleHelper.SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
+                        SendMessage($"InstancePublication => Set category 5 {taskModel.Category5}");
                         category5 = true;
                     }
                     else
@@ -522,12 +522,12 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 driver.Manage().Timeouts().ImplicitWait = oldImplicitWait;
                 if (setCategory)
                 {
-                    ConsoleHelper.SendMessage($"InstancePublication => Category");
+                    SendMessage($"InstancePublication => Category");
                 }
 
                 //Select type
                 JsClick(driver, By.CssSelector($"input[value='20018']"));
-                ConsoleHelper.SendMessage($"InstancePublication => Select owner type");
+                SendMessage($"InstancePublication => Select owner type");
 
 
                 var comboboxCount = driver.FindElementByName("locationId");
@@ -537,7 +537,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     var option = allOptions.FirstOrDefault(q => q.Selected);
                     driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "value", "639180");
                     driver.ExecuteScript("arguments[0].setAttribute(arguments[1], arguments[2]);", option, "data-parent-id", "637680");
-                    ConsoleHelper.SendMessage($"InstancePublication => Set location from selector");
+                    SendMessage($"InstancePublication => Set location from selector");
                 }
                 else
                 {
@@ -548,7 +548,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                          e.SendKeys(OpenQA.Selenium.Keys.Return);
                          Find(driver, "li", "data-marker", "suggest(0)", e2 => JsClick(driver, e2));
                      });
-                    ConsoleHelper.SendMessage($"InstancePublication => Set location from search string");
+                    SendMessage($"InstancePublication => Set location from search string");
                 }
 
                 //Set fields
@@ -557,7 +557,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 DoAction(driver, By.CssSelector($"textarea[id='item-edit__description']"), e => e.SendKeys(taskModel.Description));
                 DoAction(driver, By.CssSelector($"input[id='item-edit__price']"), e => e.SendKeys(taskModel.Price));
 
-                ConsoleHelper.SendMessage($"InstancePublication => Set fields");
+                SendMessage($"InstancePublication => Set fields");
 
                 if (taskModel.Images != null && taskModel.Images.Any())
                 {
@@ -568,13 +568,13 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         {
                             count++;
                             var file = ImageHelper.ImageToTemp(img);
-                            ConsoleHelper.SendMessage($"InstancePublication => Image {img} save to {file}");
+                            SendMessage($"InstancePublication => Image {img} save to {file}");
                             if (string.IsNullOrWhiteSpace(file))
                                 continue;
                             var fileInput = driver.FindElementByCssSelector($"input[name='image']");
                             fileInput.SendKeys(file);
                             WaitElementCountByCssSelector(driver, 30, count, "div[class~='form-uploader-item'][data-state='active']");
-                            ConsoleHelper.SendMessage($"InstancePublication => Set image {img}");
+                            SendMessage($"InstancePublication => Set image {img}");
                         }
                         catch (Exception ex)
                         {
@@ -586,7 +586,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 //Select base bulletin
                 if (driver.PageSource.Contains("Разово"))
                 {
-                    ConsoleHelper.SendException($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
+                    SendMessage($"InstancePublication => Account {taskModel.Login} is blocked from publication limit");
                     Find(driver, "input", "name", "fees[eula]", c => JsClick(driver, c));
                 }
 
@@ -599,25 +599,25 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 {
 
                     var r5 = ex;
-                    ConsoleHelper.SendMessage($"InstancePublication => Error:{r5}");
+                    SendMessage($"InstancePublication => Error:{r5}");
                 }
                
                 WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Select sale type ");
+                SendMessage($"InstancePublication => Select sale type ");
 
 
 
                 FindTagByTextContains(driver, "button", "Продолжить с пакетом «Быстрая продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                SendMessage($"InstancePublication => Click continue");
                 JsClick(driver, By.Id("service-premium"));
                 JsClick(driver, By.Id("service-highlight"));
-                ConsoleHelper.SendMessage($"InstancePublication => Paid option has been disabled ");
+                SendMessage($"InstancePublication => Paid option has been disabled ");
 
                 var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
                 JsClick(driver, button);
                 WaitExecute(driver);
-                ConsoleHelper.SendMessage($"InstancePublication => Click continue");
+                SendMessage($"InstancePublication => Click continue");
 
                 //Забираем идентификатор
                 var idPattern = "itemId=(\\d+)";
@@ -643,6 +643,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                     if (!string.IsNullOrEmpty(match))
                     {
                         result = @"https://www.avito.ru" + match;
+
+                        SendMessage($"InstancePublication => Url is found - {result}");
                         break;
                     }
                     if (hasNextPage)
@@ -651,6 +653,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                         WaitPage(driver, 30000, inactivePage + $"/rossiya?p={pages}&s=4");
                     }
                 }
+                if(string.IsNullOrEmpty(result))
+                    SendMessage($"InstancePublication => Url is not found");
             }
             catch (Exception ex)
             {
@@ -779,6 +783,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             str = str.Replace("\r\n", "");
             return str;
         }
+
         #endregion
     }
 }

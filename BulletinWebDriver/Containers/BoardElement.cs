@@ -31,6 +31,8 @@ namespace BulletinWebDriver.Containers
         public abstract IEnumerable<string> IPExceptionsString { get; }
         public abstract IEnumerable<string> BlockedExceptionsString { get; }
         public abstract int PageNavigationTimeout { get; }
+
+        protected TaskCache CurrentTask { get; private set; }
         #endregion
         #region Constructor
         public BoardElement(string Name)
@@ -220,7 +222,7 @@ namespace BulletinWebDriver.Containers
                                 AccessHelper.Save(access);
                                 MessageServiceHelper.Save(messages);
                             }
-                        }, true);
+                        }, true, true);
                         break;
                     case "Registration":
                         registration(task);
@@ -243,7 +245,7 @@ namespace BulletinWebDriver.Containers
                             var instance = BulletinInstanceHelper.Get(b.InstanceId);
                             instance.ActivationDate = DateTime.Now;
                             BulletinInstanceHelper.Save(instance);
-                        }, hasProxy: false, withImage: true);
+                        }, hasProxy: true, withImage: true);
                         break;
                     case "InstancePublication":
                         executeCommand<TaskInstancePublicationCache>(task, (a, b) =>
@@ -260,7 +262,7 @@ namespace BulletinWebDriver.Containers
 #endif
 #if DEBUG_REMOTE || DEBUG
 
-                        }, hasProxy: false, withImage: true);
+                        }, hasProxy: true, withImage: true);
 #endif
 
                         break;
@@ -276,7 +278,7 @@ namespace BulletinWebDriver.Containers
                                 access.Calls = stat.Calls;
                                 AccessHelper.Save(access);
                             }
-                        }, false);
+                        }, true, true);
                         break;
                     case "InstanceStatistics":
                         executeCommand<TaskInstanceStatisticsCache>(task, (a, b) =>
@@ -288,7 +290,7 @@ namespace BulletinWebDriver.Containers
                                 instance.Views = stat.Value;
                                 BulletinInstanceHelper.Save(instance);
                             }
-                        }, false);
+                        }, true, true);
                         break;
                     case "BulletinTemplateCollector":
                         executeCommand<TaskBulletinTemplateCollectorCache>(task, (a, b) =>
@@ -312,16 +314,17 @@ namespace BulletinWebDriver.Containers
         private void executeCommand<T>(TaskCache task, Action<FirefoxDriver, T> action, bool hasProxy = true, bool withImage = false)
             where T : CacheObject, new()
         {
+            CurrentTask = task;
             var taskModel = DriverTaskHelper.GetTask<T>(task);
             if (taskModel == null)
             {
-                ConsoleHelper.SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
+                SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString, 2500) : null;
+            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString, 1000) : null;
             if (proxy == null && hasProxy)
             {
-                ConsoleHelper.SendException($"Command execute crash and stoped, proxy not found or service not available");
+                SendException($"Command execute crash and stoped, proxy not found or service not available");
                 throw new Exception("Command execute crash and stoped, proxy not found or service not available");
             }
             else
@@ -334,7 +337,7 @@ namespace BulletinWebDriver.Containers
                 FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
 #if RELEASE
-                FirefoxHelper.ExecuteOne(browser =>
+                FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
                 {
                     ToHome(browser);
@@ -405,7 +408,7 @@ namespace BulletinWebDriver.Containers
                     access = Registration(b, access);
                 }, false, withImage: true);
                 AccessHelper.Save(access);
-                ConsoleHelper.SendMessage($"Registration from {access.Login} completed. Phone{access.Phone}");
+                SendMessage($"Registration from {access.Login} completed. Phone{access.Phone}");
             }, continueExceptionMethod: (c, ex) =>
             {
                 //Задание завершилось с ошибкой
@@ -625,6 +628,22 @@ namespace BulletinWebDriver.Containers
             });
             return result;
         }
+        #endregion
+        #region Logging
+        protected void SendMessage(string message)
+        {
+            if(CurrentTask != null)
+                CurrentTask.LastStep = message;
+            ConsoleHelper.SendMessage(message);
+        }
+
+        protected void SendException(string message)
+        {
+            if (CurrentTask != null)
+                CurrentTask.LastStep = message;
+            ConsoleHelper.SendException(message);
+        }
+
         #endregion
     }
 }
