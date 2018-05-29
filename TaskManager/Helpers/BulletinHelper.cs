@@ -28,10 +28,10 @@ namespace TaskManager.Helpers
         {
             BCT.Execute(d =>
             {
-                var bulletin = CreateBulletin(userLogin, brand, model, modifier, price);
-                if (bulletin == null) return;
-                //Запускаем задачи на публикацию и активацию
-                CreatePublicationTasks(bulletin);
+                //var bulletin = CreateBulletin(userLogin, brand, model, modifier, price);
+                //if (bulletin == null) return;
+                ////Запускаем задачи на публикацию и активацию
+                //CreatePublicationTasks(bulletin);
             });
         }
 
@@ -82,8 +82,9 @@ namespace TaskManager.Helpers
                 var bulletin = d.BulletinDb.Bulletins.FirstOrDefault(q => q.Id == bulletinId);
                 if (bulletin == null) return;
 
-                ChooseTemplate(bulletin, brand, model, modifier);
-                CreatePublicationTasks(bulletin);
+                var template = ChooseTemplate(bulletin, brand, model, modifier);
+                if(template != null)
+                    CreatePublicationTasks(bulletin, template.Id);
             });
         }
 
@@ -140,48 +141,57 @@ namespace TaskManager.Helpers
             var result = default(BulletinTemplate);
             BCT.Execute(d =>
             {
-                var templates = d.TempDB.BulletinTemplate.Where(q => q.IsIndividualSeller && q.State != (int)DefaultState.Disable
-                && q.Category4 != "Запчасти").ToArray();
-                // Исключаем шаблоны с запрещенными словами
-                var temp = templates.Where(q => forbiddenWords.All(x => !q.Description.ToLower().Contains(x.ToLower()))
-                && forbiddenWords.All(x => !q.Title.Contains(x))).ToArray();
-
-                var modelParams = model.ToLower().Replace("+", "").Split().ToList();
-                if (model.Contains("+"))
-                    modelParams.Add("+");
-
-                var modifierParams = Enumerable.Empty<string>().ToList(); 
-                if(modifier != null)
-                {
-                    modifierParams = modifier.Split('/').ToList();
-                }
-                var aliasesForModifier = aliases.Where(q => modifierParams.Any(qq => qq == q.Key)).ToArray();
-                if(aliasesForModifier.Any())
-                {
-                    modifierParams.AddRange(aliasesForModifier.Select(q => q.Value));
-                }
-
-                //Фильтруем шаблоны по бренду, модели и модификаторам (цвет и т.д.)
-                var allMatches = temp.Where(q =>
-                q.Title.ToLower().Contains(brand.ToLower())
-                && modelParams.All(x =>
-                   (x == "+" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
-                || (x == "plus" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
-                || q.Title.ToLower().Split(' ', '/', ',').Any(qq => qq == x))
-                && modifierParams.Any(x => q.Title.ToLower().Contains(x)));
-
-                result = allMatches.FirstOrDefault();
+                var temp = d.TempDB.BulletinTemplate.Where(q => q.State != (int)DefaultState.Disable).FirstOrDefault();
+                result = temp;
                 if (result != null)
                 {
                     result.StateEnum = DefaultState.Disable;
                     d.SaveChanges();
                 }
+
+                //var templates = d.TempDB.BulletinTemplate.Where(q => q.IsIndividualSeller && q.State != (int)DefaultState.Disable
+                //&& q.Category4 != "Запчасти").ToArray();
+                //// Исключаем шаблоны с запрещенными словами
+                //var temp = templates.Where(q => forbiddenWords.All(x => !q.Description.ToLower().Contains(x.ToLower()))
+                //&& forbiddenWords.All(x => !q.Title.Contains(x))).ToArray();
+
+                //var modelParams = model.ToLower().Replace("+", "").Split().ToList();
+                //if (model.Contains("+"))
+                //    modelParams.Add("+");
+
+                //var modifierParams = Enumerable.Empty<string>().ToList(); 
+                //if(modifier != null)
+                //{
+                //    modifierParams = modifier.Split('/').ToList();
+                //}
+                //var aliasesForModifier = aliases.Where(q => modifierParams.Any(qq => qq == q.Key)).ToArray();
+                //if(aliasesForModifier.Any())
+                //{
+                //    modifierParams.AddRange(aliasesForModifier.Select(q => q.Value));
+                //}
+
+                ////Фильтруем шаблоны по бренду, модели и модификаторам (цвет и т.д.)
+                //var allMatches = temp.Where(q =>
+                //q.Title.ToLower().Contains(brand.ToLower())
+                //&& modelParams.All(x =>
+                //   (x == "+" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
+                //|| (x == "plus" && (q.Title.ToLower().Contains("+") || q.Title.ToLower().Contains("plus")))
+                //|| q.Title.ToLower().Split(' ', '/', ',').Any(qq => qq == x))
+                //&& modifierParams.Any(x => q.Title.ToLower().Contains(x)));
+
+                //result = allMatches.FirstOrDefault();
+                //if (result != null)
+                //{
+                //    result.StateEnum = DefaultState.Disable;
+                //    d.SaveChanges();
+                //}
             });
             return result;
         }
 
-        static void ChooseTemplate(Bulletin bulletin, string brand, string model, string modifier)
+        static BulletinTemplate ChooseTemplate(Bulletin bulletin, string brand, string model, string modifier)
         {
+            var result = default(BulletinTemplate);
             BCT.Execute(d =>
             {
                 var chosenBrand = brand ?? bulletin.Brand;
@@ -203,19 +213,22 @@ namespace TaskManager.Helpers
 
                 bulletin.StateEnum = bulletin.StateEnum;
                 d.SaveChanges();
+
+                result = chosenTemplate;
             });
+            return result;
         }
 
         static Dictionary<Guid, DateTime> accessPublicationTime = new Dictionary<Guid, DateTime>();
 
-        static void CreatePublicationTasks(Bulletin bulletin)
+        static void CreatePublicationTasks(Bulletin bulletin, Guid templateId)
         {
             BCT.Execute(d =>
             {
                 var tasks = d.TempDB.Tasks.Where(q => (q.State == (int)BulletinHub.Entity.Data.TaskState.Created || q.State == (int)BulletinHub.Entity.Data.TaskState.Enabled) && q.BulletinId == bulletin.Id && q.Command == (int)BulletinHub.Entity.Data.TaskCommand.InstancePublication).ToArray();
                 if (tasks != null && tasks.Any())
                     TaskHelper.Remove(tasks);
-                var instances = BulletinHub.Helpers.BulletinHelper.CreateInstance(bulletin);
+                var instances = BulletinHub.Helpers.BulletinHelper.CreateInstance(bulletin, templateId);
                 if (instances.Any())
                 {
                     bulletin.SetGenerationCheck();

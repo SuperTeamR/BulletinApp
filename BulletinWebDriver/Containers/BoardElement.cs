@@ -580,7 +580,7 @@ namespace BulletinWebDriver.Containers
             var result = default(IWebElement);
             DCT.Execute(d =>
             {
-                result = driver.FindElement(query);
+                result = driver.FindElements(query).FirstOrDefault();
             });
             return result;
         }

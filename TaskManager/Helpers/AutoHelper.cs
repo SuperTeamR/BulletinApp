@@ -31,7 +31,8 @@ namespace TaskManager.Helpers
                 }
                 var userId = user.Id;
 
-                var bulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).ToArray().Where(q => q.DatePublication == null || q.DatePublication.Value.Date != DateTime.Today);
+                //Определяем количество буллетинов, которые надо опубликовать
+                var bulletins = GetBulletinsForPublication(userId);
                 if(!bulletins.Any())
                 {
                     ConsoleHelper.SendMessage($"AvitoPublicateBulletin => Нет буллетинов на републикацию");
@@ -62,6 +63,34 @@ namespace TaskManager.Helpers
             });
         }
 
+        static IEnumerable<Bulletin> GetBulletinsForPublication(Guid userId)
+        {
+            var result = Enumerable.Empty<Bulletin>();
+            BCT.Execute(d =>
+            {
+                var bulletins = d.BulletinDb.Bulletins.Where(q => q.UserId == userId).ToArray();
+                //Определяем опубликованные инстанции
+                var bulletinIds = bulletins.Select(q => q.Id);
+                var publicatedInstances = d.BulletinDb.BulletinInstances.Where(q =>
+                    q.Url != null
+                    && bulletinIds.Any(qq => qq == q.BulletinId)).ToArray().Where(q => q.CreateDate.Date == DateTime.Today);
+
+                //Определяем неопубликованные инстанции, которые в процесс публикации
+                var unpublicatedInstances = d.BulletinDb.BulletinInstances.Where(q =>
+                    q.Url == null
+                    && bulletinIds.Any(qq => qq == q.BulletinId)).ToArray().Where(q => q.CreateDate.Date == DateTime.Today);
+                var unpublicatedInstanceIds = unpublicatedInstances.Select(q => q.Id);
+                var instanceToPublicationIds = d.TempDB.Tasks.Where(q => q.Command == (int)TaskCommand.InstancePublication
+                    && q.State == 0
+                    && unpublicatedInstanceIds.Any(qq => qq == q.InstanceId)).Select(q => q.InstanceId).ToArray();
+                var instancesToPublication = unpublicatedInstances.Where(q => instanceToPublicationIds.Any(qq => qq == q.Id)).ToArray();
+
+                // Пропускаем уже опубликованные или в стадии публикации буллетины
+                var skippedBulletinIds = publicatedInstances.Concat(instancesToPublication).Select(q => q.BulletinId);
+                result = bulletins.Where(q => skippedBulletinIds.All(qq => qq != q.Id)).ToArray();
+            });
+            return result;
+        }
         static int ComputeAccessCapacity(Guid userId)
         {
             var accountCapacity = 0;

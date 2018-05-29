@@ -107,7 +107,7 @@ namespace BulletinHub.Helpers
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public static IEnumerable<BulletinInstance> CreateInstance(Bulletin bulletin)
+        public static IEnumerable<BulletinInstance> CreateInstance(Bulletin bulletin, Guid? templateId = null)
         {
             var result = new List<BulletinInstance>();
             BCT.Execute(c =>
@@ -119,6 +119,7 @@ namespace BulletinHub.Helpers
                     instance.BoardId = board.Id;
                     instance.BulletinId = bulletin.Id;
                     instance.GroupId = bulletin.GroupId.Value;
+                    instance.TemplateId = templateId;
                     instance.StateEnum = BulletinInstanceState.Created;
                     result.Add(instance);
                 }

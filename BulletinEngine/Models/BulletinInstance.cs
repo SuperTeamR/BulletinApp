@@ -59,6 +59,9 @@ namespace BulletinEngine.Entity.Data
         /// Дата активации
         /// </summary>
         public DateTime? ActivationDate { get; set; }
+
+
+        public Guid? TemplateId { get; set; }
         #endregion
 
         #region ALM -- Definition
@@ -93,6 +96,7 @@ namespace BulletinEngine.Entity.Data
             arg1.AccessId = arg2.AccessId;
             arg1.Url = arg2.Url;
             arg1.GroupId = arg2.GroupId;
+            arg1.TemplateId = arg2.TemplateId;
 
             return arg1;
         }

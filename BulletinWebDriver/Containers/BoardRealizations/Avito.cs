@@ -592,8 +592,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
 
                 try
                 {
-                    WaitPage(driver, 10000, "Продолжить с пакетом «Быстрая продажа»");
-                    FindTagByTextContains(driver, "span", "Быстрая продажа", e => JsClick(driver, e));
+                    WaitPage(driver, 10000, "Продолжить с пакетом «Обычная продажа»");
+                    FindTagByTextContains(driver, "span", "Обычная продажа", e => JsClick(driver, e));
                 }
                 catch (Exception ex)
                 {
@@ -605,56 +605,84 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 SendMessage($"InstancePublication => Select sale type ");
 
-
-
-                FindTagByTextContains(driver, "button", "Продолжить с пакетом «Быстрая продажа»", e => JsClick(driver, e));
+                FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
                 SendMessage($"InstancePublication => Click continue");
                 JsClick(driver, By.Id("service-premium"));
+                JsClick(driver, By.Id("service-vip"));
                 JsClick(driver, By.Id("service-highlight"));
                 SendMessage($"InstancePublication => Paid option has been disabled ");
 
-                var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                var isClassicDesign = false;
+                var button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Подать объявление");
+                if(button == null)
+                {
+                    isClassicDesign = true;
+                    button = FindMany(driver, By.TagName("button")).FirstOrDefault(q => q.Text == "Продолжить");
+                }
+                    
                 JsClick(driver, button);
                 WaitExecute(driver);
                 SendMessage($"InstancePublication => Click continue");
 
-                //Забираем идентификатор
-                var idPattern = "itemId=(\\d+)";
-                var pageSource = driver.PageSource;
-                var id = RegexHelper.GetValue(idPattern, pageSource);
-
-                //Переходим на страницу профиля и забираем полный url по идентификатору
-                var inactivePage = @"www.avito.ru/profile/items/inactive";
-                driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p=1&s=4");
-                WaitPage(driver, 3000, inactivePage);
-                WaitExecute(driver);
-                var nextPagePattern = "(Следующая страница)";
-                var urlPattern = $"a name=\"item_{id}\" href=\"(.*?)\"";
-                var pages = 1;
-                var hasNextPage = true;
-                while (hasNextPage)
+                //Забираем URL
+                if(isClassicDesign)
                 {
-                    pages++;
-                    var html = driver.PageSource;
-                    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
-
-                    var match = RegexHelper.GetValue(urlPattern, html);
-                    if (!string.IsNullOrEmpty(match))
+                    var a = Find(driver, By.XPath("//*[@class='content-text']/p/a"));
+                    if(a != null)
                     {
-                        result = @"https://www.avito.ru" + match;
-
-                        SendMessage($"InstancePublication => Url is found - {result}");
-                        break;
-                    }
-                    if (hasNextPage)
-                    {
-                        driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p={pages}&s=4");
-                        WaitPage(driver, 30000, inactivePage + $"/rossiya?p={pages}&s=4");
+                        var href = a.GetAttribute("href");
+                        result = href;
                     }
                 }
-                if(string.IsNullOrEmpty(result))
+                else
+                {
+                    FindContains(driver, "a", "class", "item-added-popup-link", e =>
+                    {
+                        var href = e.GetAttribute("href");
+                        result = href;
+
+                    });
+                }
+                
+                ////Забираем идентификатор
+                //var idPattern = "itemId=(\\d+)";
+                //var pageSource = driver.PageSource;
+                //var id = RegexHelper.GetValue(idPattern, pageSource);
+
+                ////Переходим на страницу профиля и забираем полный url по идентификатору
+                //var inactivePage = @"www.avito.ru/profile/items/inactive";
+                //driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p=1&s=4");
+                //WaitPage(driver, 3000, inactivePage);
+                //WaitExecute(driver);
+                //var nextPagePattern = "(Следующая страница)";
+                //var urlPattern = $"a name=\"item_{id}\" href=\"(.*?)\"";
+                //var pages = 1;
+                //var hasNextPage = true;
+                //while (hasNextPage)
+                //{
+                //    pages++;
+                //    var html = driver.PageSource;
+                //    hasNextPage = !string.IsNullOrEmpty(RegexHelper.GetValue(nextPagePattern, html));
+
+                //    var match = RegexHelper.GetValue(urlPattern, html);
+                //    if (!string.IsNullOrEmpty(match))
+                //    {
+                //        result = @"https://www.avito.ru" + match;
+
+                //        SendMessage($"InstancePublication => Url is found - {result}");
+                //        break;
+                //    }
+                //    if (hasNextPage)
+                //    {
+                //        driver.Navigate().GoToUrl("http://" + inactivePage + $"/rossiya?p={pages}&s=4");
+                //        WaitPage(driver, 30000, inactivePage + $"/rossiya?p={pages}&s=4");
+                //    }
+                //}
+                if (string.IsNullOrEmpty(result))
                     SendMessage($"InstancePublication => Url is not found");
+                else
+                    SendMessage($"InstancePublication => Url is found - {result}");
             }
             catch (Exception ex)
             {
