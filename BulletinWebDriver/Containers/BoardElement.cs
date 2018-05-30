@@ -332,6 +332,7 @@ namespace BulletinWebDriver.Containers
                 if(hasProxy && proxy != null)
                 {
                     CurrentTask.Ip = proxy.Address + ":" + proxy.Port;
+                    CurrentTask.IsAnonimousProxy = proxy.Anonymous;
                 }
 #if DEBUG && !DEBUG_REMOTE
        FirefoxHelper.ExecuteWithVisual(browser =>

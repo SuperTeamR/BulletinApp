@@ -16,5 +16,6 @@ namespace BulletinBridge.Models
         public string StateDesc { get; set; }
         public string LastStep { get; set; }
         public string Ip { get; set; }
+        public bool IsAnonimousProxy { get; set; }
     }
 }

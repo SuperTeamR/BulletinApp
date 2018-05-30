@@ -44,6 +44,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
             WaitExecute(driver);
 
             var authResult = false;
+            var exceptionRegistrationFail = "Неправильная пара логин";
             var exceptionStrings = new string[] { "Неправильная пара логин", "Некорректный номер телефона", "Личный кабинет", "Доступ заблокирован", "Текст с картинки" };
 
             for (int i = 0; i < 30; i++)
@@ -81,6 +82,8 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitPage(driver, 30000, exceptionStrings);
                 authResult = driver.Title.Contains("Личный кабинет");
                 if (authResult)
+                    break;
+                if (driver.PageSource.Contains(exceptionRegistrationFail))
                     break;
                 Thread.Sleep(2000);
             }

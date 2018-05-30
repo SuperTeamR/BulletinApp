@@ -64,6 +64,7 @@ namespace BulletinHub.Entity.Data
         public string LastStep { get; set; }
 
         public string Ip { get; set; }
+        public bool IsAnonimousProxy { get; set; }
 
         #endregion
 
@@ -102,6 +103,7 @@ namespace BulletinHub.Entity.Data
             arg1.BoardId = arg2.BoardId;
             arg1.LastStep = arg2.LastStep;
             arg1.Ip = arg2.Ip;
+            arg1.IsAnonimousProxy = arg2.IsAnonimousProxy;
             return arg1;
         }
         #endregion
@@ -194,6 +196,7 @@ namespace BulletinHub.Entity.Data
             arg2.ErrorDescription = arg1.Error;
             arg2.LastStep = arg1.LastStep;
             arg2.Ip = arg1.Ip;
+            arg2.IsAnonimousProxy = arg1.IsAnonimousProxy;
             return arg2;
         }
 
