@@ -321,7 +321,7 @@ namespace BulletinWebDriver.Containers
                 SendException($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
                 throw new Exception($"Command execute crash and stoped. Server return empty model, type of {typeof(T).Name}. Please check - 1. ServiceConfiguration. 2. Task model creator");
             }
-            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString, 1000) : null;
+            ProxyCardCheckCache proxy = hasProxy ? ProxyHelper.GetProxy(URL, IPExceptionsString, 2500) : null;
             if (proxy == null && hasProxy)
             {
                 SendException($"Command execute crash and stoped, proxy not found or service not available");
@@ -329,7 +329,10 @@ namespace BulletinWebDriver.Containers
             }
             else
             {
-
+                if(hasProxy && proxy != null)
+                {
+                    CurrentTask.Ip = proxy.Address + ":" + proxy.Port;
+                }
 #if DEBUG && !DEBUG_REMOTE
        FirefoxHelper.ExecuteWithVisual(browser =>
 #endif
@@ -406,7 +409,7 @@ namespace BulletinWebDriver.Containers
                 {
                     access = AccessHelper.GetAccess(t.AccessId);
                     access = Registration(b, access);
-                }, false, withImage: true);
+                }, true, withImage: true);
                 AccessHelper.Save(access);
                 SendMessage($"Registration from {access.Login} completed. Phone{access.Phone}");
             }, continueExceptionMethod: (c, ex) =>

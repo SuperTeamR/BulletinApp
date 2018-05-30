@@ -63,6 +63,8 @@ namespace BulletinHub.Entity.Data
         
         public string LastStep { get; set; }
 
+        public string Ip { get; set; }
+
         #endregion
 
         #region Another methods
@@ -99,6 +101,7 @@ namespace BulletinHub.Entity.Data
             arg1.ErrorDescription = arg2.ErrorDescription;
             arg1.BoardId = arg2.BoardId;
             arg1.LastStep = arg2.LastStep;
+            arg1.Ip = arg2.Ip;
             return arg1;
         }
         #endregion
@@ -190,6 +193,7 @@ namespace BulletinHub.Entity.Data
         {
             arg2.ErrorDescription = arg1.Error;
             arg2.LastStep = arg1.LastStep;
+            arg2.Ip = arg1.Ip;
             return arg2;
         }
 

@@ -608,9 +608,10 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 FindTagByTextContains(driver, "button", "Продолжить с пакетом «Обычная продажа»", e => JsClick(driver, e));
                 WaitExecute(driver);
                 SendMessage($"InstancePublication => Click continue");
-                JsClick(driver, By.Id("service-premium"));
-                JsClick(driver, By.Id("service-vip"));
-                JsClick(driver, By.Id("service-highlight"));
+
+                //JsClick(driver, By.Id("service-premium"));
+                //JsClick(driver, By.Id("service-vip"));
+                //JsClick(driver, By.Id("service-highlight"));
                 SendMessage($"InstancePublication => Paid option has been disabled ");
 
                 var isClassicDesign = false;
