@@ -612,9 +612,16 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 WaitExecute(driver);
                 SendMessage($"InstancePublication => Click continue");
 
-                //JsClick(driver, By.Id("service-premium"));
-                //JsClick(driver, By.Id("service-vip"));
-                //JsClick(driver, By.Id("service-highlight"));
+                var servicePremium = Find(driver, By.Id("service-premium"));
+                if(servicePremium != null && servicePremium.GetAttribute("checked") != null)
+                    JsClick(driver, By.Id("service-premium"));
+                var serviceVip = Find(driver, By.Id("service-vip"));
+                if (serviceVip != null && serviceVip.GetAttribute("checked") != null)
+                    JsClick(driver, By.Id("service-vip"));
+                var serviceHighlight = Find(driver, By.Id("service-highlight"));
+                if (serviceHighlight != null && serviceHighlight.GetAttribute("checked") != null)
+                    JsClick(driver, By.Id("service-highlight"));
+
                 SendMessage($"InstancePublication => Paid option has been disabled ");
 
                 var isClassicDesign = false;
