@@ -141,8 +141,10 @@ namespace TaskManager.Helpers
             var result = default(BulletinTemplate);
             BCT.Execute(d =>
             {
-                var temp = d.TempDB.BulletinTemplate.Where(q => q.State != (int)DefaultState.Disable).FirstOrDefault();
-                result = temp;
+                var temp = d.TempDB.BulletinTemplate.Where(q => q.State != (int)DefaultState.Disable && q.IsIndividualSeller && q.Category4 != "Запчасти").ToArray();
+                temp = temp.Where(q => forbiddenWords.All(x => !q.Description.ToLower().Contains(x.ToLower()))
+                    && forbiddenWords.All(x => !q.Title.Contains(x))).ToArray();
+                result = temp.FirstOrDefault();
                 if (result != null)
                 {
                     result.StateEnum = DefaultState.Disable;
@@ -232,7 +234,7 @@ namespace TaskManager.Helpers
                 if (instances.Any())
                 {
                     bulletin.SetGenerationCheck();
-                    var datePublish = DateTime.Now;
+                    var datePublish = DateTime.Now.AddDays(1);
                    
                     var hasPublication = false;
                     foreach (var instance in instances)

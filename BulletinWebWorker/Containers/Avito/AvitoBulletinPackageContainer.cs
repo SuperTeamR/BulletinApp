@@ -203,7 +203,6 @@ namespace BulletinWebWorker.Containers.Avito
                             //Edit a bulletin
                             string cachedName, cachedDesc;
                             var r = new Random();
-
                         
                             cachedName = ChangeField(bulletin, "Название объявления", r.Next(1000, 100000).ToString());
                             cachedDesc = ChangeField(bulletin, "Описание объявления", r.Next(1000, 100000).ToString());

@@ -621,7 +621,7 @@ namespace BulletinWebDriver.Containers.BoardRealizations
                 var serviceHighlight = Find(driver, By.Id("service-highlight"));
                 if (serviceHighlight != null && serviceHighlight.GetAttribute("checked") != null)
                     JsClick(driver, By.Id("service-highlight"));
-
+                WaitExecute(driver);
                 SendMessage($"InstancePublication => Paid option has been disabled ");
 
                 var isClassicDesign = false;

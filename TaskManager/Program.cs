@@ -20,7 +20,7 @@ namespace TaskManager
            AutoPublicate -login SuperKazah -brand IPhone -model 7+ 128gb - публикует буллетин на базе шаблона с активацией ночью
            CreateBulletin -login MegaArthur -brand IPhone -model 7+ 128gb - создает новый буллетин
            NextInstances -login MegaArthur - публикация новых инстанций для буллетинов
-           CreateAccess - login MegaArthur -forward -n 4
+           CreateAccess -login MegaArthur -forward -n 4
             ";
 
         static void Main(string[] args)
@@ -139,23 +139,43 @@ namespace TaskManager
             //};
             #endregion
             #region MegaArthur5
+            //var list = new List<string>
+            //{
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier черный/серый -price 12000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 16gb -modifier розовый -price 15500",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 16gb -modifier черный/серый -price 15500",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier белый/серебристый -price 15000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier золотой -price 15000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier черный/серый -price 15000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 128gb -modifier черный/серый -price 17000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s+ 16gb -modifier белый/серебристый -price 15000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier золотой -price 23000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 128gb -modifier черный/серый -price 25000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier розовый -price 23000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier черный/серый -price 23000",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier черный -price 12500",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier золотой -price 12500",
+            //    "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier розовый -price 12500",
+            //};
+            #endregion
+            #region MegaArthur6
             var list = new List<string>
             {
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier черный/серый -price 12000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 16gb -modifier розовый -price 15500",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 16gb -modifier черный/серый -price 15500",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier белый/серебристый -price 15000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier золотой -price 15000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 64gb -modifier черный/серый -price 15000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s 128gb -modifier черный/серый -price 17000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 6s+ 16gb -modifier белый/серебристый -price 15000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier золотой -price 23000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 128gb -modifier черный/серый -price 25000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier розовый -price 23000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model 7 32gb -modifier черный/серый -price 23000",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier черный -price 12500",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier золотой -price 12500",
-                "CreateBulletin -login MegaArthur5 -brand IPhone -model SE 64gb -modifier розовый -price 12500",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 64gb -modifier черный/серый -price 12000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 16gb -modifier розовый -price 15500",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 16gb -modifier черный/серый -price 15500",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 64gb -modifier белый/серебристый -price 15000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 64gb -modifier золотой -price 15000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 64gb -modifier черный/серый -price 15000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s 128gb -modifier черный/серый -price 17000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 6s+ 16gb -modifier белый/серебристый -price 15000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 7 32gb -modifier золотой -price 23000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 7 128gb -modifier черный/серый -price 25000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 7 32gb -modifier розовый -price 23000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model 7 32gb -modifier черный/серый -price 23000",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model SE 64gb -modifier черный -price 12500",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model SE 64gb -modifier золотой -price 12500",
+                "CreateBulletin -login MegaArthur6 -brand IPhone -model SE 64gb -modifier розовый -price 12500",
             };
             #endregion
 
